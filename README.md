@@ -1,13 +1,6 @@
-## vehicle-management-frontend-dashboard
+## install
+npm install
 
-## Live Link: https://vehicle-management-frontend-seven.vercel.app/login
+## Get started
 
-## Backend Api Link: https://github.com/19khaled88/vahicle_management_backend
-
-### Team Members:
-
-- Md. Omar Faruq
-- Md. Khaled
-- Nisharga Kabir
-- Ripon
-- shafikul islam
+npm run dev
