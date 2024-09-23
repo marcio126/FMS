@@ -1,12 +1,13 @@
+import { useState } from "react";
+import Image from "next/image";
+import { Button, message } from "antd";
 import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
 import {
     useUpdateSingleFuelMutation,
 } from "@/redux/api/manageFuelApi";
-import { Button, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
 import FormSelectField from "../ReusableForms/FormSelectField";
-import { useState } from "react";
 import FormTextArea from "../ReusableForms/FormTextArea";
 
 type AddFuelValues = {
@@ -22,7 +23,7 @@ type AddFuelValues = {
 };
 
 const UpdateFuelForm = ({ fuelData }: any) => {
-  const { vehicle, vendorName, Time, fuelTyoe, price, invoice, gallons,comments, id } = fuelData;
+  const { vehicle, vendorName, Time, fuelTyoe, price, invoice, gallons,comments, id, photo } = fuelData;
   const [updateFuel] = useUpdateSingleFuelMutation();
   const vehicleArr = [
     { label: '1100 [2018 Toyota Prius]', value: '1100 [2018 Toyota Prius]' },
@@ -59,10 +60,11 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     price: price,
     invoice: invoice,
     gallons: gallons,
-    comments:comments
+    comments:comments ,
+    photo:photo
   };
-  const [file, setFile] = useState('');
-  const [preview, setPreview] = useState('');
+  const [avater, setAvater] = useState(photo?photo:"");
+  const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
   const onSubmit: SubmitHandler<AddFuelValues> = async (updateData: any) => {
     updateData.vehicle = updateData?.vehicle;
     updateData.vendorName = updateData?.vendorName;
@@ -71,21 +73,39 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     updateData.gallons = parseFloat(updateData?.gallons);
     updateData.price = parseFloat(updateData?.price);
     updateData.invoice = updateData?.invoice;
-    updateData.photo = preview ? preview.slice(5)+"/"+file : "";
+    updateData.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
     updateData.comments = updateData?.comments;
     const res = await updateFuel({ id, ...updateData });
     if ((res as any)?.updateData?.statusCode === 200) {
       message.success("Fuel updated successfully");
     }
   };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0].name;
-      const filePath = e.target.files[0];
-      setFile(file);
-      setPreview(URL.createObjectURL(filePath));  // Create a preview URL
-    }
-  };
+  const handleImageUpload = (e : any) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+          setCurrentImage((reader as any)?.result);
+      };
+      reader.readAsDataURL(file);
+  } else {
+      setCurrentImage(currentImage);
+  }
+
+        const imageStoragekey = '68cb5fb5d48334a60f021c30aff06ada'
+        
+        const formData = new FormData()
+        formData.append('image', file)
+        fetch(`https://api.imgbb.com/1/upload?key=${imageStoragekey}`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(result => setAvater(result?.data?.display_url))
+
+
+  }
   return (
     <>
       <div className="mx-auto overflow-y-scroll ">
@@ -145,13 +165,24 @@ const UpdateFuelForm = ({ fuelData }: any) => {
           </div>
 
           <div className="mb-4 flex gap-2">
-            <FormInput
-              name="photo"
-              type="file"
-              placeholder="Photo"
-              onChange={handleFileChange}
+              <div className="w-12 h-12 rounded-full">
+              <Image
+                      src={currentImage}
+                      alt='avater'
+                      className="w-full
+                      object-cover"
+                      width={0}
+                      height={0}
+                      unoptimized
+                  />
+            </div>
+            <input
+                type="file"
+                name="photo"
+                placeholder="Image"
+                className="input input-bordered input-warning w-full max-w-x mt-2"
+              onChange= {handleImageUpload}
             />
-            {preview && <img src={preview} alt="Preview" style={{ width: '50px', height: 'auto' }} />}
           </div>
 
           <div className="mb-4">
