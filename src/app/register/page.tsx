@@ -23,7 +23,7 @@ export default function LoginPage() {
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [location, setLocation] = useState("");
-    const [email, setEmail] = useState("kabir@example.com");
+    const [email, setEmail] = useState("admin@gmail.com");
     const [password, setPassword] = useState("12345678");
 
   const router = useRouter();
@@ -58,7 +58,7 @@ export default function LoginPage() {
           <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
           <div className="w-full px-24 z-10">
             <h1 className="text-5xl font-bold text-left tracking-wide">
-              Vehicle Management System (VMS)
+              Fleet Management System (FMS)
             </h1>
             <p className="text-3xl my-4">Imagine having a virtual garage</p>
           </div>

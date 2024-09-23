@@ -1,23 +1,23 @@
 export const vehiclesFields = [
   {
     id: 1,
-    fields: "Reg.Id",
+    fields: "Name",
   },
   {
     id: 2,
-    fields: "Model",
+    fields: "VIN/SN",
   },
   {
     id: 3,
-    fields: "seatCapacity",
+    fields: "Brand",
   },
   {
     id: 4,
-    fields: "Tax",
+    fields: "Model",
   },
   {
     id: 5,
-    fields: "Brand",
+    fields: "Vehicle Type",
   },
   {
     id: 6,

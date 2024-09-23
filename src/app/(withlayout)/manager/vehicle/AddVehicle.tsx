@@ -61,22 +61,40 @@ const AddVehicle = () => {
         <Form submitHandler={onSubmit}>
           <div className="mb-4">
             <FormInput
-              name="registrationNo"
+              name="VehicleName"
               type="text"
               size="large"
-              placeholder="Vehicle Registration No"
+              placeholder="Vehicle Name"
             />
           </div>
-
-          <p className="mb-4">Purchase:</p>
           <div className="mb-4">
             <FormInput
-              name="purchaseDate"
+              name="VehicleName"
+              type="text"
               size="large"
-              type="date"
-              placeholder="Purchase Date"
+              placeholder="VIN/SN"
             />
+          </div>          
+          <div className="md:flex md:gap-4 md:items-center ">
+            <div className="mb-4">
+              <FormInput
+                name="brand"
+                type="text"
+                size="large"
+                placeholder="Vehicle Brand"
+              />
+            </div>
+
+            <div className="mb-4">
+              <FormInput
+                name="model"
+                type="text"
+                size="large"
+                placeholder="Vehicle model"
+              />
+            </div>
           </div>
+
           <p className="mb-4">Registration:</p>
           <div className="mb-4">
             <FormInput
@@ -86,52 +104,6 @@ const AddVehicle = () => {
               placeholder="Registration Date"
             />
           </div>
-          <div className="mb-4">
-            <FormInput
-              name="color"
-              type="text"
-              size="large"
-              placeholder="Vehicle Color"
-            />
-          </div>
-
-          <div className="mb-4">
-            <FormInput
-              name="mileage"
-              type="number"
-              size="large"
-              placeholder="Mileage"
-            />
-          </div>
-          <div className="md:flex md:gap-4 md:items-center">
-            <div className="mb-4">
-              <FormInput
-                name="price"
-                type="number"
-                size="large"
-                placeholder="Vehicle Price"
-              />
-            </div>
-
-            <div className="mb-4">
-              <FormInput
-                name="tax"
-                type="number"
-                size="large"
-                placeholder="Vehicle Tax"
-              />
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <FormInput
-              name="seatCapacity"
-              type="number"
-              size="large"
-              placeholder="Vehicle SeatCapacity"
-            />
-          </div>
-
           <div className="mb-4 flex justify-between">
             <span className="p-1">Vehicle Type:</span>
 
@@ -172,26 +144,6 @@ const AddVehicle = () => {
               <label htmlFor="slippingbus" className="p-1">
                 Slipping
               </label>
-            </div>
-          </div>
-
-          <div className="md:flex md:gap-4 md:items-center ">
-            <div className="mb-4">
-              <FormInput
-                name="brand"
-                type="text"
-                size="large"
-                placeholder="Vehicle Brand"
-              />
-            </div>
-
-            <div className="mb-4">
-              <FormInput
-                name="model"
-                type="text"
-                size="large"
-                placeholder="Vehicle model"
-              />
             </div>
           </div>
 
@@ -248,7 +200,54 @@ const AddVehicle = () => {
                 Hybrid
               </label>
             </div>
+          </div>          
+          {/* <div className="mb-4">
+            <FormInput
+              name="color"
+              type="text"
+              size="large"
+              placeholder="Vehicle Color"
+            />
+          </div> */}
+
+          <div className="mb-4">
+            <FormInput
+              name="mileage"
+              type="number"
+              size="large"
+              placeholder="Mileage"
+            />
           </div>
+          <div className="md:flex md:gap-4 md:items-center">
+            <div className="mb-4">
+              <FormInput
+                name="price"
+                type="number"
+                size="large"
+                placeholder="Vehicle Price"
+              />
+            </div>
+
+            <div className="mb-4">
+              <FormInput
+                name="tax"
+                type="number"
+                size="large"
+                placeholder="Vehicle Tax"
+              />
+            </div>
+          </div>
+
+          {/* <div className="mb-4">
+            <FormInput
+              name="seatCapacity"
+              type="number"
+              size="large"
+              placeholder="Vehicle SeatCapacity"
+            />
+          </div> */}
+
+
 
           <Button
             htmlType="submit"
