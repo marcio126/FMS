@@ -68,7 +68,7 @@ export default function LoginPage() {
           className="lg:w-1/2 w-full flex items-center justify-center text-center md:px-16 "
           style={{ backgroundColor: "#00334E" }}
         >
-          <div className="w-full py-6  ">
+          <div className="w-full py-1  ">
             <Image
               alt="Mountains"
               src={logo}
@@ -82,7 +82,7 @@ export default function LoginPage() {
               }}
             />
 
-            <p className="text-gray-200 text-xl mb-2">
+            <p className="text-gray-200 text-xl mb-12">
               Welcome our Vehicle Managment System Register Page
             </p>
 
