@@ -1,7 +1,14 @@
 import { redirect } from "next/navigation";
-
+import {getFromLocalStorage} from "../utils/local-storage";
 const HomePage = () => {
-  return redirect("/login");
+  let access = getFromLocalStorage;
+  if (access == undefined || access == null) {
+    return redirect("/login");
+  }
+  else {
+    return redirect("/manager/overview");
+  }
+
 };
 
 export default HomePage;
