@@ -16,34 +16,30 @@ type AddVehicleValues = {
 const AddVehicle = () => {
   const [createVehicle] = useCreateVehicleMutation();
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
-    const registrationNo = data.registrationNo;
-
-    const purchaseDate = formatDate(data.purchaseDate);
+    debugger;
+    const vehicleName = data.VehicleName;
+    const vin_sn = data.VIN;
+    const brand = data.brand;
+    const model = data.model;
     const registrationDate = formatDate(data.registrationDate);
-
-    const color = data.color;
+    const vehicleType = data.vehicleType;
+    const fuelType = data.fuelType;
     const mileage = Number(data.mileage);
     const price = Number(data.price);
     const tax = Number(data.tax);
-    const seatCapacity = Number(data.seatCapacity);
-    const vehicleType = data.vehicleType;
-    const brand = data.brand;
-    const model = data.model;
-    const fuelType = data.fuelType;
+
 
     const formData = {
-      registrationNo,
-      purchaseDate,
+      vehicleName,
+      vin_sn,
+      brand,
+      model,
       registrationDate,
-      color,
+      vehicleType, 
+      fuelType,
       mileage,
       price,
       tax,
-      seatCapacity,
-      vehicleType,
-      brand,
-      model,
-      fuelType,
     };
 
     const resData = await createVehicle(formData);
@@ -69,7 +65,7 @@ const AddVehicle = () => {
           </div>
           <div className="mb-4">
             <FormInput
-              name="VehicleName"
+              name="VIN"
               type="text"
               size="large"
               placeholder="VIN/SN"
