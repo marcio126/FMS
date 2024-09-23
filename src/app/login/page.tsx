@@ -19,7 +19,7 @@ type FormValues = {
 export default function LoginPage() {
   const [userLogin, { isLoading: isLogin }] = useUserLoginMutation();
 
-  const [email, setEmail] = useState("kabir@example.com");
+  const [email, setEmail] = useState("admin@gmail.com");
   const [password, setPassword] = useState("12345678");
 
   const router = useRouter();
@@ -55,9 +55,9 @@ export default function LoginPage() {
           <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
           <div className="w-full px-24 z-10">
             <h1 className="text-5xl font-bold text-left tracking-wide">
-              Vehicle Management System (VMS)
+              Fleet Management System
             </h1>
-            <p className="text-3xl my-4">Imagine having a virtual garage</p>
+            {/* <p className="text-3xl my-4">Imagine having a virtual garage</p> */}
           </div>
         </div>
 
@@ -82,49 +82,6 @@ export default function LoginPage() {
             <p className="text-gray-200 text-xl">
               Welcome our Vehicle Managment System Register Login
             </p>
-
-            <div className="my-8 p-2 shadow-lg text-center flex justify-evenly item-center">
-              <div>
-                <Tooltip
-                  title="
-                    Email: faruq@example.com     
-                    Password: 12345678
-                    "
-                  color="geekblue"
-                  key="geekblue"
-                >
-                  <p className="cursor-pointer underline text-sky-600">
-                    Super-admin Credentials
-                  </p>
-                </Tooltip>
-              </div>
-              /
-              <div>
-                <Tooltip
-                  title="Email: khaled@example.com
-                    Password: 12345678"
-                  color="geekblue"
-                  key="geekblue"
-                >
-                  <p className="cursor-pointer underline text-sky-600">
-                    Driver Credentials
-                  </p>
-                </Tooltip>
-              </div>
-              /
-              <div>
-                <Tooltip
-                  title="Email: kabir@example.com 
-                    Password: 12345678"
-                  color="geekblue"
-                  key="geekblue"
-                >
-                  <p className="cursor-pointer underline text-sky-600">
-                    Manager Credentials
-                  </p>
-                </Tooltip>
-              </div>
-            </div>
 
             <Form submitHandler={onSubmit}>
               <div className={`flex flex-col justify-center items-center`}>
