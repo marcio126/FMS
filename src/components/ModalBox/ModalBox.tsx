@@ -11,6 +11,9 @@ interface IProps {
 
 const ModalBox: React.FC<IProps> = ({ btnLabel, children, title, modalWidth }) => {
   const [open, setOpen] = useState(false);
+   const handleCloseModal = () => {
+    setOpen(false);
+  };
   return (
     <>
       <Button
@@ -25,7 +28,7 @@ const ModalBox: React.FC<IProps> = ({ btnLabel, children, title, modalWidth }) =
       <Modal
         centered
         open={open}
-        onCancel={() => setOpen(false)}
+        onCancel={handleCloseModal}
         title={title || ""}
         //bodyStyle={{ height: "100%" }}
         width={modalWidth || 400}

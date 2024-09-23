@@ -1,9 +1,9 @@
 "use client";
 import CreateTrip from "@/app/(withlayout)/manager/trip/CreateTrip";
-import { useDeleteTripMutation, useTripAllQuery } from "@/redux/api/tripApi";
 import {
   DeleteOutlined,
   EditOutlined,
+  EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import {
@@ -15,16 +15,17 @@ import {
   message,
 } from "antd";
 import { useEffect, useState } from "react";
-import UpdateTripForm from "../Forms/UpdateTripForm";
+import UpdateFuelForm from "../Forms/UpdateFuelForm";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
 import { manageFuelFields, tripFields } from "./StaticTableData";
-import { formatDateToRegularDate } from "@/utils/formateDate";
+import {useDeleteFuelMutation} from "@/redux/api/manageFuelApi";
 import { useGetManageFuelQuery } from "@/redux/api/manageFuelApi";
 import AddManageFuel from "@/app/(withlayout)/manager/manageFuel/AddManageFuel";
+import ViewFuleItem from "../ui/ViewFuelItem";
 
 const ManageFuelTable = () => {
-  const [tripDelete] = useDeleteTripMutation();
+  const [fuelDelete] = useDeleteFuelMutation();
   const [fuels, setFuels] = useState({
     data:[],
     meta:{
@@ -35,8 +36,7 @@ const ManageFuelTable = () => {
   })
 
   const confirm = async (e: any) => {
-    const deleteTrip = await tripDelete(e);
-    console.log("🚀 ~ confirm ~ delete:", deleteTrip);
+    const deleteTrip = await fuelDelete(e);
     message.success(`  Deleted Sucessfully`);
   };
 
@@ -53,7 +53,6 @@ const ManageFuelTable = () => {
     setCurrent(page);
   };
 
-  const { data: trip } = useTripAllQuery(current);
   const {data:manageFuels} = useGetManageFuelQuery(current)
    
   useEffect(() => {
@@ -62,7 +61,6 @@ const ManageFuelTable = () => {
     }
 }, [manageFuels])
 
-console.log(fuels,trip)
   //searching code
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -125,39 +123,57 @@ console.log(fuels,trip)
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
                   >
-                    <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicle_id}</td>
+                    <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicle}</td>
 
                     <td className="px-2 py-3 text-sm leading-5">
-                      {fuel?.fuel_type}
+                      {fuel?.vendorName}
                     </td>
-
                     <td className="px-2 py-3 text-sm leading-5">
-                      {formatDateToRegularDate(fuel?.invoice_number)}
+                      {fuel?.fuelTyoe}
                     </td>
-
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.purchase_date}
+                      {fuel?.Time.substring(0,10)}
                     </td>
-
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.amount}
+                      {fuel?.price}
                     </td>
-
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.ltr}
-                    </td>      
-                
+                      {fuel?.gallons}
+                    </td>
+                    <td className=" px-2 py-3 text-sm leading-5">
+                      {fuel?.invoice}
+                    </td>
+                    <td className=" px-2 py-3 text-sm leading-5">
+                      <img src={fuel?.photo} width={50} height={10} alt="vehiclePhoto"/>
+                    </td>
+                    <td className=" px-2 py-3 text-sm leading-5">
+                      {fuel?.comments}
+                    </td>
                     <td className="px-2 py-3 text-sm leading-5">
                       <div className="flex gap-x-1 justify-center">
                         <ModalBox
-                          btnLabel={
-                            <span className="item justify-center items-center">
-                              <EditOutlined />
-                            </span>
-                          }
-                        >
-                          <UpdateTripForm updateID={fuel?.id} />
-                        </ModalBox>
+                            title="View Details"
+                            modalWidth={300}
+                            btnLabel={
+                              <span className="item justify-center items-center">
+                                <EyeOutlined />
+                              </span>
+                            }
+                          >
+                            <ViewFuleItem viewID={fuel?.id} ItemType="fuel" />
+                          </ModalBox>
+
+                          <ModalBox
+                            title="Edit Vehicle Data"
+                            btnLabel={
+                              <span className="item justify-center items-center">
+                                <EditOutlined />
+                              </span>
+                            }
+                          >
+                            <UpdateFuelForm fuelData={fuel} />
+                          </ModalBox>
+
 
                         <Popconfirm
                           title="Delete the task"
@@ -196,3 +212,4 @@ console.log(fuels,trip)
 };
 
 export default ManageFuelTable;
+

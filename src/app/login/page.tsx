@@ -80,7 +80,7 @@ export default function LoginPage() {
             />
 
             <p className="text-gray-200 text-xl">
-              Welcome our Vehicle Managment System Register Login
+              Welcome our Vehicle Managment System Login Page
             </p>
 
             <Form submitHandler={onSubmit}>

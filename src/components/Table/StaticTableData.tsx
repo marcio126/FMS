@@ -483,24 +483,35 @@ export const manageFuelFields = [
   },
   {
     id: 1,
-    fields: "Fuel type",
+    fields: "Vendor Name",
   },
   {
     id: 2,
-    fields: "Invoice number",
+    fields: "Fuel Type",
   },
-  
+  {
+    id: 3,
+    fields: "Time",
+  },
+  {
+    id: 4,
+    fields: "Gallons",
+  },
+  {
+    id: 5,
+    fields: "Price",
+  },
+  {
+    id: 6,
+    fields: "Invoice",
+  },
+  {
+    id: 7,
+    fields: "Photo",
+  },
   {
     id: 8,
-    fields: "Purchase date",
-  },
-  {
-    id: 9,
-    fields: "amount",
-  },
-  {
-    id: 10,
-    fields: "ltr",
+    fields: "Comments",
   },
 ];
 

@@ -21,12 +21,18 @@ const Header = () => {
     removeUserInfo(authKey);
     router.push("/login");
   };
-
+  const profile = () => {
+    router.push("/manager/profile");
+  }
   //dropdown items.......................
   const items: MenuProps["items"] = [
     {
       key: `profile`,
-      label: <span>Profile</span>,
+      label: (
+        <Button onClick={profile} type="text">
+          <span className="ml-1"> Profile</span>
+      </Button>
+      ),
     },
 
     {
