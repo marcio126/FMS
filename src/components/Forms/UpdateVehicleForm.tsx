@@ -17,19 +17,22 @@ type AddVehicleValues = {
 
 const UpdateVehecleForm = ({ vehicleData }: any) => {
   
-  const { color, seatCapacity, model, tax, registrationNo, id } = vehicleData;
+  const { vehicleName, vin_sn, brand, model, mileage, price, tax, id } = vehicleData;
   const [updateVehicle] = useUpdateSingleVehicleMutation();
 
   const defaultValues = {
-    registrationNo: registrationNo,
-    color: color,
-    seatCapacity: seatCapacity,
+    vehicleName: vehicleName,
+    vin_sn: vin_sn,
+    brand: brand,
     model: model,
+    mileage: mileage,
+    price: price,
     tax: tax,
   };
 
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
-    data.seatCapacity = parseInt(data.seatCapacity);
+    data.mileage = parseInt(data.mileage);
+    data.price = parseInt(data.price);
     data.tax = parseInt(data.tax);
     //  data.registrationNo =  vehicle?.data?.registrationNo;
     // console.log(data, updateID)
@@ -45,29 +48,30 @@ const UpdateVehecleForm = ({ vehicleData }: any) => {
         <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
             <FormInput
-              name="registrationNo"
+              name="vehicleName"
               type="text"
               size="large"
-              placeholder="Vehicle License Number"
-            />
-          </div>
-          <div className="mb-4">
-            <FormInput
-              name="color"
-              type="text"
-              size="large"
-              placeholder="Vehicle Color"
+              placeholder="Vehicle Name"
             />
           </div>
 
+
           <div className="mb-4">
             <FormInput
-              name="seatCapacity"
+              name="vin_sn"
               type="text"
               size="large"
-              placeholder="Seat Capacity"
+              placeholder="VIN/SN"
             />
           </div>
+          <div className="mb-4">
+            <FormInput
+              name="brand"
+              type="text"
+              size="large"
+              placeholder="Vehicle Brand"
+            />
+          </div>          
 
           <div className="mb-4">
             <FormInput
@@ -80,12 +84,28 @@ const UpdateVehecleForm = ({ vehicleData }: any) => {
 
           <div className="mb-4">
             <FormInput
+              name="mileage"
+              type="text"
+              size="large"
+              placeholder="Vehicle Mileage"
+            />
+          </div>
+          <div className="mb-4">
+            <FormInput
+              name="price"
+              type="text"
+              size="large"
+              placeholder="Vehicle Price"
+            />
+          </div>
+          <div className="mb-4">
+            <FormInput
               name="tax"
               type="text"
               size="large"
-              placeholder="Vehicle tax"
+              placeholder="Vehicle Tax"
             />
-          </div>
+          </div>                    
 
           <Button
             htmlType="submit"

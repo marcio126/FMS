@@ -10,44 +10,39 @@ const ViewItem = ({ viewID }: any, ItemType: string) => {
   return (
     <>
       <p className="text-gray-700 sm:col-span-2 underline">
-      RegistrationNo: {vehicle?.data?.registrationNo}
+      Vehicle Name: {vehicle?.data?.vehicleName}
       </p>
       <br />
       {
         <Timeline
           items={[
             {
+              children: `VIN/SN: ${vehicle?.data?.vin_sn}`,
+            },            
+            {
               children: `Brand: ${vehicle?.data?.brand}`,
             },
             {
-              children: `Color: ${vehicle?.data?.color}`,
-            }, 
+              children: `Model: ${vehicle?.data?.model}`,
+            },
+            {
+              children: `VehicleType: ${vehicle?.data?.vehicleType}`,
+            },            
             {
               children: `FuelType: ${vehicle?.data?.fuelType}`,
             }, 
             {
               children: `Mileage: ${vehicle?.data?.mileage}`,
             },
-            {
-              children: `Model: ${vehicle?.data?.model}`,
-            },
+
             {
               children: `Price: ${vehicle?.data?.price}`,
             },
-            { 
-              children: `PurchaseDate: ${purchaseDate}`,
-            },
-            {
-              children: `RegistrationDate: ${registrationDate}`,
-            }, 
-            {
-              children: `SeatCapacity: ${vehicle?.data?.seatCapacity}`,
-            },
             {
               children: `Tax: ${vehicle?.data?.tax}`,
-            }, 
+            },             
             {
-              children: `VehicleType: ${vehicle?.data?.vehicleType}`,
+              children: `RegistrationDate: ${registrationDate}`,
             },
           ]}
         /> 
