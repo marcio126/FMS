@@ -11,7 +11,36 @@ const manageFuelApi = baseApi.injectEndpoints({
             }),
             providesTags: [tagTypes.manageFuel],
         }),
-
+        createFuel: build.mutation({
+            query: (createData) => ({
+                url: "/manage-fuel/create",
+                method: "POST",
+                data: createData,
+            }),
+            invalidatesTags: [tagTypes.manageFuel],
+        }),
+        singleManageFuel: build.query({
+            query: (id) => ({
+                url: `/manage-fuel/single/${id}`,
+                method: "GET", 
+            }), 
+            providesTags: [tagTypes.manageFuel],
+        }),
+        updateSingleFuel: build.mutation({
+            query: ({id, ...data}) => ({
+                url: `/manage-fuel/update/${id}`,
+                method: "PATCH",
+                data: data,
+            }),
+            invalidatesTags: [tagTypes.manageFuel],
+        }),
+        deleteFuel: build.mutation({
+            query: (id) => ({
+                url: `/manage-fuel/delete/${id}`,
+                method: "DELETE",  
+            }),
+            invalidatesTags: [tagTypes.manageFuel],
+        }),
         createRequest: build.mutation({
             query: (createData) => ({
                 url: "/manageRequest",
@@ -33,5 +62,6 @@ const manageFuelApi = baseApi.injectEndpoints({
 });
 
 export const {
-    useCreateRequestMutation, useGetManageFuelQuery,useUpdateRequestMutation
+    useCreateFuelMutation, useCreateRequestMutation, useGetManageFuelQuery,useUpdateRequestMutation,useSingleManageFuelQuery,
+  useUpdateSingleFuelMutation,useDeleteFuelMutation
 } = manageFuelApi;

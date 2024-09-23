@@ -13,7 +13,7 @@ const getItems: (panelStyle: CSSProperties) => CollapseProps["items"] = (
     key: "1",
     label: (
       <p className="font-medium">
-        What is the Fleet Management System (FMS)?
+        What is the Vehicle Management System (VMS)?
       </p>
     ),
     children: (

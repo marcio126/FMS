@@ -1,28 +1,29 @@
-"use client";
-
 import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
-import FormSelectField from "@/components/ReusableForms/FormSelectField";
-import FormTextArea from "@/components/ReusableForms/FormTextArea";
-import { useDriverVehicleQuery } from "@/redux/api/driverApi";
-import { useCreateFuelMutation } from "@/redux/api/manageFuelApi";
-import { formatDate, formatDateToRegularDate } from "@/utils/formateDate";
+import {
+    useUpdateSingleFuelMutation,
+} from "@/redux/api/manageFuelApi";
 import { Button, message } from "antd";
-import { useState } from "react";
 import { SubmitHandler } from "react-hook-form";
+import FormSelectField from "../ReusableForms/FormSelectField";
+import { useState } from "react";
+import FormTextArea from "../ReusableForms/FormTextArea";
 
-type CreateTripValue = {
-  passengerName: string;
-  phone: string;
-  tripPeriod: string;
-  tollCost: string;
-  parkingCost: string;
-  startLocation: string;
-  description: string;
-  tripId: string;
+type AddFuelValues = {
+  vehicle: string;
+  vendorName: string;
+  fuelTyoe: string;
+  Time: Date;
+  gallons: Number;
+  price: Number;
+  invoice: string;
+  photo: string;
+  comments: string;
 };
 
-const AddManageFuel = () => {
+const UpdateFuelForm = ({ fuelData }: any) => {
+  const { vehicle, vendorName, Time, fuelTyoe, price, invoice, gallons,comments, id } = fuelData;
+  const [updateFuel] = useUpdateSingleFuelMutation();
   const vehicleArr = [
     { label: '1100 [2018 Toyota Prius]', value: '1100 [2018 Toyota Prius]' },
     { label: '2100 [2016 Ford F-150]', value: '2100 [2016 Ford F-150]' },
@@ -50,15 +51,21 @@ const AddManageFuel = () => {
     { label: 'Propane', value: 'Propane' },
 
   ]
-  const [selectedDriver, setSelectedDriver] = useState("");
-  const [selectedVehicle, setSelectedVehicle] = useState("");
-
-  const [createFuel] = useCreateFuelMutation();
+  const defaultValues = {
+    vehicle: vehicle,
+    vendorName: vendorName,
+    fuelTyoe: fuelTyoe,
+    Time:Time.substring(0, 10),
+    price: price,
+    invoice: invoice,
+    gallons: gallons,
+    comments:comments
+  };
   const [file, setFile] = useState('');
   const [preview, setPreview] = useState('');
-
-  const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
-    // data.status = "UPCOMMING";
+  const onSubmit: SubmitHandler<AddFuelValues> = async (data: any) => {
+    console.log(data);
+    
     data.vehicle = data?.vehicle;
     data.vendorName = data?.vendorName;
     data.fuelTyoe = data?.fuelTyoe;
@@ -68,16 +75,11 @@ const AddManageFuel = () => {
     data.invoice = data?.invoice;
     data.photo = preview ? preview.slice(5)+"/"+file : "";
     data.comments = data?.comments;
-    // data.vehicle_id = selectedVehicle;
-    // data.driver_id = selectedDriver;
-    const res = await createFuel(data);
-
-    if ((res as any)?.data?.statusCode === 200) {
-      message.success(`Create Trip Sucessfully`);
-    }
+    // const res = await updateFuel({ id, ...data });
+    // if ((res as any)?.data?.statusCode === 200) {
+    //   message.success("Fuel updated successfully");
+    // }
   };
-
-  const { data: driverVehicle } = useDriverVehicleQuery({});
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0].name;
@@ -86,18 +88,10 @@ const AddManageFuel = () => {
       setPreview(URL.createObjectURL(filePath));  // Create a preview URL
     }
   };
-  function handleSelectDriver(event: any) {
-    setSelectedDriver(event.target.value);
-  }
-  function handleSelectVehicle(event: any) {
-    setSelectedVehicle(event.target.value);
-  }
-
   return (
     <>
-      <p className="font-bold text-black text-[16px] mb-2">Add Fuel Page</p>
       <div className="mx-auto overflow-y-scroll ">
-        <Form submitHandler={onSubmit}>
+        <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
             <FormSelectField
               name="vehicle"
@@ -171,13 +165,9 @@ const AddManageFuel = () => {
           </div>
           <Button
             htmlType="submit"
-            className="text-md rounded-lg"
-            style={{
-              backgroundColor: "#00334E",
-              color: "#eee",
-            }}
+            className="uppercase text-md rounded-lg bg-brand hover:bg-gray-200 hover:text-secondary"
           >
-            Add Fuel
+            Update Fuel
           </Button>
         </Form>
       </div>
@@ -185,4 +175,4 @@ const AddManageFuel = () => {
   );
 };
 
-export default AddManageFuel;
+export default UpdateFuelForm;

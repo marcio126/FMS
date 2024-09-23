@@ -1,23 +1,23 @@
 export const vehiclesFields = [
   {
     id: 1,
-    fields: "Name",
+    fields: "Reg.Id",
   },
   {
     id: 2,
-    fields: "VIN/SN",
-  },
-  {
-    id: 3,
-    fields: "Brand",
-  },
-  {
-    id: 4,
     fields: "Model",
   },
   {
+    id: 3,
+    fields: "seatCapacity",
+  },
+  {
+    id: 4,
+    fields: "Tax",
+  },
+  {
     id: 5,
-    fields: "Vehicle Type",
+    fields: "Brand",
   },
   {
     id: 6,
@@ -483,24 +483,35 @@ export const manageFuelFields = [
   },
   {
     id: 1,
-    fields: "Fuel type",
+    fields: "Vendor Name",
   },
   {
     id: 2,
-    fields: "Invoice number",
+    fields: "Fuel Type",
   },
-  
+  {
+    id: 3,
+    fields: "Time",
+  },
+  {
+    id: 4,
+    fields: "Gallons",
+  },
+  {
+    id: 5,
+    fields: "Price",
+  },
+  {
+    id: 6,
+    fields: "Invoice",
+  },
+  {
+    id: 7,
+    fields: "Photo",
+  },
   {
     id: 8,
-    fields: "Purchase date",
-  },
-  {
-    id: 9,
-    fields: "amount",
-  },
-  {
-    id: 10,
-    fields: "ltr",
+    fields: "Comments",
   },
 ];
 
