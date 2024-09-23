@@ -63,22 +63,20 @@ const UpdateFuelForm = ({ fuelData }: any) => {
   };
   const [file, setFile] = useState('');
   const [preview, setPreview] = useState('');
-  const onSubmit: SubmitHandler<AddFuelValues> = async (data: any) => {
-    console.log(data);
-    
-    data.vehicle = data?.vehicle;
-    data.vendorName = data?.vendorName;
-    data.fuelTyoe = data?.fuelTyoe;
-    data.Time = new Date(data?.Time);
-    data.gallons = parseFloat(data?.gallons);
-    data.price = parseFloat(data?.price);
-    data.invoice = data?.invoice;
-    data.photo = preview ? preview.slice(5)+"/"+file : "";
-    data.comments = data?.comments;
-    // const res = await updateFuel({ id, ...data });
-    // if ((res as any)?.data?.statusCode === 200) {
-    //   message.success("Fuel updated successfully");
-    // }
+  const onSubmit: SubmitHandler<AddFuelValues> = async (updateData: any) => {
+    updateData.vehicle = updateData?.vehicle;
+    updateData.vendorName = updateData?.vendorName;
+    updateData.fuelTyoe = updateData?.fuelTyoe;
+    updateData.Time = new Date(updateData?.Time);
+    updateData.gallons = parseFloat(updateData?.gallons);
+    updateData.price = parseFloat(updateData?.price);
+    updateData.invoice = updateData?.invoice;
+    updateData.photo = preview ? preview.slice(5)+"/"+file : "";
+    updateData.comments = updateData?.comments;
+    const res = await updateFuel({ id, ...updateData });
+    if ((res as any)?.updateData?.statusCode === 200) {
+      message.success("Fuel updated successfully");
+    }
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

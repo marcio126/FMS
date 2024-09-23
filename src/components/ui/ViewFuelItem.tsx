@@ -9,9 +9,7 @@ const ViewFuelItem = ({ viewID }: any, ItemType: string) => {
     const registrationDate = formatDateToRegularDate(fuel?.data?.registrationDate)
   return (
     <>
-      <p className="text-gray-700 sm:col-span-2 underline">
-      RegistrationNo: {fuel?.data?.id}
-      </p>
+      
       <br />
       {
         <Timeline
