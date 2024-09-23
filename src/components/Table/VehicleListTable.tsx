@@ -21,11 +21,11 @@ import { vehiclesFields } from "./StaticTableData";
 
 interface IProps {
   id: string;
-  registrationNo: string;
-  model: string;
-  seatCapacity: string;
-  tax: string;
+  vehicleName: string;
+  vin_sn: string;
   brand: string;
+  model: string;
+  vehicleType: string;
   fuelType: string;
 }
 
@@ -66,7 +66,7 @@ const VehicleListTable = (e: any) => {
             <div className=" max-w-[80%]">
               <Input
                 size="large"
-                placeholder={`Search by Reg.Id`}
+                placeholder={`Search by Vehicle Name`}
                 prefix={<SearchOutlined />}
                 onChange={(event) => {
                   setSearchTerm(event?.target?.value);
@@ -100,10 +100,10 @@ const VehicleListTable = (e: any) => {
                   if (searchTerm == "") {
                     return V;
                   } else if (
-                    V?.registrationNo
+                    V?.vehicleName
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase()) ||
-                    V?.model.toLowerCase().includes(searchTerm.toLowerCase())
+                    V?.vin_sn.toLowerCase().includes(searchTerm.toLowerCase())
                   ) {
                     return V;
                   }
@@ -116,23 +116,23 @@ const VehicleListTable = (e: any) => {
                     }  `}
                   >
                     <td className="px-2 py-3 text-sm leading-5">
-                      {vehicle?.registrationNo}
+                      {vehicle?.vehicleName}
                     </td>
 
                     <td className="px-2 py-3 text-sm leading-5">
+                      {vehicle?.vin_sn}
+                    </td>
+
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {vehicle?.brand}
+                    </td>
+
+                    <td className=" px-2 py-3 text-sm leading-5">
                       {vehicle?.model}
                     </td>
 
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {vehicle?.seatCapacity}
-                    </td>
-
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {vehicle?.tax}
-                    </td>
-
-                    <td className=" px-2 py-3 text-sm leading-5">
-                      {vehicle?.brand}
+                      {vehicle?.vehicleType}
                     </td>
 
                     <td className=" px-2 py-3 text-sm leading-5">
