@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
 import { useUserLoginMutation } from "@/redux/api/authApi";
@@ -47,7 +48,6 @@ export default function LoginPage() {
     }
   };
 
-  console.log(isLogin);
   return (
     <>
       <div className="min-h-screen flex items-stretch text-white ">
@@ -80,7 +80,7 @@ export default function LoginPage() {
             />
 
             <p className="text-gray-200 text-xl">
-              Welcome our Vehicle Managment System
+              Welcome our Vehicle Managment System Register Login
             </p>
 
             <div className="my-8 p-2 shadow-lg text-center flex justify-evenly item-center">
@@ -165,9 +165,25 @@ export default function LoginPage() {
                     className="uppercase block w-full rounded-lg !bg-brand  hover:!bg-gray-200 hover:!text-sky-600 transition-0.3s py-1
                   focus:outline-none"
                   >
-                    {isLogin ? "Loading..." : "press LogIn"}
+                    {isLogin ? "Loading..." : "LogIn"}
                   </button>
                 </div>
+                <div className="m-[10px] flex gap-x-2">
+                  You don't have account?
+                  <Link href="register">
+                    <Tooltip
+                    title="Don't have account?"
+                    color="geekblue"
+                    key="geekblue"
+                  >
+                    <p className="cursor-pointer underline text-sky-600">
+                      Register...
+                    </p>
+                  </Tooltip>
+                  </Link>
+                  
+                </div>
+                
               </div>
             </Form>
           </div>
