@@ -17,6 +17,8 @@ interface IInput {
   label?: string;
   prefix?: ReactNode;
   onChange?: any;
+  min?: string;
+  max?: string;
 }
 
 const FormInput = ({
@@ -29,6 +31,8 @@ const FormInput = ({
   validation,
   label,
   prefix,
+  min,
+  max,
   ...rest
 }: IInput) => {
   const {
@@ -61,7 +65,9 @@ const FormInput = ({
               placeholder={placeholder}
               {...field}
               value={value ? value : field.value}
-              prefix={prefix}
+                prefix={prefix}
+                min={min}
+              max={max}
               {...rest}
             />
           )

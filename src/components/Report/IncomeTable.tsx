@@ -4,7 +4,8 @@ import AddOfficeCost from "@/app/(withlayout)/manager/office-cost/AddOfficeCost"
 import { Button, MenuProps, Select } from "antd";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
-
+import { useEffect, useState } from "react";
+import { useGetAllOfficeCostQuery } from "@/redux/api/officeCostApi";
 const VehicleReg = [
   {
     label: "DHAKA-12345",
@@ -246,6 +247,30 @@ const items: MenuProps["items"] = [
 ];
 
 const IncomeTable = () => {
+  const [current, setCurrent] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [allData, setAllPost] = useState({data:[],
+    meta:{
+        limit:0,
+        page:0,
+        total:0
+    }})
+  const {data:allpost} = useGetAllOfficeCostQuery(current);
+  useEffect(() => {
+    if (allpost != undefined) {
+      setAllPost(allpost.data);
+    }
+    
+  }, [allpost])
+  useEffect(() => {
+    let total = 0;
+    allData.data.map((V: any) => {
+      console.log(V?.amount);
+      total += parseInt(V?.amount);
+    })
+    console.log("============>", total);
+    setTotalPrice(total);
+  },[allData])
   return (
     <>
       <Heading>
@@ -325,19 +350,20 @@ const IncomeTable = () => {
             </thead>
 
             <tbody className="dark:text-[#E8E8E8]">
-              {IncomeData?.map((V, index) => (
+              {allData.data?.map((V:any, index:number) => (
                 <tr
-                  key={V?.ID}
+                  key={V?.id}
                   className={`${
                     index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                   }  `}
                 >
                   <td className="px-2 py-3 text-sm leading-5">
-                    {V?.VehicleReg}
+                    {V?.cost_name}
                   </td>
-                  <td className=" px-2 py-3 text-sm leading-5">{V?.Date}</td>
+                  <td className=" px-2 py-3 text-sm leading-5">{V?.createdAt.substring(0,10)}</td>
 
-                  <td className=" px-2 py-3 text-sm leading-5">{V?.Income}</td>
+                  <td className=" px-2 py-3 text-sm leading-5">{V?.amount}</td>
+                  
                   {/* <td className=" px-2 py-3 text-sm leading-5">
                     <Dropdown menu={{ items }} placement="bottomRight" arrow>
                       <HolderOutlined />
@@ -351,7 +377,7 @@ const IncomeTable = () => {
                 <td colSpan={2} className="px-2 py-3 text-xl">
                   Total
                 </td>
-                <td className="px-2 py-3 text-xl leading-5">000000000 TK</td>
+                <td className="px-2 py-3 text-xl leading-5">{totalPrice} TK</td>
               </tr>
             </tfoot>
           </table>

@@ -21,13 +21,14 @@ import UpdateDriverForm from "../Forms/UpdateDriverForm";
 import Heading from "../ui/Heading";
 import ViewItem from "../ui/ViewItem";
 import ViewItemDriver from "../ui/ViewItemDriver";
+import StarRating from "../ui/StarRating";
 
 interface IProps {
   address?: string;
   avatar?: string;
   createAt?: string;
   email?: string;
-  experience?: string;
+  experience?: number;
   id?: string;
   license_no?: string;
   name?: string;
@@ -36,6 +37,10 @@ interface IProps {
   phone?: string;
   role?: string;
   user_id?: string;
+  score?: number;
+  license_type?: string;
+  license_expiry_date?: Date;
+  trans_distance?: number;
 }
 
 const DriverListTable = () => {
@@ -97,9 +102,9 @@ const DriverListTable = () => {
           <table className="min-w-full">
             <thead className="bg-gray-50 rounded-2xl border-b">
               <tr className="dark:bg-[#145374]">
-                {DriverListTableFields?.map((DriverListTableField) => (
+                {DriverListTableFields?.map((DriverListTableField,index) => (
                   <th
-                    key={DriverListTableField?.id}
+                    key={index}
                     className=" px-2 py-3 text-left text-black dark:text-[#E8E8E8]"
                   >
                     {DriverListTableField?.fields}
@@ -155,7 +160,13 @@ const DriverListTable = () => {
                     <td className="px-2 py-3 text-sm leading-5">
                       {drivers?.nid}
                     </td>
-
+                    <td className="px-2 py-3 text-sm leading-5">
+                      <StarRating score={drivers?.score}/>
+                    </td>
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {drivers?.license_type}
+                    </td>
+                    
                     <td className="px-2 py-3 text-sm leading-5">
                       <div className="flex gap-x-1">
                         <ModalBox

@@ -125,9 +125,9 @@ export const sidebarItems = (role: string) => {
       key: `/${role}/manageRequest`,
     },
     {
-      label: <Link href={`/${role}/report`}>Report</Link>,
+      label: <Link href={`/${role}/report`}>Report and Analysis</Link>,
       icon: <FileZipOutlined />,
-      key: `/${role}/report`,
+      key: `/${role}/ReportAnalysis`,
     },
     ...contactSidebarItem,
     ...privacyPolicySidebarItem,
