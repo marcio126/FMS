@@ -136,7 +136,8 @@ const DriverListTable = () => {
                     <td className="px-2 py-3 text-sm leading-5">
                       <Image
                         className="rounded-full"
-                        width={30}
+                        width={50}
+                        height={50}
                         src={drivers?.avatar}
                         alt="..."
                       />
