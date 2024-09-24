@@ -4,10 +4,11 @@ import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
 import { useDriverVehicleQuery } from "@/redux/api/driverApi";
 import { Button, message } from "antd";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { SubmitHandler } from "react-hook-form"; 
-import { formatDate } from '@/utils/formateDate';
 import { useCreateTripMutation } from "@/redux/api/tripApi";
+
+import FormSelectLabelField from "@/components/ReusableForms/FormSelectLabelField";
 
 
 type CreateTripValue = {
@@ -20,21 +21,38 @@ type CreateTripValue = {
   description: string;
   tripId: string;
 };
+interface Driver {
+    name: string;
+    // Add any other properties of a driver here
+}
 
-const CreateTrip = () => { 
-  const [selectedDriver, setSelectedDriver] = useState([]); 
-  const [selectedVehicle, setSelectedVehicle] = useState([]); 
+interface DriverResult {
+    driverResult: Driver[];
+}
 
+interface DriverVehicle {
+    data: DriverResult;
+}
+type MyObjectType = {
+    label: any;  // Replace 'any' with a more specific type if possible
+    value: string;
+};
+const CreateTrip = () => {  
+  const [driverOptions, setDriverOptions] = useState<{ label: string; value: string }[]>([]);
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+  const [vehicleValue, setVehicleValue] = useState<MyObjectType | undefined>(undefined);
+  const [driverValue, setDriverValue] = useState<MyObjectType | undefined>(undefined);
   const [createTrip] = useCreateTripMutation()
 
   const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
     data.status = "UPCOMMING";
     data.passengerCount = parseInt(data?.passengerCount);
     data.tripRent = parseInt(data?.tripRent);
-    data.startTime = formatDate(data?.startTime);
-    data.vehicle_id = selectedVehicle;
-    data.driver_id = selectedDriver;
-   
+    data.startTime = new Date(data?.startTime);
+    data.vehicleVal = vehicleValue?.label;
+    data.driverVal = driverValue?.label;
+    data.vehicle_id = vehicleValue?.value;
+    data.driver_id = driverValue?.value;
     const res = await createTrip(data) 
 
     if((res as any)?.data?.statusCode === 200){
@@ -42,16 +60,38 @@ const CreateTrip = () => {
     }
  
   };
+  const { data: driverVehicle } = useDriverVehicleQuery({});
+  useEffect(() => {
+    if (driverVehicle?.data?.driverResult) {
+            const options = driverVehicle.data.driverResult.map((driver: { name: any; id:any }) => ({
+                label: driver.name,
+                value: driver.id
+            }));
+            setDriverOptions(options);
+    }
+    if (driverVehicle?.data?.vehicleResult) {
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id
+            }));
+            setVehicleOptions(options);
+        }
+  }, [driverVehicle]);
 
-   const {data: driverVehicle} = useDriverVehicleQuery({})
-  
-  function handleSelectDriver(event: any) {
-    setSelectedDriver(event.target.value);
+  const handleDriverChange = (value: string, option: any) => {
+    const selected = {
+      label: option.label,
+      value: value
+    };
+    setDriverValue(selected);
   }
-  function handleSelectVehicle(event: any) {
-    setSelectedVehicle(event.target.value);
+  const handleVehicleChange = (value: string, option: any) => {
+    const selected = {
+      label: option.label,
+      value: value
+    };
+    setVehicleValue(selected);
   }
-
 
 
   return (
@@ -124,31 +164,24 @@ const CreateTrip = () => {
               placeholder="$tripRent"
             />
           </div>
-
           <div className="mb-4">
-          <label className="mr-2">Select Driver:</label>
-          <select value={selectedDriver} onChange={handleSelectDriver}>   
-              {
-               (driverVehicle?.data?.driverResult ?? []).map((driver: any) => {
-                return <option value={driver?.id} key={driver?.id}>{driver?.name}</option>
-               })
-              }  
-            </select>
+            <FormSelectLabelField
+              name="driver_id"
+              size="large"
+              placeholder="Select Driver"
+              options={driverOptions}
+              handleChange={handleDriverChange}
+            />
           </div>
-          
           <div className="mb-4">
-          <label className="mr-2">Select Vehicle:</label>
-          <select value={selectedVehicle} onChange={handleSelectVehicle}>   
-              {
-               (driverVehicle?.data?.vehicleResult ?? []).map((vehicle: any) => {
-                return <option value={vehicle?.id} key={vehicle?.id}>{vehicle?.brand}</option>
-               })
-              }  
-            </select>
+            <FormSelectLabelField
+              name="vehicle_id"
+              size="large"
+              placeholder="Select Vehicle"
+              options={vehicleOptions}
+              handleChange={handleVehicleChange}
+            />
           </div>
-
-          
-
           <Button
             htmlType="submit"
             className="text-md rounded-lg"

@@ -2,175 +2,226 @@ import { Button, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
 import Form from "../ReusableForms/Form";
 import FormInput from "../ReusableForms/FormInput";
-// import {
-//   useTripSingleQuery,
-//   useUpdateSingleTripMutation,
-// } from "../../redux/api/tripApi";
+import FormSelectLabelField from "@/components/ReusableForms/FormSelectLabelField";
 
 import {
-  // useManageFuelMutation,
-  // useUpdateSingleFuelMutation
-} from "../../redux/api/manageFuelApi";
-
+  useTripSingleQuery,
+  useUpdateSingleTripMutation,
+} from "../../redux/api/tripApi";
+import { useEffect, useState } from "react";
+import { useDriverVehicleQuery } from "@/redux/api/driverApi";
 import FormSelectField from "../ReusableForms/FormSelectField";
-import { useState } from "react";
-import FormTextArea from "../ReusableForms/FormTextArea";
-import { vehicles } from './../Table/StaticTableData';
 
 type AddVehicleValues = {
+  passengerName: string;
+  phone: string;
+  tripPeriod: string;
+  tollCost: string;
+  parkingCost: string;
+  startLocation: string;
+  description: string;
   tripId: string;
   status: string;
-  tripPeriod: string;
 };
+interface Driver {
+    name: string;
+    // Add any other properties of a driver here
+}
 
+interface DriverResult {
+    driverResult: Driver[];
+}
+
+interface DriverVehicle {
+    data: DriverResult;
+}
+type MyObjectType = {
+    label: any;  // Replace 'any' with a more specific type if possible
+    value: string;
+};
 const UpdateTripForm = ({ updateID }: any) => {
-  const vehicleArr = [
-    { label: '1100 [2018 Toyota Prius]', value: '1100 [2018 Toyota Prius]' },
-    { label: '2100 [2016 Ford F-150]', value: '2100 [2016 Ford F-150]' },
-    { label: '3100 [2014 Chevrolet Express Cargo]', value: '3100 [2014 Chevrolet Express Cargo]' },
-    { label: '4100 [2012 Freightliner Cascadia]', value: '4100 [2012 Freightliner Cascadia]' },
-    { label: '5100 [2010 Utility Reefer]', value: '5100 [2010 Utility Reefer]' },
-    { label: '6100 [2017 Hyster H50XM]', value: '6100 [2017 Hyster H50XM]' }
-  ];
-  const vendorArr = [
-    { label: 'Chevron', value: 'Chevron' },
-    { label: 'Shell #4291', value: 'Shell #4291' },
-    { label: 'Shell #5820', value: 'Shell #5820' }
+  const { data: singleTrip } = useTripSingleQuery(updateID);
+  const [driverOptions, setDriverOptions] = useState<{ label: string; value: string }[]>([]);
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+  const [vehicleValue, setVehicleValue] = useState<MyObjectType | undefined>(undefined);
+  const [driverValue, setDriverValue] = useState<MyObjectType | undefined>(undefined);
+  const statusOption = [
+    { label: 'PENDING', value: 'PENDING' },
+    { label: 'COMPLETED', value: 'COMPLETED' },
+    { label: 'UPCOMMING', value: 'UPCOMMING' },
   ]
-  const tyoeArr = [
-    { label: 'BioDiesel', value: 'BioDiesel' },
-    { label: 'Compressed Natural Gas', value: 'Compressed Natural Gas' },
-    { label: 'DEF', value: 'DEF' },
-    { label: 'Diesel', value: 'Diesel' },
-    { label: 'Diesel/Electric Hybrid', value: 'Diesel/Electric Hybrid' },
-    { label: 'Electric', value: 'Electric' },
-    { label: 'Flex Fuel', value: 'Flex Fuel' },
-    { label: 'Gas/Electric Hybrid', value: 'Gas/Electric Hybrid' },
-    { label: 'Gasoline', value: 'Gasoline' },
-    { label: 'Plug-in Hybrid', value: 'Plug-in Hybrid' },
-    { label: 'Propane', value: 'Propane' },
+  const defaultValues = {
+    status: singleTrip?.data?.status,
+    passengerCount: singleTrip?.data?.passengerCount,
+    tripPeriod: singleTrip?.data?.tripPeriod,
+    tripRent: singleTrip?.data?.tripRent,
+    startLocation: singleTrip?.data?.startLocation,
+    endLocation: singleTrip?.data?.endLocation,
+    startTime: singleTrip?.data?.startTime.substring(0, 10),
+    passengerName: singleTrip?.data?.passengerName,
+    passengerPhone: singleTrip?.data?.passengerPhone,
+    driver_id: singleTrip?.data?.driver_id,
+    vehicle_id: singleTrip?.data?.vehicle_id,    
+  };
 
-  ]
-  // const data = useManageFuelMutation(updateID);
-  const [file, setFile] = useState('');
-  const [preview, setPreview] = useState('');
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0].name;
-      const filePath = e.target.files[0];
-      setFile(file);
-      setPreview(URL.createObjectURL(filePath));  // Create a preview URL
+  const [updateTrip] = useUpdateSingleTripMutation();
+
+  const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
+    data.passengerCount = parseInt(data?.passengerCount);
+    data.tripRent = parseInt(data?.tripRent);
+    data.startTime = new Date(data?.startTime);
+    data.vehicleVal = vehicleValue?.label;
+    data.driverVal = driverValue?.label;
+    data.vehicle_id = vehicleValue?.value;
+    data.driver_id = driverValue?.value;
+
+    try {
+      const res = await updateTrip({ id: updateID, ...data });
+      if ((res as any)?.data?.statusCode === 200) {
+        message.success("Trip updated successfully");
+      }
+    } catch (error) {
+      message.success("Something Went Wrong");
     }
   };
-  // const defaultValues = {
-  //   status: singleTrip?.data?.status,
-  //   passengerCount: singleTrip?.data?.passengerCount,
-  //   tripPeriod: singleTrip?.data?.tripPeriod,
-  //   tripRent: singleTrip?.data?.tripRent,
-  // };
-
-  // const [updateTrip] = useUpdateSingleFuelMutation();
-
-  // const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
-  //   data.passengerCount = parseInt(data?.passengerCount);
-
-  //   try {
-  //     const res = await updateTrip({ id: updateID, ...data });
-  //     if ((res as any)?.data?.statusCode === 200) {
-  //       message.success("Fuel updated successfully");
-  //     }
-  //   } catch (error) {
-  //     message.success("Something Went Wrong");
-  //   }
-  // };
+    const { data: driverVehicle } = useDriverVehicleQuery({});
+  useEffect(() => {
+    if (driverVehicle?.data?.driverResult) {
+            const options = driverVehicle.data.driverResult.map((driver: { name: any; id:any }) => ({
+                label: driver.name,
+                value: driver.id
+            }));
+            setDriverOptions(options);
+    }
+    if (driverVehicle?.data?.vehicleResult) {
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id
+            }));
+            setVehicleOptions(options);
+        }
+  }, [driverVehicle]);
+const handleDriverChange = (value: string, option: any) => {
+    const selected = {
+      label: option.label,
+      value: value
+    };
+    setDriverValue(selected);
+  }
+  const handleVehicleChange = (value: string, option: any) => {
+    const selected = {
+      label: option.label,
+      value: value
+    };
+    setVehicleValue(selected);
+  }
   return (
     <div>
-      <h1>Update Fuel For:</h1>
-      {/* <div className="mx-auto overflow-y-scroll ">
-        <Form submitHandler={onSubmit}>
+      <h1>Update Trip For: {singleTrip?.data?.passengerName}</h1>
+      <div className="mx-auto overflow-y-scroll p-5">
+        <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
             <FormSelectField
-              name="vehicle"
+              name="status"
               size="large"
-              placeholder="Select vehicle"
-              options={vehicleArr}
+              placeholder="Status (done / pending)"
+              options={statusOption}
             />
           </div>
           <div className="mb-4">
-            <FormSelectField
-              name="vendorName"
-              size="large"
-              placeholder="Vendor Name"
-              options={vendorArr}
+            <FormInput
+              name="startLocation"
+              type="text"
+              placeholder="Start Location"
             />
           </div>
+          
           <div className="mb-4">
-            <FormSelectField
-              name="fuelTyoe"
-              size="large"
-              placeholder="Fuel tyoe"
-              options={tyoeArr}
+            <FormInput
+              name="endLocation"
+              type="text"
+              placeholder="End Location"
             />
           </div>
 
           <div className="mb-4 flex gap-2 items-center">
-            <label className="mr-2">Purchase Date:</label>
-            <FormInput name="Time" type="date" placeholder="Purchase Date" />
-          </div>
-
-          <div className="mb-4">
+          <label className="mr-2">Date:</label>
             <FormInput
-              name="gallons"
-              type="number"
-              placeholder="Gallons(US)"
+              name="startTime"
+              type="date"
+              placeholder="Trip Date"
             />
           </div>
 
           <div className="mb-4">
             <FormInput
-              name="price"
-              type="number"
-              placeholder="Price/Gallon(US)"
-            />
-          </div>
-
-          <div className="mb-4">
-            <FormInput
-              name="invoice"
+              name="passengerName"
               type="text"
-              placeholder="Invoice number, transaction ID, etc"
+              placeholder="Passenger Name"
             />
           </div>
-
-          <div className="mb-4 flex gap-2">
-            <FormInput
-              name="photo"
-              type="file"
-              placeholder="Photo"
-              onChange={handleFileChange}
-            />
-            {preview && <img src={preview} alt="Preview" style={{ width: '50px', height: 'auto' }} />}
-          </div>
-
+          
           <div className="mb-4">
-            <FormTextArea
-              name="comments"
-              label="Comments"
-              placeholder="Comments"
+            <FormInput
+              name="passengerPhone"
+              type="text"
+              placeholder="Passenger Phone"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <FormInput
+              name="passengerCount"
+              type="number"
+              placeholder="Total passenger Count"
+            />
+          </div> 
+          
+          <div className="mb-4">
+            <FormInput
+              name="tripPeriod"
+              type="text"
+              placeholder="Single-Trip | Round-Trip"
+            />
+          </div>
+            
+          <div className="mb-4">
+            <FormInput
+              name="tripRent"
+              type="number"
+              placeholder="$tripRent"
+            />
+          </div>
+          <div className="mb-4">
+            <FormSelectLabelField
+              name="driver_id"
+              size="large"
+              placeholder="Select Driver"
+              options={driverOptions}
+              handleChange={handleDriverChange}
+            />
+          </div>
+          <div className="mb-4">
+            <FormSelectLabelField
+              name="vehicle_id"
+              size="large"
+              placeholder="Select Vehicle"
+              options={vehicleOptions}
+              handleChange={handleVehicleChange}
             />
           </div>
           <Button
             htmlType="submit"
-            className="text-md rounded-lg"
-            style={{
-              backgroundColor: "#00334E",
-              color: "#eee",
-            }}
+            className="text-md rounded-lg  bg-secondary text-[#eee]"
+            // style={{
+            //   backgroundColor: "#00334E",
+            //   color: "#eee",
+            // }}
           >
-            Add Fuel
+            Update Trip
           </Button>
         </Form>
-      </div> */}
+      </div>
     </div>
   );
 };

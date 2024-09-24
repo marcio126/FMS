@@ -44,7 +44,7 @@ const TripListTable = () => {
   };
 
   const { data: trip } = useTripAllQuery(current);
-   
+  console.log(trip);
   //searching code
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -136,17 +136,17 @@ const TripListTable = () => {
                     </td>
                     
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {trips?.driver?.name}
+                      {trips?.driverVal}
                     </td>
 
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {trips?.vehicle?.brand}
+                      {trips?.vehicleVal}
                     </td>
 
                     <td className="px-2 py-3 text-sm leading-5">
                       <span
                         className={`${
-                          trips?.status ? "bg-red-300" : "bg-green-300"
+                          (trips?.status =='UPCOMMING') ? "bg-yellow-300" : ((trips?.status =='PENDING') ? "bg-red-300" : "bg-green-300")
                         } inline-flex px-2 py-1 leading-none text-primary rounded-lg`}
                       >
                         {trips?.status ? trips?.status : "Pending"}

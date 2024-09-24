@@ -265,10 +265,8 @@ const IncomeTable = () => {
   useEffect(() => {
     let total = 0;
     allData.data.map((V: any) => {
-      console.log(V?.amount);
       total += parseInt(V?.amount);
     })
-    console.log("============>", total);
     setTotalPrice(total);
   },[allData])
   return (
