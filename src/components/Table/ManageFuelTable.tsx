@@ -108,10 +108,15 @@ const ManageFuelTable = () => {
                   if (searchTerm == "") {
                     return V;
                   } else if (
-                    V?.amount
-                      .includes(searchTerm) ||
-                    V?.invoice_number
-                      .includes(searchTerm)
+                    V?.vehicleVal
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    V?.vendorName
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    V?.fuelTyoe
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
                   ) {
                     return V;
                   }
@@ -123,7 +128,7 @@ const ManageFuelTable = () => {
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
                   >
-                    <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicle}</td>
+                    <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicleVal}</td>
 
                     <td className="px-2 py-3 text-sm leading-5">
                       {fuel?.vendorName}

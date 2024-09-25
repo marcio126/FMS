@@ -58,14 +58,11 @@ const DriverListTable = () => {
   };
 
   const [current, setCurrent] = useState(1);
-  const [vehicleData, setVehicleData] = useState(null);
-  const [isFetching, setIsFetching] = useState(false);
 
   const onChange: PaginationProps["onChange"] = (page) => {
     setCurrent(page);
   };
   const { data: driver } = useGetAllDriverQuery(current);
-  
 
 
   //searching code
@@ -85,7 +82,7 @@ const DriverListTable = () => {
             <div className=" max-w-[80%]">
               <Input
                 size="large"
-                placeholder={`Search by Trip Id / Passenger Name of total ${driver?.length} Trips`}
+                placeholder={`Search by Driver Name`}
                 prefix={<SearchOutlined />}
                 onChange={(event) => {
                   setSearchTerm(event?.target?.value);
@@ -118,10 +115,9 @@ const DriverListTable = () => {
                 if (searchTerm == "") {
                   return V;
                 } else if (
-                  V?.nid
+                  V?.name
                     .toLowerCase()
-                    .includes(searchTerm.toLowerCase()) ||
-                  V?.phone.toLowerCase().includes(searchTerm.toLowerCase())
+                    .includes(searchTerm.toLowerCase())
                 ) {
                   return V;
                 }
@@ -136,7 +132,8 @@ const DriverListTable = () => {
                     <td className="px-2 py-3 text-sm leading-5">
                       <Image
                         className="rounded-full"
-                        width={30}
+                        width={50}
+                        height={50}
                         src={drivers?.avatar}
                         alt="..."
                       />
