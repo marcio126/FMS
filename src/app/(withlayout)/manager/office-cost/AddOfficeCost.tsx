@@ -9,7 +9,6 @@ const AddOfficeCost = () => {
   const onSubmit = async (data: any) => {
     data.amount = parseInt(data.amount);
     const response = await createOfficeCost(data);
-    console.log("response", response);
   };
   return (
     <>

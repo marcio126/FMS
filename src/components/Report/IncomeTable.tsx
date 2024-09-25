@@ -1,11 +1,19 @@
 "use client";
 
 import AddOfficeCost from "@/app/(withlayout)/manager/office-cost/AddOfficeCost";
-import { Button, MenuProps, Select } from "antd";
+import { Button, MenuProps, Select,Popconfirm,message } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
 import { useEffect, useState } from "react";
 import { useGetAllOfficeCostQuery } from "@/redux/api/officeCostApi";
+import ViewFuleItem from "../ui/ViewFuelItem";
+import UpdateFuelForm from "../Forms/UpdateFuelForm";
+
 const VehicleReg = [
   {
     label: "DHAKA-12345",
@@ -291,7 +299,10 @@ const IncomeTable = () => {
     })
     setTotalPrice(total);
   }, [allData]);
-  
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    message.error("Click on No");
+  };
   return (
     <>
       <Heading>
@@ -385,17 +396,56 @@ const IncomeTable = () => {
 
                   <td className=" px-2 py-3 text-sm leading-5">{V?.amount}</td>
                   
-                  {/* <td className=" px-2 py-3 text-sm leading-5">
-                    <Dropdown menu={{ items }} placement="bottomRight" arrow>
-                      <HolderOutlined />
-                    </Dropdown>
-                  </td> */}
+                  <td className="px-2 py-3 text-sm leading-5">
+                      <div className="flex gap-x-1 justify-center">
+                        <ModalBox
+                            title="View Details"
+                            modalWidth={300}
+                            btnLabel={
+                              <span className="item justify-center items-center">
+                                <EyeOutlined />
+                              </span>
+                            }
+                          >
+                            <ViewFuleItem viewID={V?.id} ItemType="fuel" />
+                          </ModalBox>
+
+                          <ModalBox
+                            title="Edit Vehicle Data"
+                            btnLabel={
+                              <span className="item justify-center items-center">
+                                <EditOutlined />
+                              </span>
+                            }
+                          >
+                            <UpdateFuelForm fuelData={V} />
+                          </ModalBox>
+
+
+                        <Popconfirm
+                          title="Delete the task"
+                          description="Are you sure to delete this task?"
+                          onConfirm={() => confirm(V?.id)}
+                          onCancel={() => cancel}
+                          okText="Delete"
+                          okType="danger"
+                          cancelText="No"
+                        >
+                          <Button danger>
+                            <span className="item justify-center items-center">
+                              {" "}
+                              <DeleteOutlined />{" "}
+                            </span>
+                          </Button>
+                        </Popconfirm>
+                      </div>
+                    </td>
                 </tr>
               ))}
             </tbody>
             <tfoot className="bg-gray-100 font-bold  border-t">
               <tr className="dark:bg-[#145374] ">
-                <td colSpan={2} className="px-2 py-3 text-xl">
+                <td colSpan={5} className="px-2 py-3 text-xl">
                   Total
                 </td>
                 <td className="px-2 py-3 text-xl leading-5">{totalPrice} TK</td>

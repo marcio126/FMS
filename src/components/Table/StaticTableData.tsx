@@ -459,28 +459,32 @@ export const tripFields = [
   },
   {
     id: 4,
-    fields: "Passengers",
+    fields: "Passenger Phone",
   },
   {
     id: 5,
-    fields: "Trip Period",
+    fields: "Passengers",
   },
   {
     id: 6,
+    fields: "Trip Period",
+  },
+  {
+    id: 7,
     fields: "Trip Rent",
   }, {
-    id: 7,
+    id: 8,
     fields: "Driver",
   }, {
-    id: 8,
+    id: 9,
     fields: "Vehicle",
   },
   {
-    id: 9,
+    id: 10,
     fields: "Status",
   },
   {
-    id: 10,
+    id: 11,
     fields: "Actions",
   },
 ];
@@ -520,6 +524,10 @@ export const manageFuelFields = [
   {
     id: 8,
     fields: "Comments",
+  },
+  {
+    id: 9,
+    fields: "Actions",
   },
 ];
 

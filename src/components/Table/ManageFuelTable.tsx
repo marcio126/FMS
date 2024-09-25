@@ -108,10 +108,15 @@ const ManageFuelTable = () => {
                   if (searchTerm == "") {
                     return V;
                   } else if (
-                    V?.amount
-                      .includes(searchTerm) ||
-                    V?.invoice_number
-                      .includes(searchTerm)
+                    V?.vehicleVal
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    V?.vendorName
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    V?.fuelTyoe
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
                   ) {
                     return V;
                   }

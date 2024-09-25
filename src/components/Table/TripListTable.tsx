@@ -44,7 +44,7 @@ const TripListTable = () => {
   };
 
   const { data: trip } = useTripAllQuery(current);
-  console.log(trip);
+
   //searching code
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -119,6 +119,10 @@ const TripListTable = () => {
 
                     <td className=" px-2 py-3 text-sm leading-5">
                       {trips?.passengerName}
+                    </td>
+
+                    <td className=" px-2 py-3 text-sm leading-5">
+                      {trips?.passengerPhone}
                     </td>
 
                     <td className=" px-2 py-3 text-sm leading-5">
