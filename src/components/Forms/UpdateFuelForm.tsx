@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button, message } from "antd";
 import Form from "@/components/ReusableForms/Form";
@@ -9,9 +9,10 @@ import {
 import { SubmitHandler } from "react-hook-form";
 import FormSelectField from "../ReusableForms/FormSelectField";
 import FormTextArea from "../ReusableForms/FormTextArea";
+import { useDriverVehicleQuery } from "@/redux/api/driverApi";
 
 type AddFuelValues = {
-  vehicle: string;
+  vehicleVal: string;
   vendorName: string;
   fuelTyoe: string;
   Time: Date;
@@ -23,16 +24,9 @@ type AddFuelValues = {
 };
 
 const UpdateFuelForm = ({ fuelData }: any) => {
-  const { vehicle, vendorName, Time, fuelTyoe, price, invoice, gallons,comments, id, photo } = fuelData;
+  const { vehicleVal, vendorName, Time, fuelTyoe, price, invoice, gallons, comments, vehicle_id, id, photo } = fuelData;
   const [updateFuel] = useUpdateSingleFuelMutation();
-  const vehicleArr = [
-    { label: '1100 [2018 Toyota Prius]', value: '1100 [2018 Toyota Prius]' },
-    { label: '2100 [2016 Ford F-150]', value: '2100 [2016 Ford F-150]' },
-    { label: '3100 [2014 Chevrolet Express Cargo]', value: '3100 [2014 Chevrolet Express Cargo]' },
-    { label: '4100 [2012 Freightliner Cascadia]', value: '4100 [2012 Freightliner Cascadia]' },
-    { label: '5100 [2010 Utility Reefer]', value: '5100 [2010 Utility Reefer]' },
-    { label: '6100 [2017 Hyster H50XM]', value: '6100 [2017 Hyster H50XM]' }
-  ];
+
   const vendorArr = [
     { label: 'Chevron', value: 'Chevron' },
     { label: 'Shell #4291', value: 'Shell #4291' },
@@ -52,8 +46,12 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     { label: 'Propane', value: 'Propane' },
 
   ]
-  const defaultValues = {
-    vehicle: vehicle,
+  
+  const [avater, setAvater] = useState(photo?photo:"");
+  const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+    const defaultValues = {
+    vehicle_id: vehicle_id + "," + vehicleVal, 
     vendorName: vendorName,
     fuelTyoe: fuelTyoe,
     Time:Time.substring(0, 10),
@@ -63,10 +61,10 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     comments:comments ,
     photo:photo
   };
-  const [avater, setAvater] = useState(photo?photo:"");
-  const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
   const onSubmit: SubmitHandler<AddFuelValues> = async (updateData: any) => {
-    updateData.vehicle = updateData?.vehicle;
+    const [vehicle_id, vehicle_val] = updateData?.vehicle_id.split(',');
+    updateData.vehicleVal = vehicle_val;
+    updateData.vehicle_id = vehicle_id;
     updateData.vendorName = updateData?.vendorName;
     updateData.fuelTyoe = updateData?.fuelTyoe;
     updateData.Time = new Date(updateData?.Time);
@@ -75,11 +73,28 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     updateData.invoice = updateData?.invoice;
     updateData.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
     updateData.comments = updateData?.comments;
-    const res = await updateFuel({ id, ...updateData });
-    if ((res as any)?.updateData?.statusCode === 200) {
+    try {
+      const res = await updateFuel({ id, ...updateData });
+      if ((res as any)?.data?.statusCode === 200) {
       message.success("Fuel updated successfully");
     }
+    } catch (error) {
+      message.success("Something Went Wrong");
+    }
+    
+    
   };
+  const { data: driverVehicle } = useDriverVehicleQuery({});
+
+  useEffect(() => {
+    if (driverVehicle?.data?.vehicleResult) {
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id + "," + vehicle.brand
+            }));
+            setVehicleOptions(options);
+        }
+  }, [driverVehicle]);
   const handleImageUpload = (e : any) => {
     const file = e.target.files[0];
 
@@ -112,10 +127,10 @@ const UpdateFuelForm = ({ fuelData }: any) => {
         <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
             <FormSelectField
-              name="vehicle"
+              name="vehicle_id"
               size="large"
               placeholder="Select vehicle"
-              options={vehicleArr}
+              options={vehicleOptions}
             />
           </div>
           <div className="mb-4">

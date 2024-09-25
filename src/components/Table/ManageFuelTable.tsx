@@ -123,7 +123,7 @@ const ManageFuelTable = () => {
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
                   >
-                    <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicle}</td>
+                    <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicleVal}</td>
 
                     <td className="px-2 py-3 text-sm leading-5">
                       {fuel?.vendorName}

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Image from "next/image";
 import { Button, message } from "antd";
 
@@ -9,7 +9,6 @@ import FormSelectField from "@/components/ReusableForms/FormSelectField";
 import FormTextArea from "@/components/ReusableForms/FormTextArea";
 import { useDriverVehicleQuery } from "@/redux/api/driverApi";
 import { useCreateFuelMutation } from "@/redux/api/manageFuelApi";
-import { formatDate, formatDateToRegularDate } from "@/utils/formateDate";
 
 import { SubmitHandler } from "react-hook-form";
 
@@ -25,14 +24,6 @@ type CreateTripValue = {
 };
 
 const AddManageFuel = () => {
-  const vehicleArr = [
-    { label: '1100 [2018 Toyota Prius]', value: '1100 [2018 Toyota Prius]' },
-    { label: '2100 [2016 Ford F-150]', value: '2100 [2016 Ford F-150]' },
-    { label: '3100 [2014 Chevrolet Express Cargo]', value: '3100 [2014 Chevrolet Express Cargo]' },
-    { label: '4100 [2012 Freightliner Cascadia]', value: '4100 [2012 Freightliner Cascadia]' },
-    { label: '5100 [2010 Utility Reefer]', value: '5100 [2010 Utility Reefer]' },
-    { label: '6100 [2017 Hyster H50XM]', value: '6100 [2017 Hyster H50XM]' }
-  ];
   const vendorArr = [
     { label: 'Chevron', value: 'Chevron' },
     { label: 'Shell #4291', value: 'Shell #4291' },
@@ -52,16 +43,23 @@ const AddManageFuel = () => {
     { label: 'Propane', value: 'Propane' },
 
   ]
-  const [selectedDriver, setSelectedDriver] = useState("");
-  const [selectedVehicle, setSelectedVehicle] = useState("");
-
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
   const [createFuel] = useCreateFuelMutation();
+  const { data: driverVehicle } = useDriverVehicleQuery({});
+useEffect(() => {
+    if (driverVehicle?.data?.vehicleResult) {
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id + "," + vehicle.brand
+            }));
+            setVehicleOptions(options);
+        }
+  }, [driverVehicle]);
   const [avater, setAvater] = useState("");
   const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
 
   const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
     // data.status = "UPCOMMING";
-    data.vehicle = data?.vehicle;
     data.vendorName = data?.vendorName;
     data.fuelTyoe = data?.fuelTyoe;
     data.Time = new Date(data?.Time);
@@ -70,8 +68,9 @@ const AddManageFuel = () => {
     data.invoice = data?.invoice;
     data.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
     data.comments = data?.comments;
-    // data.vehicle_id = selectedVehicle;
-    // data.driver_id = selectedDriver;
+    const [vehicle_id, vehicle_val] = data?.vehicle_id.split(',');
+    data.vehicleVal = vehicle_val;
+    data.vehicle_id = vehicle_id;
     const res = await createFuel(data);
 
     if ((res as any)?.data?.statusCode === 200) {
@@ -106,12 +105,6 @@ const AddManageFuel = () => {
 
 
   }
-  function handleSelectDriver(event: any) {
-    setSelectedDriver(event.target.value);
-  }
-  function handleSelectVehicle(event: any) {
-    setSelectedVehicle(event.target.value);
-  }
 
   return (
     <>
@@ -120,10 +113,10 @@ const AddManageFuel = () => {
         <Form submitHandler={onSubmit}>
           <div className="mb-4">
             <FormSelectField
-              name="vehicle"
+              name="vehicle_id"
               size="large"
-              placeholder="Select vehicle"
-              options={vehicleArr}
+              placeholder="Select Vehicle"
+              options={vehicleOptions}
             />
           </div>
           <div className="mb-4">

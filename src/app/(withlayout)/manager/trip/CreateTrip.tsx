@@ -8,7 +8,7 @@ import { useState,useEffect } from "react";
 import { SubmitHandler } from "react-hook-form"; 
 import { useCreateTripMutation } from "@/redux/api/tripApi";
 
-import FormSelectLabelField from "@/components/ReusableForms/FormSelectLabelField";
+import FormSelectField from "@/components/ReusableForms/FormSelectField";
 
 
 type CreateTripValue = {
@@ -49,10 +49,12 @@ const CreateTrip = () => {
     data.passengerCount = parseInt(data?.passengerCount);
     data.tripRent = parseInt(data?.tripRent);
     data.startTime = new Date(data?.startTime);
-    data.vehicleVal = vehicleValue?.label;
-    data.driverVal = driverValue?.label;
-    data.vehicle_id = vehicleValue?.value;
-    data.driver_id = driverValue?.value;
+    const [vehicle_id, vehicle_val] = data?.vehicle_id.split(',');
+    const [driver_id, driver_val] = data?.driver_id.split(',');
+    data.vehicleVal = vehicle_val;
+    data.driverVal = driver_val;
+    data.vehicle_id = vehicle_id;
+    data.driver_id = driver_id;
     const res = await createTrip(data) 
 
     if((res as any)?.data?.statusCode === 200){
@@ -65,14 +67,14 @@ const CreateTrip = () => {
     if (driverVehicle?.data?.driverResult) {
             const options = driverVehicle.data.driverResult.map((driver: { name: any; id:any }) => ({
                 label: driver.name,
-                value: driver.id
+                value: driver.id + "," + driver.name
             }));
             setDriverOptions(options);
     }
     if (driverVehicle?.data?.vehicleResult) {
             const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
                 label: vehicle.brand,
-                value: vehicle.id
+                value: vehicle.id + "," + vehicle.brand
             }));
             setVehicleOptions(options);
         }
@@ -165,21 +167,19 @@ const CreateTrip = () => {
             />
           </div>
           <div className="mb-4">
-            <FormSelectLabelField
+            <FormSelectField
               name="driver_id"
               size="large"
               placeholder="Select Driver"
               options={driverOptions}
-              handleChange={handleDriverChange}
             />
           </div>
           <div className="mb-4">
-            <FormSelectLabelField
+            <FormSelectField
               name="vehicle_id"
               size="large"
               placeholder="Select Vehicle"
               options={vehicleOptions}
-              handleChange={handleVehicleChange}
             />
           </div>
           <Button

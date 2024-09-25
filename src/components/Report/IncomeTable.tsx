@@ -81,15 +81,35 @@ const year = [
 const IncomeReportTableFields = [
   {
     id: 0,
-    fields: "Vehicle Reg.",
+    fields: "Vehicle Maker",
   },
   {
-    id: 11,
-    fields: "Date",
+    id: 1,
+    fields: "Vehicle Model"
+  },
+  {
+    id: 2,
+    fields: "License Plate",
   },
   {
     id: 3,
-    fields: "Income",
+    fields: "Income Type",
+  },
+  {
+    id: 4,
+    fields: "Date",
+  },
+  {
+    id: 5,
+    fields: "Amount",
+  },
+  {
+    id: 6,
+    fields: "Mileage(Km)",
+  },
+  {
+    id: 7,
+    fields: "Operation",
   },
 ];
 
@@ -255,20 +275,23 @@ const IncomeTable = () => {
         page:0,
         total:0
     }})
-  const {data:allpost} = useGetAllOfficeCostQuery(current);
+  const { data: allpost } = useGetAllOfficeCostQuery(current);
+  
   useEffect(() => {
     if (allpost != undefined) {
       setAllPost(allpost.data);
     }
     
   }, [allpost])
+
   useEffect(() => {
     let total = 0;
     allData.data.map((V: any) => {
       total += parseInt(V?.amount);
     })
     setTotalPrice(total);
-  },[allData])
+  }, [allData]);
+  
   return (
     <>
       <Heading>
@@ -328,7 +351,7 @@ const IncomeTable = () => {
               />
             </div>
 
-            <ModalBox btnLabel="Add Office Cost">
+            <ModalBox btnLabel="Add Income Data">
               <AddOfficeCost />
             </ModalBox>
           </div>
