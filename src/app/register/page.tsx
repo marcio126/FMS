@@ -4,6 +4,11 @@ import FormInput from "@/components/ReusableForms/FormInput";
 import { useUserRegisterMutation } from "@/redux/api/authApi";
 import Link from 'next/link';
 import { Button, Tooltip, message } from "antd";
+import {
+  CameraOutlined
+}
+from "@ant-design/icons";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { SubmitHandler } from "react-hook-form";
@@ -25,9 +30,33 @@ export default function LoginPage() {
     const [location, setLocation] = useState("");
     const [email, setEmail] = useState("admin@gmail.com");
     const [password, setPassword] = useState("12345678");
-
+    const [avatar, setAvater] = useState("");
+    const [currentImage, setCurrentImage] = useState(avatar || "https://i.ibb.co/W5QpjZ7/avatar.png");
   const router = useRouter();
+  const handleImageUpload = async (e : any) => {
+        const file = e.target.files[0];
 
+        if (file) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+              setCurrentImage((reader as any)?.result);
+          };
+          reader.readAsDataURL(file);
+      } else {
+          setCurrentImage(currentImage);
+      }
+
+        const imageStoragekey = '68cb5fb5d48334a60f021c30aff06ada'
+        
+        const formData = new FormData()
+        formData.append('image', file)
+        await fetch(`https://api.imgbb.com/1/upload?key=${imageStoragekey}`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+      .then(result => setAvater(result?.data?.display_url))
+    }
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
       try {
           let name = fullname;
@@ -37,7 +66,8 @@ export default function LoginPage() {
               address,
               location,
               email,
-              password
+              password,
+              avatar
           }
           const res = await userRegister(formData);
             if ((res as any).data?.statusCode === 200) {
@@ -50,7 +80,7 @@ export default function LoginPage() {
       message.error("Register unsuccessful");
     }
   };
-
+  
   return (
     <>
       <div className="min-h-screen flex items-stretch text-white ">
@@ -77,18 +107,48 @@ export default function LoginPage() {
                 width: "35%",
                 height: "auto",
                 margin: "auto",
-                marginTop: "5%",
-                marginBottom: "5%",
               }}
             />
 
-            <p className="text-gray-200 text-xl mb-12">
+            <p className="text-gray-200 text-xl mb-8">
               Welcome our Vehicle Managment System Register Page
             </p>
 
             <Form submitHandler={onSubmit}>
-              <div className={`flex flex-col justify-center items-center`}>
-                <div className="w-[60%] ">
+                <div className="w-[60%] mr-auto ml-auto mb-5">
+                  <div className={`flex flex-col justify-center items-center`}>
+                    <div className="flex items-center justify-center">
+                        <div className="w-32 z-1 h-32 bg-red-500 rounded-full relative">
+                          <Image
+                            src={currentImage}
+                            alt='avater'
+                            className="w-full h-full
+                            object-cover rounded-full"
+                            width={0}
+                            height={0}
+                            unoptimized
+                          />
+                          <div className="absolute z-9 right-1  bottom-0 flex justify-center items-center ">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center">
+                              <div className="flex flex-col items-start mt-2">
+                                <label htmlFor="photo" className="flex items-center cursor-pointer bg-blue-200 hover:bg-gray-300 rounded-full p-2">
+                                  <CameraOutlined/>
+                                </label>
+                                <input
+                                  id="photo"
+                                  type="file"
+                                  name="avatar"
+                                  className="hidden" // Hide the input element
+                                  onChange={handleImageUpload}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[60%] mr-auto ml-auto">
                   <FormInput
                     name="fullname"
                     type="text"
@@ -103,7 +163,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <br />
-                <div className="w-[60%] ">
+                <div className="w-[60%] mr-auto ml-auto">
                   <FormInput
                     name="phone"
                     type="tel"
@@ -118,7 +178,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <br />
-                <div className="w-[60%] ">
+                <div className="w-[60%] mr-auto ml-auto">
                   <FormInput
                     name="address"
                     type="text"
@@ -133,7 +193,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <br />
-                <div className="w-[60%] ">
+                <div className="w-[60%] mr-auto ml-auto">
                   <FormInput
                     name="location"
                     type="text"
@@ -148,7 +208,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <br />
-                <div className="w-[60%] ">
+                <div className="w-[60%] mr-auto ml-auto">
                   <FormInput
                     name="email"
                     type="email"
@@ -163,7 +223,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <br />
-                <div className="w-[60%]">
+                <div className="w-[60%] mr-auto ml-auto">
                   <FormInput
                     name="password"
                     type="password"
@@ -178,7 +238,7 @@ export default function LoginPage() {
                   />
                 </div>
                 <br />
-                <div className="w-[60%] ">
+                <div className="w-[60%] mr-auto ml-auto">
                   {" "}
                   <button
                     type="submit"
@@ -188,7 +248,7 @@ export default function LoginPage() {
                     {"Register"}
                   </button>
                 </div>
-                <div className="m-[10px] flex gap-x-2">
+                <div className="w-[60%] mt-4 m-auto flex justify-center gap-x-2">
                     You already have account?
                     <Link href="/login">
                     <Tooltip
@@ -203,8 +263,7 @@ export default function LoginPage() {
                     </Link>
                   
                 </div>
-                
-              </div>
+              
             </Form>
           </div>
         </div>

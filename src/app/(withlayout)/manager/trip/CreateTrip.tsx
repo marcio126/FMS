@@ -80,21 +80,6 @@ const CreateTrip = () => {
         }
   }, [driverVehicle]);
 
-  const handleDriverChange = (value: string, option: any) => {
-    const selected = {
-      label: option.label,
-      value: value
-    };
-    setDriverValue(selected);
-  }
-  const handleVehicleChange = (value: string, option: any) => {
-    const selected = {
-      label: option.label,
-      value: value
-    };
-    setVehicleValue(selected);
-  }
-
 
   return (
     <>

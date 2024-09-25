@@ -118,8 +118,6 @@ const UpdateFuelForm = ({ fuelData }: any) => {
         })
         .then(res => res.json())
         .then(result => setAvater(result?.data?.display_url))
-
-
   }
   return (
     <>

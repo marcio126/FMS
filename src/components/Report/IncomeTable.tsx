@@ -1,18 +1,26 @@
 "use client";
+import { useEffect, useState } from "react";
 
-import AddOfficeCost from "@/app/(withlayout)/manager/office-cost/AddOfficeCost";
-import { Button, MenuProps, Select,Popconfirm,message } from "antd";
+import { 
+  Button, 
+  Select,
+  Popconfirm,
+  Pagination, 
+  PaginationProps,
+  message
+} from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
+
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
-import { useEffect, useState } from "react";
-import { useGetAllOfficeCostQuery } from "@/redux/api/officeCostApi";
-import ViewFuleItem from "../ui/ViewFuelItem";
-import UpdateFuelForm from "../Forms/UpdateFuelForm";
+import { useIncomeAllQuery, useDeleteIncomeMutation } from "@/redux/api/incomeApi";
+import AddIncomeCost from "@/app/(withlayout)/manager/report/AddIncomeCost";
+import ViewIncomeItem from "../ui/ViewIncomeItem";
+import UpdateIncomeForm from "../Forms/UpdateIncomeForm";
 
 const VehicleReg = [
   {
@@ -120,160 +128,6 @@ const IncomeReportTableFields = [
     fields: "Operation",
   },
 ];
-
-const IncomeData = [
-  {
-    ID: 1,
-    VehicleReg: "DHAKA-12345",
-    Date: "01/05/2018",
-    Income: "120000",
-  },
-  {
-    ID: 2,
-    VehicleReg: "CHITTAGONG-67890",
-    Date: "15/11/2017",
-    Income: "80000",
-  },
-  {
-    ID: 3,
-    VehicleReg: "RAJSHAHI-23456",
-    Date: "10/07/2019",
-    Income: "150000",
-  },
-  {
-    ID: 4,
-    VehicleReg: "KHULNA-78901",
-    Date: "28/03/2016",
-    Income: "60000",
-  },
-  {
-    ID: 5,
-    VehicleReg: "SYLHET-34567",
-    Date: "12/09/2022",
-    Income: "175000",
-  },
-  {
-    ID: 6,
-    VehicleReg: "BARISAL-89012",
-    Date: "05/02/2015",
-    Income: "90000",
-  },
-  {
-    ID: 7,
-    VehicleReg: "RANGPUR-45678",
-    Date: "19/04/2018",
-    Income: "130000",
-  },
-  {
-    ID: 8,
-    VehicleReg: "COMILLA-90123",
-    Date: "23/08/2020",
-    Income: "110000",
-  },
-  {
-    ID: 9,
-    VehicleReg: "NARAYANGANJ-56789",
-    Date: "08/06/2017",
-    Income: "70000",
-  },
-  {
-    ID: 10,
-    VehicleReg: "GAZIPUR-01234",
-    Date: "30/12/2026",
-    Income: "200000",
-  },
-  {
-    ID: 11,
-    VehicleReg: "DHAKA-12345",
-    Date: "14/10/2019",
-    Income: "160000",
-  },
-  {
-    ID: 12,
-    VehicleReg: "CHITTAGONG-67890",
-    Date: "03/01/2016",
-    Income: "55000",
-  },
-  {
-    ID: 13,
-    VehicleReg: "RAJSHAHI-23456",
-    Date: "21/07/2024",
-    Income: "190000",
-  },
-  {
-    ID: 14,
-    VehicleReg: "KHULNA-78901",
-    Date: "09/11/2015",
-    Income: "75000",
-  },
-  {
-    ID: 15,
-    VehicleReg: "SYLHET-34567",
-    Date: "18/02/2018",
-    Income: "100000",
-  },
-  {
-    ID: 16,
-    VehicleReg: "BARISAL-89012",
-    Date: "26/05/2021",
-    Income: "145000",
-  },
-  {
-    ID: 17,
-    VehicleReg: "RANGPUR-45678",
-    Date: "07/09/2017",
-    Income: "85000",
-  },
-  {
-    ID: 18,
-    VehicleReg: "COMILLA-90123",
-    Date: "13/04/2016",
-    Income: "60000",
-  },
-  {
-    ID: 19,
-    VehicleReg: "NARAYANGANJ-56789",
-    Date: "29/08/2019",
-    Income: "120000",
-  },
-  {
-    ID: 20,
-    VehicleReg: "GAZIPUR-01234",
-    Date: "04/03/2023",
-    Income: "175000",
-  },
-];
-
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: (
-      <Button
-        type="text"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.aliyun.com"
-      >
-        Edit
-      </Button>
-    ),
-  },
-  {
-    key: "2",
-    label: (
-      <Button
-        danger
-        type="text"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.luohanacademy.com"
-      >
-        Delete
-      </Button>
-    ),
-  },
-];
-
 const IncomeTable = () => {
   const [current, setCurrent] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -282,23 +136,33 @@ const IncomeTable = () => {
         limit:0,
         page:0,
         total:0
-    }})
-  const { data: allpost } = useGetAllOfficeCostQuery(current);
-  
-  useEffect(() => {
-    if (allpost != undefined) {
-      setAllPost(allpost.data);
     }
-    
-  }, [allpost])
+  })
+  const [incomeDelete] = useDeleteIncomeMutation();
+  const { data: income } = useIncomeAllQuery(current);
 
   useEffect(() => {
+    if (income != undefined) {
+      setAllPost(income?.data);
+    }
+  }, [income]);
+  
+  useEffect(() => {
     let total = 0;
-    allData.data.map((V: any) => {
+    income?.data?.data.map((V: any) => {
       total += parseInt(V?.amount);
     })
     setTotalPrice(total);
-  }, [allData]);
+  }, [income]);
+  
+  const onChange: PaginationProps["onChange"] = (page) => {
+    setCurrent(page);
+  };
+
+  const confirm = async (e: any) => {
+    const deleteTrip = await incomeDelete(e);
+    message.success(`  Deleted Sucessfully`);
+  };
   const cancel = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e);
     message.error("Click on No");
@@ -363,7 +227,7 @@ const IncomeTable = () => {
             </div>
 
             <ModalBox btnLabel="Add Income Data">
-              <AddOfficeCost />
+              <AddIncomeCost />
             </ModalBox>
           </div>
           <br />
@@ -382,7 +246,7 @@ const IncomeTable = () => {
             </thead>
 
             <tbody className="dark:text-[#E8E8E8]">
-              {allData.data?.map((V:any, index:number) => (
+              {(income?.data?.data??[]).map((V:any, index:number) => (
                 <tr
                   key={V?.id}
                   className={`${
@@ -390,12 +254,23 @@ const IncomeTable = () => {
                   }  `}
                 >
                   <td className="px-2 py-3 text-sm leading-5">
-                    {V?.cost_name}
+                    {V?.vehicle_maker}
                   </td>
-                  <td className=" px-2 py-3 text-sm leading-5">{V?.createdAt.substring(0,10)}</td>
+                  <td className="px-2 py-3 text-sm leading-5">
+                    {V?.vehicle_model}
+                  </td>
+                  <td className="px-2 py-3 text-sm leading-5">
+                    {V?.license_plate}
+                  </td>
+                  <td className=" px-2 py-3 text-sm leading-5">{V?.income_type}</td>
+                  <td className=" px-2 py-3 text-sm leading-5">{V?.date.substring(0,10)}</td>
+                  <td className="px-2 py-3 text-sm leading-5">
+                    {V?.amount}
+                  </td>
+                  <td className="px-2 py-3 text-sm leading-5">
+                    {V?.mileage}
+                  </td>
 
-                  <td className=" px-2 py-3 text-sm leading-5">{V?.amount}</td>
-                  
                   <td className="px-2 py-3 text-sm leading-5">
                       <div className="flex gap-x-1 justify-center">
                         <ModalBox
@@ -407,7 +282,7 @@ const IncomeTable = () => {
                               </span>
                             }
                           >
-                            <ViewFuleItem viewID={V?.id} ItemType="fuel" />
+                            <ViewIncomeItem viewID={V?.id} ItemType="income" />
                           </ModalBox>
 
                           <ModalBox
@@ -418,7 +293,7 @@ const IncomeTable = () => {
                               </span>
                             }
                           >
-                            <UpdateFuelForm fuelData={V} />
+                            <UpdateIncomeForm incomeData={V} />
                           </ModalBox>
 
 
@@ -452,6 +327,13 @@ const IncomeTable = () => {
               </tr>
             </tfoot>
           </table>
+          <div className="flex justify-center items-center py-8">
+            <Pagination
+              current={current}
+              onChange={onChange}
+              total={allData?.meta?.total }
+            />
+          </div>
         </div>
         {/* table end */}
       </div>
