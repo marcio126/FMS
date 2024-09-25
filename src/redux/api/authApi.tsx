@@ -18,11 +18,28 @@ const authApi = baseApi.injectEndpoints({
         data: registerData,
       }),
       invalidatesTags: [tagTypes.user],
-    })
+    }),
+    getProfile: build.query({
+      query: (id) => ({
+        url: `/auth/single/${id}`,
+        method: "GET", 
+      }), 
+      providesTags: [tagTypes.user],
+    }),
+    profileUpdate: build.mutation({
+      query: ({id, ...data}) => ({
+        url: `/auth/profileUpdate/${id}`,
+        method: "PATCH",
+        data: data,
+      }),
+      invalidatesTags: [tagTypes.user],
+    }),
   }),
 });
 
 export const {
   useUserLoginMutation,
-  useUserRegisterMutation
+  useUserRegisterMutation,
+  useProfileUpdateMutation,
+  useGetProfileQuery
 } = authApi;

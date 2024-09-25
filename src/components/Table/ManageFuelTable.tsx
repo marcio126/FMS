@@ -1,5 +1,4 @@
 "use client";
-import CreateTrip from "@/app/(withlayout)/manager/trip/CreateTrip";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -18,14 +17,15 @@ import { useEffect, useState } from "react";
 import UpdateFuelForm from "../Forms/UpdateFuelForm";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
-import { manageFuelFields, tripFields } from "./StaticTableData";
+import { manageFuelFields } from "./StaticTableData";
 import {useDeleteFuelMutation} from "@/redux/api/manageFuelApi";
 import { useGetManageFuelQuery } from "@/redux/api/manageFuelApi";
 import AddManageFuel from "@/app/(withlayout)/manager/manageFuel/AddManageFuel";
 import ViewFuleItem from "../ui/ViewFuelItem";
 
 const ManageFuelTable = () => {
-  const [fuelDelete] = useDeleteFuelMutation();
+  const [current, setCurrent] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const [fuels, setFuels] = useState({
     data:[],
     meta:{
@@ -33,8 +33,19 @@ const ManageFuelTable = () => {
         page:0,
         total:0
     }
-  })
+  });
+  const [fuelDelete] = useDeleteFuelMutation();
+  const {data:manageFuels} = useGetManageFuelQuery(current)
 
+  useEffect(() => {
+    if (manageFuels != undefined) {
+      setFuels(manageFuels.data)
+    }
+  }, [manageFuels]);
+
+  const onChange: PaginationProps["onChange"] = (page) => {
+    setCurrent(page);
+  };
   const confirm = async (e: any) => {
     const deleteTrip = await fuelDelete(e);
     message.success(`  Deleted Sucessfully`);
@@ -44,26 +55,6 @@ const ManageFuelTable = () => {
     console.log(e);
     message.error("Click on No");
   };
-
-  const [current, setCurrent] = useState(1);
-  const [vehicleData, setVehicleData] = useState(null);
-  const [isFetching, setIsFetching] = useState(false);
-
-  const onChange: PaginationProps["onChange"] = (page) => {
-    setCurrent(page);
-  };
-
-  const {data:manageFuels} = useGetManageFuelQuery(current)
-   
-  useEffect(() => {
-    if (manageFuels != undefined) {
-        setFuels(manageFuels.data)
-    }
-}, [manageFuels])
-
-  //searching code
-  const [searchTerm, setSearchTerm] = useState("");
-
   return (
     <>
       <Heading>

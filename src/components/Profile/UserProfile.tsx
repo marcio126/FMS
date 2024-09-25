@@ -1,5 +1,4 @@
 "use client";
-import profile from "@/assets/profile.png";
 import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
 import {
@@ -13,11 +12,19 @@ import {
   UserAddOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Button, Divider, Menu } from "antd";
+import { Button, Divider, Menu, message } from "antd";
 import Image from "next/image";
-import React, { useState } from "react";
-type MenuItem = Required<MenuProps>["items"][number];
+import React, { useState,useEffect, SetStateAction } from "react";
+import { SubmitHandler } from "react-hook-form";
+import { useGetProfileQuery,useProfileUpdateMutation } from "@/redux/api/authApi";
+import { getTokenFromKey } from "@/services/auth.service";
 
+type MenuItem = Required<MenuProps>["items"][number];
+type FormValues = {
+  id: string;
+  password: string;
+  
+};
 function getItem(
   label: React.ReactNode,
   key: React.Key,
@@ -39,38 +46,108 @@ const items: MenuProps["items"] = [
   getItem("Social Profile", "social-profile", <UserAddOutlined />),
 ];
 
-const UserProfile = () => {
+const UserProfile = ()  => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(
     "edit-profile"
   );
+  const [profileUpdate] = useProfileUpdateMutation();
+    const userInfo = getTokenFromKey();
+    const { data: getProfile } = useGetProfileQuery(userInfo?.id);
+  const [userProfile, setUserProfile] = useState<any>({});
+  const [fullname, setFullName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
+  const [location, setLocation] = useState("");
+  const [avatar, setAvater] = useState("");
+  const [currentImage, setCurrentImage] = useState(avatar || "https://i.ibb.co/W5QpjZ7/avatar.png");
+    useEffect(() => {
+    if (getProfile != undefined) {
+      setUserProfile(getProfile.data);
+      setAvater(getProfile.data.avatar); // Set the avatar state
+      setCurrentImage(getProfile.data.avatar); // Set the currentImage state
+      }
+    }, [getProfile]);
+  const handleImageUpload = (e : any) => {
+      const file = e.target.files[0];
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setCurrentImage((reader as any)?.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        setCurrentImage(currentImage);
+    }
+
+      const imageStoragekey = '68cb5fb5d48334a60f021c30aff06ada'
+      
+      const formData = new FormData()
+      formData.append('image', file)
+      fetch(`https://api.imgbb.com/1/upload?key=${imageStoragekey}`, {
+          method: 'POST',
+          body: formData
+      })
+      .then(res => res.json())
+    .then(result => setAvater(result?.data?.display_url))
+  }
+  const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
+    try {
+      data.name = fullname != "" ? fullname : data.name;
+      data.phone = phone != "" ? phone : data.phone;
+      data.address = address != "" ? address : data.address;
+      data.location = location != "" ? location : data.location;
+      data.avatar = avatar;
+      let id = data.id;
+      console.log(data);
+      const res = await profileUpdate({id, ...data});
+        if ((res as any).data?.statusCode === 200) {
+        message.success("User Profile Update successful");
+        } else {
+        message.error("Something went wrong");
+        }
+    } catch (err: any) {
+      message.error("Update profile unsuccessful");
+    }
   };
   return (
     <div>
       <h1 className="text-2xl font-bold text-textColor">My Profile</h1>
-      <div className="flex flex-col md:flex-row gap-4 mt-6">
+        <Form  submitHandler={onSubmit} defaultValues = {userProfile}>
+        <div className="flex flex-col md:flex-row gap-4 mt-6">
         <div className="bg-white dark:bg-[#00334E] w-full md:w-72 px-4 py-8 rounded">
           <div className="flex items-center justify-center">
-            <div className="w-32 h-32 bg-red-500 rounded-full relative">
-              <Image src={profile} alt="profile" className="" />
-              <div className="absolute right-1  bottom-0 flex justify-center items-center ">
+            <div className="w-32 z-1 h-32 bg-red-500 rounded-full relative">
+              <Image
+                src={currentImage}
+                alt='avater'
+                className="w-full h-full
+                object-cover rounded-full"
+                width={0}
+                height={0}
+                unoptimized
+              />
+              <div className="absolute z-9 right-1  bottom-0 flex justify-center items-center ">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center">
-                  <Button
-                    title="Upload Photo"
-                    shape="circle"
-                    type="primary"
-                    icon={<CameraOutlined />}
-                    className="bg-blue-400 ring-2  ring-white text-center"
+                  <div className="flex flex-col items-start mt-2">
+                  <label htmlFor="photo" className="flex items-center cursor-pointer bg-blue-200 hover:bg-gray-300 rounded-full p-2">
+                    <CameraOutlined/>
+                  </label>
+                  <input
+                    id="photo"
+                    type="file"
+                    name="avatar"
+                    className="hidden" // Hide the input element
+                    onChange={handleImageUpload}
                   />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="text-center my-6 dark:text-[#EFEFEF]">
-            <h1 className="text-lg font-semibold ">Nisharga Kabir</h1>
-            <p className="font-light">Part Time Manager</p>
+            <h1 className="text-lg font-semibold ">{userProfile.name}</h1>
+            <p className="font-light">{userProfile.phone}</p>
           </div>
           <Divider style={{ backgroundColor: "#eee" }} />
           <div>
@@ -85,7 +162,6 @@ const UserProfile = () => {
             />
           </div>
         </div>
-
         <div className="bg-white dark:bg-[#00334E]  w-full md:flex-1 px-4 py-8 rounded">
           {selectedMenuItem === "edit-profile" && (
             <div className="dark:text-[#EFEFEF]">
@@ -94,36 +170,38 @@ const UserProfile = () => {
               <Divider style={{ backgroundColor: "#eee" }} />
 
               <div className="w-full md:w-3/5 md:mx-auto">
-                <Form submitHandler={onSubmit}>
+                
                   <div className="space-y-4">
                     <div>
                       <FormInput
-                        name="name"
-                        type="text"
-                        size="large"
-                        label="Name"
-                        placeholder="Your Name"
-                        prefix={<UserAddOutlined />}
-                      />
-                    </div>
-                    <div>
-                      <FormInput
-                        name="email"
-                        type="email"
-                        size="large"
-                        label="Email"
-                        placeholder="Your Email (abc@gmail.com)"
-                        prefix={<MailFilled />}
-                      />
+                      name="name"
+                      type="text"
+                      label="Name"
+                      size="large"
+                      placeholder="Full Name"
+                      value={fullname}
+                      prefix={<UserAddOutlined />}
+                      onChange={(e: {
+                        target: { value: SetStateAction<string> };
+                      }) => {
+                        return setFullName(e.target.value);
+                      }}
+                  />
                     </div>
                     <div>
                       <FormInput
                         name="phone"
-                        type="text"
+                        type="tel"
                         size="large"
                         label="Phone Number"
                         placeholder="Phone Number (+880 ...)"
                         prefix={<PhoneOutlined />}
+                        value={phone}
+                        onChange={(e: {
+                          target: { value: SetStateAction<string> };
+                        }) => {
+                          return setPhone(e.target.value);
+                        }}
                       />
                     </div>
                     <div>
@@ -132,20 +210,40 @@ const UserProfile = () => {
                         type="text"
                         size="large"
                         label="Address"
-                        placeholder="Your Address"
+                        placeholder="address"
+                        value={address}
                         prefix={<EnvironmentOutlined />}
+                        onChange={(e: {
+                          target: { value: SetStateAction<string> };
+                        }) => {
+                          return setAddress(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <FormInput
+                        name="location"
+                        type="text"
+                        size="large"
+                        label="Location"
+                        placeholder="Location"
+                        prefix={<EnvironmentOutlined />}
+                        value={location}
+                        onChange={(e: {
+                          target: { value: SetStateAction<string> };
+                        }) => {
+                          return setLocation(e.target.value);
+                        }}
                       />
                     </div>
                   </div>
-                  <Button
-                    shape="default"
-                    type="primary"
-                    htmlType="submit"
-                    className="bg-[#003343] text-[#eee] dark:bg-gray-100 dark:text-[#00334E] mt-3"
+                  <button
+                    type="submit"
+                  className="uppercase block w-full rounded-lg !bg-[#003343] text-[#eee]  hover:!bg-gray-200 hover:!text-sky-600 transition-0.3s py-1
+                  focus:outline-none dark:bg-gray-100 dark:text-[#00334E] mt-3"
                   >
                     Update Profile
-                  </Button>
-                </Form>
+                  </button>
               </div>
             </div>
           )}
@@ -196,8 +294,9 @@ const UserProfile = () => {
               </div>
             </div>
           )}
-        </div>
       </div>
+      </div>
+      </Form>
     </div>
   );
 };
