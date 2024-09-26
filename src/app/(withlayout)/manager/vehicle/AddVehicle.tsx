@@ -16,7 +16,6 @@ type AddVehicleValues = {
 const AddVehicle = () => {
   const [createVehicle] = useCreateVehicleMutation();
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
-    debugger;
     const vehicleName = data.VehicleName;
     const vin_sn = data.VIN;
     const brand = data.brand;
