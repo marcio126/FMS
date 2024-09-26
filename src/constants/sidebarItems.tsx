@@ -105,9 +105,9 @@ export const sidebarItems = (role: string) => {
           key: `/${role}/vehicleType`,
         },
         {
-          label: <Link href={`/${role}/vehicle_inspection`}>Vehicle Inspection</Link>,
+          label: <Link href={`/${role}/vehicleInspection`}>Vehicle Inspection</Link>,
           icon: <BarChartOutlined />,
-          key: `/${role}/vehicle_inspection`,
+          key: `/${role}/vehicleInspection`,
         },
         {
           label: <Link href={`/${role}/vehicle_track`}>Vehicle Track</Link>,

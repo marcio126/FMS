@@ -28,6 +28,32 @@ export const vehiclesFields = [
     fields: "Actions",
   },
 ];
+export const VehicleInspectionListTableFields = [
+  {
+    id: 0,
+    fields: "Vehicle",
+  },
+  {
+    id: 1,
+    fields: "Review_by",
+  },
+  {
+    id: 2,
+    fields: "Reg_Number",
+  },
+  {
+    id: 3,
+    fields: "Failed_items",
+  },
+  {
+    id: 4,
+    fields: "Duration(h)",
+  },
+  {
+    id: 5,
+    fields: "Operation",
+  },
+]
 export const VehicleTypeListTableFields = [
   {
     id: 0,
