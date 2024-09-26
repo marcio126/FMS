@@ -147,7 +147,7 @@ const AddDriver = () => {
             >
             <div className="w-2/5">
                 <label className="label">
-                    <span className="label-text text-gray-600 font-semibold">Profile Image</span>
+                    <span className="label-text text-gray-600 font-semibold">Driver Image</span>
                 </label>
                 <div className="w-12 h-12 rounded-full">
                 <Image
@@ -161,13 +161,12 @@ const AddDriver = () => {
                     />
                 </div>
             </div> 
-
-                <input
-                    type="file"
-                    placeholder="Image"
-                    className="input input-bordered input-warning w-full max-w-x mt-2"
-                  onChange= {handleImageUpload}
-                />
+            <input
+                type="file"
+                placeholder="Image"
+                className="input input-bordered input-warning w-full max-w-x mt-2"
+              onChange= {handleImageUpload}
+            />
           </div>
         </div>
                              

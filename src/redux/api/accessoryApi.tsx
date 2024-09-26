@@ -13,7 +13,7 @@ const accessoryApi = baseApi.injectEndpoints({
           }),
           getSingleAccessory: build.query({
             query: (id) => ({
-              url: `/accessory/${id}`,
+              url: `/accessory/single/${id}`,
               method: "GET", 
             }),
             providesTags: [tagTypes.vehicle],
@@ -28,7 +28,7 @@ const accessoryApi = baseApi.injectEndpoints({
           }),
           updateAccessory: build.mutation({
             query: ({id, ...updatedData}) => ({
-              url: `/accessory/${id}`,
+              url: `/accessory/update/${id}`,
               method: "PATCH", 
               body: updatedData,
             }),

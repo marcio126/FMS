@@ -78,7 +78,7 @@ const handleImageUpload = (e : any) => {
   const [updateDriver] = useUpdateDriverMutation();
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
     data.id = id;
-    data.avatar = avater ?avater : "https://i.ibb.co/SRF75vM/avatar.png";;
+    data.avatar = avater?avater : "https://i.ibb.co/SRF75vM/avatar.png";
     data.experience = parseInt(data.experience);
     data.score = parseInt(data.score);
     data.trans_distance = parseFloat(data.trans_distance);

@@ -17,9 +17,8 @@ import {
 } from "@/redux/api/driverApi";
 import { Button, Pagination, Popconfirm, message } from "antd";
 import { useState } from "react";
-import UpdateDriverForm from "../Forms/UpdateDriverForm";
 import Heading from "../ui/Heading";
-import ViewItem from "../ui/ViewItem";
+import UpdateDriverForm from "../Forms/UpdateDriverForm";
 import ViewItemDriver from "../ui/ViewItemDriver";
 import StarRating from "../ui/StarRating";
 
