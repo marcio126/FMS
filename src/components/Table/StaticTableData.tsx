@@ -28,7 +28,32 @@ export const vehiclesFields = [
     fields: "Actions",
   },
 ];
-
+export const VehicleTypeListTableFields = [
+  {
+    id: 0,
+    fields: "ICON",
+  },
+  {
+    id: 1,
+    fields: "Type",
+  },
+  {
+    id: 2,
+    fields: "Display Name",
+  },
+  {
+    id: 3,
+    fields: "Seats",
+  },
+  {
+    id: 4,
+    fields: "Enable",
+  },
+  {
+    id: 5,
+    fields: "Operation",
+  },
+]
 export const tripCostFields = [
   {
     id: 1,
