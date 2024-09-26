@@ -89,7 +89,8 @@ const UserProfile = ()  => {
           body: formData
       })
       .then(res => res.json())
-    .then(result => setAvater(result?.data?.display_url))
+    .then(result => setAvater(result?.data?.display_url));
+    message.success("Changed Profile Photo");
   }
   const onSubmit: SubmitHandler<FormValues> = async (data: any) => {
     try {
@@ -97,9 +98,8 @@ const UserProfile = ()  => {
       data.phone = phone != "" ? phone : data.phone;
       data.address = address != "" ? address : data.address;
       data.location = location != "" ? location : data.location;
-      data.avatar = avatar;
+      data.avatar = avatar !="" ? avatar :data.avatar;
       let id = data.id;
-      console.log(data);
       const res = await profileUpdate({id, ...data});
         if ((res as any).data?.statusCode === 200) {
         message.success("User Profile Update successful");
@@ -147,7 +147,7 @@ const UserProfile = ()  => {
           </div>
           <div className="text-center my-6 dark:text-[#EFEFEF]">
             <h1 className="text-lg font-semibold ">{userProfile.name}</h1>
-            <p className="font-light">{userProfile.phone}</p>
+            <p className="font-light">{userProfile.email}</p>
           </div>
           <Divider style={{ backgroundColor: "#eee" }} />
           <div>
