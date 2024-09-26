@@ -294,7 +294,70 @@ export const InventoryListTableFields = [
     fields: "Quantity",
   },
 ];
-
+export const UserListTableFields =[
+  {
+    id: 0,
+    fields: "Photo",
+  },
+  {
+    id: 1,
+    fields: "Name",
+  },
+  {
+    id: 2,
+    fields: "Email",
+  },
+  {
+    id: 3,
+    fields: "Phone",
+  },
+  {
+    id: 4,
+    fields: "Address",
+  },
+  {
+    id: 5,
+    fields: "Location",
+  },
+  {
+    id: 6,
+    fields: "Operation",
+  },
+]
+export const CustomerListTableFields = [
+  {
+    id: 0,
+    fields: "Photo",
+  },
+  {
+    id: 1,
+    fields: "Name",
+  },
+  {
+    id: 2,
+    fields: "Email",
+  },
+  {
+    id: 3,
+    fields: "Phone",
+  },
+  {
+    id: 4,
+    fields: "Gender",
+  },
+  {
+    id: 5,
+    fields: "Address",
+  },
+  {
+    id: 6,
+    fields: "Score",
+  },
+  {
+    id: 7,
+    fields: "Operation",
+  },
+]
 export const DriverListTableFields = [
   {
     id: 0,

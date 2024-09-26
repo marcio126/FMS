@@ -8,7 +8,7 @@ const page = () => {
     <>
       <div className="flex justify-between">
         <h3 className="mb-4 flex justify-center text-xl md:text-3xl text-secondary">
-          User List
+          Manager List
         </h3>
         
       </div>

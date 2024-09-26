@@ -11,7 +11,8 @@ export enum tagTypes {
   inventory = 'inventory',
   manageRequest = 'manageRequest',
   manageFuel = 'manageFuel',
-  income = "income"
+  income = "income",
+  customer = "customer"
 }
 
 export const tagTypesList = [
@@ -27,5 +28,6 @@ export const tagTypesList = [
   tagTypes.inventory,
   tagTypes.manageRequest,
   tagTypes.manageFuel,
-  tagTypes.income
+  tagTypes.income,
+  tagTypes.customer
 ];

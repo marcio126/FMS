@@ -1,80 +1,61 @@
 "use client";
 import {
   DeleteOutlined,
-  DownloadOutlined,
-  EditOutlined,
-  EyeOutlined,
+  SearchOutlined
 } from "@ant-design/icons";
-import { Image } from "antd";
+import { Button,Image,PaginationProps,Pagination,Input,message,Popconfirm } from "antd";
 import ModalBox from "../ModalBox/ModalBox";
-import Pagination from "../ui/Pagination";
-import { DriverListTableFields, vehicleDriversList } from "./StaticTableData";
-
-import AddUser from "@/app/(withlayout)/manager/user/AddUser";
-import { Button, message, Popconfirm } from "antd";
-import UpdateDriverForm from "../Forms/UpdateDriverForm";
-import ViewItem from "../ui/ViewItem";
+import { UserListTableFields } from "./StaticTableData";
+import {
+  useGetAllQuery,
+  useUserDeleteMutation
+} from "@/redux/api/authApi";
+import { useState } from "react";
 
 const UserListTable = () => {
-  const confirm = (e: any) => {
-    console.log(e);
-    message.success(`${e} Deleted Sucessfully`);
+  const [current, setCurrent] = useState(1);
+  const [deleteUser] = useUserDeleteMutation();
+
+  const onChange: PaginationProps["onChange"] = (page) => {
+      setCurrent(page);
+    };
+  const { data: allUser } = useGetAllQuery(current);
+  console.log(allUser);
+  const confirm = async (e: any) => {
+    const res = await deleteUser(e);
+    console.log("🚀 ~ confirm ~ res:", res);
+    message.success(`Deleted Sucessfully`);
   };
 
   const cancel = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e);
     message.error("Click on No");
   };
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <>
       {/* table start */}
       <div className="overflow-x-auto rounded-lg">
         <div className="align-middle inline-block min-w-full shadow overflow-hidden bg-white   px-8 pt-3 rounded-bl-lg rounded-br-lg py-10">
           <div className="pb-3 flex justify-between">
-            <div className="inline-flex border rounded w-7/12 px-2 lg:px-6 h-10 bg-transparent">
-              <div className="flex flex-wrap items-stretch w-full h-full mb-6 relative">
-                <div className="flex">
-                  <span className="flex items-center leading-normal bg-transparent rounded rounded-r-none border border-r-0 border-none lg:px-3 py-2   text-grey-dark text-sm">
-                    <svg
-                      width="18"
-                      height="18"
-                      className="w-4 lg:w-auto"
-                      viewBox="0 0 18 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M8.11086 15.2217C12.0381 15.2217 15.2217 12.0381 15.2217 8.11086C15.2217 4.18364 12.0381 1 8.11086 1C4.18364 1 1 4.18364 1 8.11086C1 12.0381 4.18364 15.2217 8.11086 15.2217Z"
-                        stroke="#455A64"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M16.9993 16.9993L13.1328 13.1328"
-                        stroke="#455A64"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <input
+            <div className=" max-w-[80%]">
+                <Input
                   type="text"
-                  className="flex-shrink flex-grow flex-auto leading-normal tracking-wide w-px border border-none border-l-0 rounded rounded-l-none px-3 relative focus:outline-none text-xxs lg:text-xs text-gray-500 font-thin"
-                  placeholder={`Search Through ${DriverListTableFields?.length} Driver`}
+                  size="large"
+                  prefix={<SearchOutlined />}
+                  placeholder={`Search Through Manager`}
+                   onChange={(event) => {
+                  setSearchTerm(event?.target?.value);
+                }}
                 />
-              </div>
             </div>
-
-            <ModalBox btnLabel="Add User">
-              <AddUser />
-            </ModalBox>
           </div>
 
           <table className="min-w-full">
             <thead className="bg-gray-50 rounded-2xl">
               <tr className="">
-                {DriverListTableFields?.map((DriverListTableField) => (
+                {UserListTableFields?.map((DriverListTableField) => (
                   <th
                     key={DriverListTableField?.id}
                     className=" px-2 py-3 text-left text-black"
@@ -86,80 +67,54 @@ const UserListTable = () => {
             </thead>
 
             <tbody className="">
-              {vehicleDriversList?.map((vehicleDriver, index) => (
+              {((allUser as any)?.data.data ?? [])?.filter((V: any) => {
+                if (searchTerm == "") {
+                  return V;
+                } else if (
+                  V?.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+                ) {
+                  return V;
+                }
+              })?.map(
+                (user: any, index: any) => (
                 <tr
-                  key={vehicleDriver?.email}
+                  key={user?.id}
                   className={`${index % 2 === 0 ? "" : "bg-gray-50"}  `}
                 >
                   <td className="px-2">
                     <Image
                       className="rounded-full"
                       width={30}
-                      src={vehicleDriver?.avatar}
+                      src={user?.avatar}
                       alt="..."
                     />
                   </td>
-                  <td className=" px-2 py-3 -space-y-1">
-                    <p className="text-sm font-bold">{vehicleDriver?.name}</p>
-                    <p className="text-[8] text-textColor italic">
-                      {vehicleDriver?.email}
-                    </p>
-                  </td>
-
-                  <td className="px-2 py-3 text-sm leading-5">
-                    {vehicleDriver?.phone}
+                   <td className="px-2 py-3 text-sm leading-5">
+                    {user?.name}
                   </td>
                   <td className="px-2 py-3 text-sm leading-5">
-                    {vehicleDriver?.joinDate}
+                    {user?.email}
                   </td>
                   <td className="px-2 py-3 text-sm leading-5">
-                    {vehicleDriver?.experience}
+                    {user?.phone}
                   </td>
                   <td className="px-2 py-3 text-sm leading-5">
-                    {vehicleDriver?.nidNumber}
+                    {user?.address}
                   </td>
                   <td className="px-2 py-3 text-sm leading-5">
-                    <Button
-                      style={{
-                        backgroundColor: "#00334E",
-                        color: "#eee",
-                      }}
-                      icon={<DownloadOutlined />}
-                    >
-                      {vehicleDriver?.document}
-                    </Button>
+                    {user?.location}
                   </td>
-
                   <td className="px-2 py-3 text-sm leading-5">
-                    <div className="flex gap-x-1">
-                      <ModalBox
-                        btnLabel={
-                          <span className="item justify-center items-center">
-                            <EyeOutlined />
-                          </span>
-                        }
-                      >
-                        <ViewItem viewID={vehicleDriver?.name} />
-                      </ModalBox>
-
-                      <ModalBox
-                        btnLabel={
-                          <span className="item justify-center items-center">
-                            {" "}
-                            <EditOutlined />
-                          </span>
-                        }
-                      >
-                        <UpdateDriverForm driverData={vehicleDriver} />
-                      </ModalBox>
-
                       <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={() => confirm(vehicleDriver?.name)}
+                        onConfirm={() => confirm(user?.id)}
                         onCancel={() => cancel}
                         okText="Yes"
                         cancelText="No"
+                        okType="danger"
                       >
                         <Button danger>
                           <span className="item justify-center items-center">
@@ -168,7 +123,6 @@ const UserListTable = () => {
                           </span>
                         </Button>
                       </Popconfirm>
-                    </div>
                   </td>
                 </tr>
               ))}
@@ -176,7 +130,11 @@ const UserListTable = () => {
           </table>
 
           <div className="flex justify-center my-4  mx-auto">
-            <Pagination />
+            <Pagination
+              current={current}
+              onChange={onChange}
+              total={allUser?.data?.meta?.total | 30}
+            />
           </div>
         </div>
         {/* table end */}
