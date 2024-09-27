@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, message } from "antd";
 import { SubmitHandler } from "react-hook-form";
 import Form from "../ReusableForms/Form";
 import FormInput from "../ReusableForms/FormInput";
 import { useUpdateVehicleInspectionMutation } from "@/redux/api/vehicleInspectionApi";
+import { useDriverVehicleQuery } from '@/redux/api/driverApi';
+import FormSelectField from '../ReusableForms/FormSelectField';
 
 type AddVehicleInspectionValues = {
   vehicle: string;
@@ -22,10 +24,23 @@ const UpdateVehicleInspectionForm = ({ vehicleInspectionData }: any) => {
     failed_items: failed_items,
     duration: duration,
   };
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+    const { data: driverVehicle } = useDriverVehicleQuery({});
+useEffect(() => {
+    if (driverVehicle?.data?.vehicleResult) {
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id + "," + vehicle.brand
+            }));
+            setVehicleOptions(options);
+        }
+  }, [driverVehicle]);
   const [updateVehicleInspection] = useUpdateVehicleInspectionMutation();
   const onSubmit: SubmitHandler<AddVehicleInspectionValues> = async (data: any) => {
     data.id = id;
     data.reg_number = parseInt(data.reg_number);
+    const [vehicle_id, vehicle_val] = data?.vehicle.split(',');
+    data.vehicle = vehicle_val;
     try {
       const res = await updateVehicleInspection({id, ...data });
       if ((res as any)?.data?.statusCode === 200) {
@@ -40,7 +55,12 @@ const UpdateVehicleInspectionForm = ({ vehicleInspectionData }: any) => {
       <div className="mx-auto overflow-y-scroll p-5">
         <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
-          <FormInput name="vehicle" type="text" placeholder="Vehicle Name" />
+          <FormSelectField
+              name="vehicle"
+              size="large"
+              placeholder="Select Vehicle"
+              options={vehicleOptions}
+            />
         </div>
         <div className="mb-4">
           <FormInput name="review_by" type="text" placeholder="Review By" />

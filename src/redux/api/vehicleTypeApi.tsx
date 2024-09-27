@@ -41,6 +41,13 @@ const vehicleTypeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.vehicleType],
     }),
+    vehicleType: build.query({
+      query: () => ({
+        url: `/vehicletype/list`,
+        method: "GET",
+      }), 
+      providesTags: [tagTypes.vehicleType],
+    }),
   }),
 });
 
@@ -49,5 +56,6 @@ export const {
     useGetSingleVehicleTypeQuery,
     useCreateVehicleTypeMutation,
     useUpdateVehicleTypeMutation,
-    useDeleteVehicleTypeMutation
+    useDeleteVehicleTypeMutation,
+    useVehicleTypeQuery
 } = vehicleTypeApi;

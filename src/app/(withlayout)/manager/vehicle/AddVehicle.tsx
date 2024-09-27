@@ -2,9 +2,12 @@
 
 import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
+import FormSelectField from "@/components/ReusableForms/FormSelectField";
 import { useCreateVehicleMutation } from "@/redux/api/vehecleApi";
+import { useVehicleTypeQuery } from "@/redux/api/vehicleTypeApi";
 import { formatDate } from "@/utils/formateDate";
 import { Button, message } from "antd";
+import { useEffect, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 type AddVehicleValues = {
   license: string;
@@ -14,6 +17,18 @@ type AddVehicleValues = {
   seatCapacity: string;
 };
 const AddVehicle = () => {
+  const { data: allVehicleType } = useVehicleTypeQuery({});
+  const [vehicleTypeOptions, setVehicleTypeOptions] = useState<{ label: string; value: string }[]>([]);
+
+  useEffect(() => {
+    if (allVehicleType?.data) {
+            const options = allVehicleType.data.map((vehicletype: { display_name: any  }) => ({
+                label: vehicletype.display_name,
+                value: vehicletype.display_name
+            }));
+            setVehicleTypeOptions(options);
+        }
+  }, [allVehicleType]);
   const [createVehicle] = useCreateVehicleMutation();
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
     const vehicleName = data.VehicleName;
@@ -99,47 +114,15 @@ const AddVehicle = () => {
               placeholder="Registration Date"
             />
           </div>
+
           <div className="mb-4 flex justify-between">
             <span className="p-1">Vehicle Type:</span>
-
-            <div className="flex">
-              <FormInput
-                name="vehicleType"
-                type="radio"
-                size="large"
-                value="AC"
-                id="ac"
-              />
-              <label htmlFor="ac" className="p-1">
-                Ac
-              </label>
-            </div>
-
-            <div className="flex">
-              <FormInput
-                name="vehicleType"
-                type="radio"
-                size="large"
-                value="NonAC"
-                id="nonac"
-              />
-              <label htmlFor="nonac" className="p-1">
-                NonAC
-              </label>
-            </div>
-
-            <div className="flex">
-              <FormInput
-                name="vehicleType"
-                type="radio"
-                size="large"
-                value="SlippingBus"
-                id="slippingbus"
-              />
-              <label htmlFor="slippingbus" className="p-1">
-                Slipping
-              </label>
-            </div>
+            <FormSelectField
+              name="vehicleType"
+              size="large"
+              placeholder="Select Vehicle Type"
+              options={vehicleTypeOptions}
+            />
           </div>
 
           <div className="mb-4 flex justify-between gap-1">

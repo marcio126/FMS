@@ -569,11 +569,15 @@ export const tripFields = [
   },
   {
     id: 3,
-    fields: "Passenger Name",
+    fields: "Customer Name",
   },
   {
     id: 4,
-    fields: "Passenger Phone",
+    fields: "Contact Phone",
+  },
+  {
+    id: 12,
+    fields: "Payment",
   },
   {
     id: 5,
@@ -585,7 +589,7 @@ export const tripFields = [
   },
   {
     id: 7,
-    fields: "Trip Rent",
+    fields: "Trip Rent($)",
   }, {
     id: 8,
     fields: "Driver",
@@ -605,42 +609,46 @@ export const tripFields = [
 export const manageFuelFields = [
   {
     id: 0,
-    fields: "Vehicle Reference",
-  },
-  {
-    id: 1,
-    fields: "Vendor Name",
-  },
-  {
-    id: 2,
-    fields: "Fuel Type",
-  },
-  {
-    id: 3,
-    fields: "Time",
-  },
-  {
-    id: 4,
-    fields: "Gallons",
-  },
-  {
-    id: 5,
-    fields: "Price",
-  },
-  {
-    id: 6,
-    fields: "Invoice",
-  },
-  {
-    id: 7,
     fields: "Photo",
   },
   {
+    id: 1,
+    fields: "Vehicle Reference",
+  },
+  {
+    id: 2,
+    fields: "Vendor Name",
+  },
+  {
+    id: 3,
+    fields: "Fuel Type",
+  },
+  {
+    id: 4,
+    fields: "Time",
+  },
+  {
+    id: 5,
+    fields: "QTY(Gallons)",
+  },
+  {
+    id: 6,
+    fields: "Price",
+  },
+  {
+    id: 7,
+    fields: "Start Meter",
+  },
+  {
     id: 8,
-    fields: "Comments",
+    fields: "State/Province",
   },
   {
     id: 9,
+    fields: "Consumption",
+  },
+  {
+    id: 10,
     fields: "Actions",
   },
 ];

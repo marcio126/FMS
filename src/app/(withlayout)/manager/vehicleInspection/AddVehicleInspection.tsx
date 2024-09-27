@@ -6,6 +6,9 @@ import { useCreateVehicleInspectionMutation } from "@/redux/api/vehicleInspectio
 import { Button } from "antd";
 import { SubmitHandler } from "react-hook-form";
 import { message } from "antd";
+import { useEffect, useState } from "react";
+import { useDriverVehicleQuery } from "@/redux/api/driverApi";
+import FormSelectField from "@/components/ReusableForms/FormSelectField";
 
 type AddVehicleInspectionValues = {
   vehicle: string;
@@ -15,9 +18,21 @@ type AddVehicleInspectionValues = {
   duration: string;
 };
 const AddVehicleInspection = () => {
-  
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+    const { data: driverVehicle } = useDriverVehicleQuery({});
+useEffect(() => {
+    if (driverVehicle?.data?.vehicleResult) {
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id + "," + vehicle.brand
+            }));
+            setVehicleOptions(options);
+        }
+  }, [driverVehicle]);
   const [addVehicleInspection] = useCreateVehicleInspectionMutation();
   const onSubmit: SubmitHandler<AddVehicleInspectionValues> = async (data: any) => {
+    const [vehicle_id, vehicle_val] = data?.vehicle.split(',');
+    data.vehicle = vehicle_val;
     data.reg_number = parseInt(data.reg_number);
     const res = await addVehicleInspection(data);
     if((res as any)?.data?.statusCode === 200){
@@ -34,7 +49,12 @@ const AddVehicleInspection = () => {
       <div className="mx-auto overflow-y-scroll ">
         <Form submitHandler={onSubmit}>
         <div className="mb-4">
-          <FormInput name="vehicle" type="text" placeholder="Vehicle Name" />
+            <FormSelectField
+              name="vehicle"
+              size="large"
+              placeholder="Select Vehicle"
+              options={vehicleOptions}
+            />
         </div>
         <div className="mb-4">
           <FormInput name="review_by" type="text" placeholder="Review By" />

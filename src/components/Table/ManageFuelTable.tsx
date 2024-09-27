@@ -12,6 +12,7 @@ import {
   PaginationProps,
   Popconfirm,
   message,
+  Image
 } from "antd";
 import { useEffect, useState } from "react";
 import UpdateFuelForm from "../Forms/UpdateFuelForm";
@@ -119,13 +120,21 @@ const ManageFuelTable = () => {
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
                   >
+                    <td className=" px-2 py-3 text-sm leading-5">
+                      <Image
+                        className="rounded-full"
+                        width={50}
+                        height={50}
+                        src={fuel?.photo}
+                        alt="vehiclePhoto"
+                      />
+                    </td>
                     <td className="px-2 py-3 text-sm leading-5">{fuel?.vehicleVal}</td>
-
                     <td className="px-2 py-3 text-sm leading-5">
                       {fuel?.vendorName}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      {fuel?.fuelTyoe}
+                      {fuel?.fuelType}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
                       {fuel?.Time.substring(0,10)}
@@ -137,13 +146,13 @@ const ManageFuelTable = () => {
                       {fuel?.gallons}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.invoice}
+                      {fuel?.meter}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
-                      <img src={fuel?.photo} width={50} height={10} alt="vehiclePhoto"/>
+                      {fuel?.consumption}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.comments}
+                      {fuel?.province}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
                       <div className="flex gap-x-1 justify-center">

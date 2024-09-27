@@ -42,7 +42,7 @@ const driverApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.driver],
     }),
     driverVehicle: build.query({
-      query: (page) => ({
+      query: () => ({
         url: `/vehicle-driver/vehicleDriverlist`,
         method: "GET", 
       }), 

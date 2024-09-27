@@ -11,6 +11,13 @@ const customerApi = baseApi.injectEndpoints({
       }), 
       providesTags: [tagTypes.customer],
     }),
+    getAllListCustomer: build.query({
+      query: () => ({
+        url: `/customer/list`,
+        method: "GET", 
+      }), 
+      providesTags: [tagTypes.customer],
+    }),
     getSingleCustomer: build.query({
       query: (id) => ({
         url: `/customer/single/${id}`,
@@ -46,6 +53,7 @@ const customerApi = baseApi.injectEndpoints({
 
 export const {
     useGetAllCustomerQuery,
+    useGetAllListCustomerQuery,
     useGetSingleCustomerQuery,
     useCreateCustomerMutation,
     useUpdateCustomerMutation,

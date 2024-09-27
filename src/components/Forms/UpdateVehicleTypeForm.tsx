@@ -60,8 +60,7 @@ const handleImageUpload = (e : any) => {
   const [updateVehicleType] = useUpdateVehicleTypeMutation();
   const onSubmit: SubmitHandler<AddVehicleTypeValues> = async (data: any) => {
     data.id = id;
-    data.avatar = avater?avater : "https://i.ibb.co/SRF75vM/avatar.png";
-    data.icon = avater;
+    data.icon = avater?avater : "https://i.ibb.co/SRF75vM/avatar.png";
     data.seats = parseInt(data.seats);
     data.enable = data.enable=="enable"?true:false;
     try {

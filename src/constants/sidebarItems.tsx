@@ -117,21 +117,9 @@ export const sidebarItems = (role: string) => {
       ]
     },
     {
-      label:"Booking",
-      key:"Booking",
+      label: <Link href={`/${role}/trip`}>Trip</Link>,
       icon: <EnvironmentOutlined />,
-      children:[
-        {
-          label: <Link href={`/${role}/trip`}>Trip</Link>,
-          // icon: <EnvironmentOutlined />,
-          key: `/${role}/trip`,
-        },
-        {
-          label: <Link href={`/${role}/trip_payment`}>Booking payments</Link>,
-          // icon: <EnvironmentOutlined />,
-          key: `/${role}/trip_payment`,
-        }
-      ]
+      key: `/${role}/trip`,
     },
     {
       label: <Link href={`/${role}/manageFuel`}>Manage Fuel</Link>,
