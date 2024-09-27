@@ -12,15 +12,17 @@ import { useCreateFuelMutation } from "@/redux/api/manageFuelApi";
 
 import { SubmitHandler } from "react-hook-form";
 
-type CreateTripValue = {
-  passengerName: string;
-  phone: string;
-  tripPeriod: string;
-  tollCost: string;
-  parkingCost: string;
-  startLocation: string;
-  description: string;
-  tripId: string;
+type AddFuelValues = {
+  vehicleVal: string;
+  vendorName: string;
+  fuelType: string;
+  Time: Date;
+  gallons: Number;
+  price: Number;
+  meter: Number;
+  photo: string;
+  province: string;
+  consumption: string;
 };
 
 const AddManageFuel = () => {
@@ -58,16 +60,19 @@ useEffect(() => {
   const [avater, setAvater] = useState("");
   const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
 
-  const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
+  const onSubmit: SubmitHandler<AddFuelValues> = async (data: any) => {
     // data.status = "UPCOMMING";
     data.vendorName = data?.vendorName;
-    data.fuelTyoe = data?.fuelTyoe;
+    data.fuelType = data?.fuelType;
     data.Time = new Date(data?.Time);
     data.gallons = parseFloat(data?.gallons);
     data.price = parseFloat(data?.price);
-    data.invoice = data?.invoice;
+    data.meter = parseInt(data?.meter);
+    data.province = data?.province;
+    data.consumption = data?.consumption;
+    
     data.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
-    data.comments = data?.comments;
+
     const [vehicle_id, vehicle_val] = data?.vehicle_id.split(',');
     data.vehicleVal = vehicle_val;
     data.vehicle_id = vehicle_id;
@@ -129,7 +134,7 @@ useEffect(() => {
           </div>
           <div className="mb-4">
             <FormSelectField
-              name="fuelTyoe"
+              name="fuelType"
               size="large"
               placeholder="Fuel tyoe"
               options={tyoeArr}
@@ -153,18 +158,31 @@ useEffect(() => {
             <FormInput
               name="price"
               type="number"
-              placeholder="Price/Gallon(US)"
+              placeholder="Price"
             />
           </div>
 
           <div className="mb-4">
             <FormInput
-              name="invoice"
-              type="text"
-              placeholder="Invoice number, transaction ID, etc"
+              name="meter"
+              type="number"
+              placeholder="Meter"
             />
           </div>
-
+          <div className="mb-4">
+            <FormInput
+              name="province"
+              type="text"
+              placeholder="State/Province"
+            />
+          </div>
+          <div className="mb-4">
+            <FormInput
+              name="consumption"
+              type="text"
+              placeholder="Consumption"
+            />
+          </div>
           <div className="mb-4 flex gap-2">
               <div className="w-12 h-12 rounded-full">
               <Image
@@ -184,13 +202,7 @@ useEffect(() => {
               onChange= {handleImageUpload}
             />
           </div>
-          <div className="mb-4">
-            <FormTextArea
-              name="comments"
-              label="Comments"
-              placeholder="Comments"
-            />
-          </div>
+          
           <Button
             htmlType="submit"
             className="text-md rounded-lg"

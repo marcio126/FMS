@@ -7,7 +7,7 @@ import { Button, message } from "antd";
 import { useState,useEffect } from "react";
 import { SubmitHandler } from "react-hook-form"; 
 import { useCreateTripMutation } from "@/redux/api/tripApi";
-
+import { useGetAllListCustomerQuery } from "@/redux/api/customerApi";
 import FormSelectField from "@/components/ReusableForms/FormSelectField";
 
 
@@ -21,18 +21,7 @@ type CreateTripValue = {
   description: string;
   tripId: string;
 };
-interface Driver {
-    name: string;
-    // Add any other properties of a driver here
-}
 
-interface DriverResult {
-    driverResult: Driver[];
-}
-
-interface DriverVehicle {
-    data: DriverResult;
-}
 type MyObjectType = {
     label: any;  // Replace 'any' with a more specific type if possible
     value: string;
@@ -42,8 +31,31 @@ const CreateTrip = () => {
   const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
   const [vehicleValue, setVehicleValue] = useState<MyObjectType | undefined>(undefined);
   const [driverValue, setDriverValue] = useState<MyObjectType | undefined>(undefined);
-  const [createTrip] = useCreateTripMutation()
+  const [ customerOptions, setCustomerOptions] = useState<{ label: string; value: string }[]>([]);
 
+  const [createTrip] = useCreateTripMutation()
+  const {data:allCustomer} = useGetAllListCustomerQuery({})
+  const tripTypeOption = [
+    { label: "Single", value: "Single" },
+    { label: "Round", value: "Round" }
+  ];
+  const paymentOption = [
+    { label: "Paypal", value: "Paypal" },
+    { label: "Payoneer", value: "Payoneer" },
+    { label: "Crypto", value: "Crypto" },
+    { label: "Bank", value: "Bank" },
+    { label: "Real-Money", value: "Real-Money" }
+
+  ];
+  useEffect(() => {
+    if (allCustomer?.data) {
+            const options = allCustomer.data.map((customer: { name: any  }) => ({
+                label: customer.name,
+                value: customer.name
+            }));
+            setCustomerOptions(options);
+        }
+  }, [allCustomer]);
   const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
     data.status = "UPCOMMING";
     data.passengerCount = parseInt(data?.passengerCount);
@@ -113,10 +125,11 @@ const CreateTrip = () => {
           </div>
 
           <div className="mb-4">
-            <FormInput
+            <FormSelectField
               name="passengerName"
-              type="text"
+              size="large"
               placeholder="Passenger Name"
+              options={customerOptions}
             />
           </div>
           
@@ -129,6 +142,13 @@ const CreateTrip = () => {
           </div>
           
           <div className="mb-4">
+            <FormSelectField
+              options={paymentOption}
+              name="payment"
+              placeholder="Payment"
+            />
+          </div>
+          <div className="mb-4">
             <FormInput
               name="passengerCount"
               type="number"
@@ -137,9 +157,9 @@ const CreateTrip = () => {
           </div> 
           
           <div className="mb-4">
-            <FormInput
+            <FormSelectField
+              options={tripTypeOption}
               name="tripPeriod"
-              type="text"
               placeholder="Single-Trip | Round-Trip"
             />
           </div>

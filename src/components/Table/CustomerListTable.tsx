@@ -2,51 +2,40 @@
 import {
   DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import { Image, Input, PaginationProps } from "antd";
 import ModalBox from "../ModalBox/ModalBox";
 
-import { DriverListTableFields } from "./StaticTableData";
+import { CustomerListTableFields } from "./StaticTableData";
 
-import AddDriver from "@/app/(withlayout)/manager/driver/AddDriver";
+import AddCustomer from "@/app/(withlayout)/manager/customer/AddCustomer";
 import {
-  useDeleteDriverMutation,
-  useGetAllDriverQuery,
-} from "@/redux/api/driverApi";
+  useDeleteCustomerMutation,
+  useGetAllCustomerQuery,
+} from "@/redux/api/customerApi";
 import { Button, Pagination, Popconfirm, message } from "antd";
 import { useState } from "react";
 import Heading from "../ui/Heading";
-import UpdateDriverForm from "../Forms/UpdateDriverForm";
-import ViewItemDriver from "../ui/ViewItemDriver";
+import UpdateCustomerForm from "../Forms/UpdateCustomerForm";
 import StarRating from "../ui/StarRating";
 
 interface IProps {
+  id?: string;
+  name?:string;
+  email?: string;
+  phone?: string;
+  gender?:string;
   address?: string;
   avatar?: string;
-  createAt?: string;
-  email?: string;
-  experience?: number;
-  id?: string;
-  license_no?: string;
-  name?: string;
-  nid?: string;
-  password?: string;
-  phone?: string;
-  role?: string;
-  user_id?: string;
   score?: number;
-  license_type?: string;
-  license_expiry_date?: Date;
-  trans_distance?: number;
 }
 
-const DriverListTable = () => {
-  const [deleteDriver] = useDeleteDriverMutation();
+const CustomerListTable = () => {
+  const [deleteCustomer] = useDeleteCustomerMutation();
 
   const confirm = async (e: any) => {
-    const res = await deleteDriver(e);
+    const res = await deleteCustomer(e);
     console.log("🚀 ~ confirm ~ res:", res);
     message.success(`Deleted Sucessfully`);
   };
@@ -61,7 +50,7 @@ const DriverListTable = () => {
   const onChange: PaginationProps["onChange"] = (page) => {
     setCurrent(page);
   };
-  const { data: driver } = useGetAllDriverQuery(current);
+  const { data: customer } = useGetAllCustomerQuery(current);
 
 
   //searching code
@@ -69,7 +58,7 @@ const DriverListTable = () => {
   return (
     <>
       <Heading>
-        <p>Driver</p>
+        <p>Customer List</p>
       </Heading>
       {/* table start */}
       <div className="overflow-x-auto rounded-tl-xl rounded-tr-x">
@@ -81,7 +70,7 @@ const DriverListTable = () => {
             <div className=" max-w-[80%]">
               <Input
                 size="large"
-                placeholder={`Search by Driver Name`}
+                placeholder={`Search by Customer Name`}
                 prefix={<SearchOutlined />}
                 onChange={(event) => {
                   setSearchTerm(event?.target?.value);
@@ -89,8 +78,8 @@ const DriverListTable = () => {
               />
             </div>
             <div className="flex justify-start">
-              <ModalBox btnLabel="Add Driver">
-                <AddDriver />
+              <ModalBox btnLabel="Add Customer">
+                <AddCustomer />
               </ModalBox>
             </div>
           </div>
@@ -98,19 +87,19 @@ const DriverListTable = () => {
           <table className="min-w-full">
             <thead className="bg-gray-50 rounded-2xl border-b">
               <tr className="dark:bg-[#145374]">
-                {DriverListTableFields?.map((DriverListTableField,index) => (
+                {CustomerListTableFields?.map((CustomerListTableField,index) => (
                   <th
                     key={index}
                     className=" px-2 py-3 text-left text-black dark:text-[#E8E8E8]"
                   >
-                    {DriverListTableField?.fields}
+                    {CustomerListTableField?.fields}
                   </th>
                 ))}
               </tr>
             </thead>
 
             <tbody className="dark:text-[#E8E8E8]">
-              {((driver as any)?.data ?? [])?.filter((V: any) => {
+              {((customer as any)?.data ?? [])?.filter((V: any) => {
                 if (searchTerm == "") {
                   return V;
                 } else if (
@@ -121,9 +110,9 @@ const DriverListTable = () => {
                   return V;
                 }
               })?.map(
-                (drivers: IProps, index: number) => (
+                (customers: IProps, index: number) => (
                   <tr
-                    key={drivers?.id}
+                    key={customers?.id}
                     className={`${
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
@@ -133,48 +122,31 @@ const DriverListTable = () => {
                         className="rounded-full"
                         width={50}
                         height={50}
-                        src={drivers?.avatar}
+                        src={customers?.avatar}
                         alt="..."
                       />
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      <p className="text-sm font-bold">{drivers?.name}</p>
-                      <p className="text-[8] text-textColor italic">
-                        {drivers?.email}
-                      </p>
+                      {customers?.name}
+                    </td>
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {customers?.email}
+                    </td>
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {customers?.phone}
+                    </td>
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {customers?.gender}
+                    </td>
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {customers?.address}
                     </td>
 
                     <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.phone}
+                      <StarRating score={customers?.score}/>
                     </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.license_no}
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.experience}
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.nid}
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      <StarRating score={drivers?.score}/>
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.license_type}
-                    </td>
-                    
                     <td className="px-2 py-3 text-sm leading-5">
                       <div className="flex gap-x-1">
-                        <ModalBox
-                          btnLabel={
-                            <span className="item justify-center items-center">
-                              <EyeOutlined />
-                            </span>
-                          }
-                        >
-                          <ViewItemDriver viewID={drivers?.id} />
-                        </ModalBox>
-
                         <ModalBox
                           btnLabel={
                             <span className="item justify-center items-center">
@@ -183,13 +155,13 @@ const DriverListTable = () => {
                             </span>
                           }
                         >
-                          <UpdateDriverForm driverData={drivers} />
+                          <UpdateCustomerForm customerData={customers} />
                         </ModalBox>
 
                         <Popconfirm
                           title="Delete the task"
                           description="Are you sure to delete this task?"
-                          onConfirm={() => confirm(drivers?.id)}
+                          onConfirm={() => confirm(customers?.id)}
                           onCancel={() => cancel}
                           
                           cancelText="No"
@@ -215,7 +187,7 @@ const DriverListTable = () => {
             <Pagination
               current={current}
               onChange={onChange}
-              total={driver?.data?.meta?.total | 30}
+              total={customer?.data?.meta?.total | 30}
             />
           </div>
         </div>
@@ -225,4 +197,4 @@ const DriverListTable = () => {
   );
 };
 
-export default DriverListTable;
+export default CustomerListTable;

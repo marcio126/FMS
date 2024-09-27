@@ -10,6 +10,8 @@ import {
 } from "../../redux/api/tripApi";
 import { useEffect, useState } from "react";
 import { useDriverVehicleQuery } from "@/redux/api/driverApi";
+import { useGetAllListCustomerQuery } from "@/redux/api/customerApi";
+
 import FormSelectField from "../ReusableForms/FormSelectField";
 
 type AddVehicleValues = {
@@ -22,19 +24,8 @@ type AddVehicleValues = {
   description: string;
   tripId: string;
   status: string;
+  payment: string;
 };
-interface Driver {
-    name: string;
-    // Add any other properties of a driver here
-}
-
-interface DriverResult {
-    driverResult: Driver[];
-}
-
-interface DriverVehicle {
-    data: DriverResult;
-}
 type MyObjectType = {
     label: any;  // Replace 'any' with a more specific type if possible
     value: string;
@@ -43,11 +34,28 @@ const UpdateTripForm = ({ updateID }: any) => {
   const { data: singleTrip } = useTripSingleQuery(updateID);
   const [driverOptions, setDriverOptions] = useState<{ label: string; value: string }[]>([]);
   const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+  const [ customerOptions, setCustomerOptions] = useState<{ label: string; value: string }[]>([]);
   const statusOption = [
     { label: 'PENDING', value: 'PENDING' },
     { label: 'COMPLETED', value: 'COMPLETED' },
     { label: 'UPCOMMING', value: 'UPCOMMING' },
   ]
+  const paymentOption = [
+    { label: "Paypal", value: "Paypal" },
+    { label: "Payoneer", value: "Payoneer" },
+    { label: "Crypto", value: "Crypto" },
+    { label: "Bank", value: "Bank" },
+    { label: "Real-Money", value: "Real-Money" }
+
+  ];
+  const tripTypeOption = [
+    { label: "Single", value: "Single" },
+    { label: "Round", value: "Round" }
+  ];
+  const { data: allCustomer } = useGetAllListCustomerQuery({});
+  const [updateTrip] = useUpdateSingleTripMutation();
+
+
   const defaultValues = {
     status: singleTrip?.data?.status,
     passengerCount: singleTrip?.data?.passengerCount,
@@ -59,10 +67,18 @@ const UpdateTripForm = ({ updateID }: any) => {
     passengerName: singleTrip?.data?.passengerName,
     passengerPhone: singleTrip?.data?.passengerPhone,
     driver_id: singleTrip?.data?.driver_id +","+singleTrip?.data?.driverVal,
-    vehicle_id: singleTrip?.data?.vehicle_id + "," +singleTrip?.data?.vehicleVal,    
+    vehicle_id: singleTrip?.data?.vehicle_id + "," +singleTrip?.data?.vehicleVal,  
+    payment:  singleTrip?.data?.payment
   };
-
-  const [updateTrip] = useUpdateSingleTripMutation();
+  useEffect(() => {
+    if (allCustomer?.data) {
+            const options = allCustomer.data.map((customer: { name: any  }) => ({
+                label: customer.name,
+                value: customer.name
+            }));
+            setCustomerOptions(options);
+        }
+  }, [allCustomer]);
 
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
     data.passengerCount = parseInt(data?.passengerCount);
@@ -137,10 +153,11 @@ const UpdateTripForm = ({ updateID }: any) => {
             />
           </div>
           <div className="mb-4">
-            <FormInput
+            <FormSelectField
               name="passengerName"
-              type="text"
+              size="large"
               placeholder="Passenger Name"
+              options={customerOptions}
             />
           </div>
           <div className="mb-4">
@@ -151,6 +168,13 @@ const UpdateTripForm = ({ updateID }: any) => {
             />
           </div>  
           <div className="mb-4">
+            <FormSelectField
+              options={paymentOption}
+              name="payment"
+              placeholder="Payment"
+            />
+          </div>
+          <div className="mb-4">
             <FormInput
               name="passengerCount"
               type="number"
@@ -158,12 +182,12 @@ const UpdateTripForm = ({ updateID }: any) => {
             />
           </div>       
           <div className="mb-4">
-            <FormInput
+            <FormSelectField
+              options={tripTypeOption}
               name="tripPeriod"
-              type="text"
               placeholder="Single-Trip | Round-Trip"
             />
-          </div>        
+          </div>
           <div className="mb-4">
             <FormInput
               name="tripRent"

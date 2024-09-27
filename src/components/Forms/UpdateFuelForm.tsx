@@ -14,17 +14,18 @@ import { useDriverVehicleQuery } from "@/redux/api/driverApi";
 type AddFuelValues = {
   vehicleVal: string;
   vendorName: string;
-  fuelTyoe: string;
+  fuelType: string;
   Time: Date;
   gallons: Number;
   price: Number;
-  invoice: string;
+  meter: Number;
   photo: string;
-  comments: string;
+  province: string;
+  consumption: string;
 };
 
 const UpdateFuelForm = ({ fuelData }: any) => {
-  const { vehicleVal, vendorName, Time, fuelTyoe, price, invoice, gallons, comments, vehicle_id, id, photo } = fuelData;
+  const { vehicleVal, vendorName, Time, fuelType, price, province, gallons, meter, consumption, vehicle_id, id, photo } = fuelData;
   const [updateFuel] = useUpdateSingleFuelMutation();
 
   const vendorArr = [
@@ -32,7 +33,7 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     { label: 'Shell #4291', value: 'Shell #4291' },
     { label: 'Shell #5820', value: 'Shell #5820' }
   ]
-  const tyoeArr = [
+  const typeArr = [
     { label: 'BioDiesel', value: 'BioDiesel' },
     { label: 'Compressed Natural Gas', value: 'Compressed Natural Gas' },
     { label: 'DEF', value: 'DEF' },
@@ -53,26 +54,28 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     const defaultValues = {
     vehicle_id: vehicle_id + "," + vehicleVal, 
     vendorName: vendorName,
-    fuelTyoe: fuelTyoe,
+    fuelType: fuelType,
     Time:Time.substring(0, 10),
     price: price,
-    invoice: invoice,
+    meter: meter,
     gallons: gallons,
-    comments:comments ,
-    photo:photo
+    province:province ,
+    photo: photo,
+    consumption:consumption
   };
   const onSubmit: SubmitHandler<AddFuelValues> = async (updateData: any) => {
     const [vehicle_id, vehicle_val] = updateData?.vehicle_id.split(',');
     updateData.vehicleVal = vehicle_val;
     updateData.vehicle_id = vehicle_id;
     updateData.vendorName = updateData?.vendorName;
-    updateData.fuelTyoe = updateData?.fuelTyoe;
+    updateData.fuelType = updateData?.fuelType;
     updateData.Time = new Date(updateData?.Time);
     updateData.gallons = parseFloat(updateData?.gallons);
     updateData.price = parseFloat(updateData?.price);
-    updateData.invoice = updateData?.invoice;
+    updateData.province = updateData?.province;
     updateData.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
-    updateData.comments = updateData?.comments;
+    updateData.meter = parseInt(updateData?.meter);
+    updateData.consumption = updateData?.consumption;
     try {
       const res = await updateFuel({ id, ...updateData });
       if ((res as any)?.data?.statusCode === 200) {
@@ -141,10 +144,10 @@ const UpdateFuelForm = ({ fuelData }: any) => {
           </div>
           <div className="mb-4">
             <FormSelectField
-              name="fuelTyoe"
+              name="fuelType"
               size="large"
-              placeholder="Fuel tyoe"
-              options={tyoeArr}
+              placeholder="Fuel type"
+              options={typeArr}
             />
           </div>
 
@@ -171,23 +174,36 @@ const UpdateFuelForm = ({ fuelData }: any) => {
 
           <div className="mb-4">
             <FormInput
-              name="invoice"
-              type="text"
-              placeholder="Invoice number, transaction ID, etc"
+              name="meter"
+              type="number"
+              placeholder="Meter"
             />
           </div>
-
+          <div className="mb-4">
+            <FormInput
+              name="province"
+              type="text"
+              placeholder="State/Province"
+            />
+          </div>
+          <div className="mb-4">
+            <FormInput
+              name="consumption"
+              type="text"
+              placeholder="Consumption"
+            />
+          </div>
           <div className="mb-4 flex gap-2">
               <div className="w-12 h-12 rounded-full">
               <Image
-                      src={currentImage}
-                      alt='avater'
-                      className="w-full
-                      object-cover"
-                      width={0}
-                      height={0}
-                      unoptimized
-                  />
+                src={currentImage}
+                alt='avater'
+                className="w-full
+                object-cover"
+                width={0}
+                height={0}
+                unoptimized
+              />
             </div>
             <input
                 type="file"
@@ -195,14 +211,6 @@ const UpdateFuelForm = ({ fuelData }: any) => {
                 placeholder="Image"
                 className="input input-bordered input-warning w-full max-w-x mt-2"
               onChange= {handleImageUpload}
-            />
-          </div>
-
-          <div className="mb-4">
-            <FormTextArea
-              name="comments"
-              label="Comments"
-              placeholder="Comments"
             />
           </div>
           <Button

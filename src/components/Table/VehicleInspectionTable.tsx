@@ -2,51 +2,37 @@
 import {
   DeleteOutlined,
   EditOutlined,
-  EyeOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { Image, Input, PaginationProps } from "antd";
+import {  Input, PaginationProps } from "antd";
 import ModalBox from "../ModalBox/ModalBox";
 
-import { DriverListTableFields } from "./StaticTableData";
+import { VehicleInspectionListTableFields } from "./StaticTableData";
 
-import AddDriver from "@/app/(withlayout)/manager/driver/AddDriver";
+import AddVehicleInspection from "@/app/(withlayout)/manager/vehicleInspection/AddVehicleInspection";
 import {
-  useDeleteDriverMutation,
-  useGetAllDriverQuery,
-} from "@/redux/api/driverApi";
+  useDeleteVehicleInspectionMutation,
+  useGetAllVehicleInspectionQuery,
+} from "@/redux/api/vehicleInspectionApi";
 import { Button, Pagination, Popconfirm, message } from "antd";
 import { useState } from "react";
 import Heading from "../ui/Heading";
-import UpdateDriverForm from "../Forms/UpdateDriverForm";
-import ViewItemDriver from "../ui/ViewItemDriver";
-import StarRating from "../ui/StarRating";
+import UpdateVehicleInspectionForm from "../Forms/UpdateVehicleInspectionForm";
 
 interface IProps {
-  address?: string;
-  avatar?: string;
-  createAt?: string;
-  email?: string;
-  experience?: number;
   id?: string;
-  license_no?: string;
-  name?: string;
-  nid?: string;
-  password?: string;
-  phone?: string;
-  role?: string;
-  user_id?: string;
-  score?: number;
-  license_type?: string;
-  license_expiry_date?: Date;
-  trans_distance?: number;
+  vehicle?: string;
+  review_by?: string;
+  reg_number?: number;
+  failed_items?: string;
+  duration?: string;
 }
 
-const DriverListTable = () => {
-  const [deleteDriver] = useDeleteDriverMutation();
+const VehicleInspectionTable = () => {
+  const [deleteVehicleInspection] = useDeleteVehicleInspectionMutation();
 
   const confirm = async (e: any) => {
-    const res = await deleteDriver(e);
+    const res = await deleteVehicleInspection(e);
     console.log("🚀 ~ confirm ~ res:", res);
     message.success(`Deleted Sucessfully`);
   };
@@ -61,7 +47,7 @@ const DriverListTable = () => {
   const onChange: PaginationProps["onChange"] = (page) => {
     setCurrent(page);
   };
-  const { data: driver } = useGetAllDriverQuery(current);
+  const { data: vehicleinspection } = useGetAllVehicleInspectionQuery(current);
 
 
   //searching code
@@ -69,7 +55,7 @@ const DriverListTable = () => {
   return (
     <>
       <Heading>
-        <p>Driver</p>
+        <p>Vehicle Inspection List</p>
       </Heading>
       {/* table start */}
       <div className="overflow-x-auto rounded-tl-xl rounded-tr-x">
@@ -81,7 +67,7 @@ const DriverListTable = () => {
             <div className=" max-w-[80%]">
               <Input
                 size="large"
-                placeholder={`Search by Driver Name`}
+                placeholder={`Search by Vehicle Inspection`}
                 prefix={<SearchOutlined />}
                 onChange={(event) => {
                   setSearchTerm(event?.target?.value);
@@ -89,8 +75,8 @@ const DriverListTable = () => {
               />
             </div>
             <div className="flex justify-start">
-              <ModalBox btnLabel="Add Driver">
-                <AddDriver />
+              <ModalBox btnLabel="Add Vehicle Inspection">
+                <AddVehicleInspection />
               </ModalBox>
             </div>
           </div>
@@ -98,83 +84,57 @@ const DriverListTable = () => {
           <table className="min-w-full">
             <thead className="bg-gray-50 rounded-2xl border-b">
               <tr className="dark:bg-[#145374]">
-                {DriverListTableFields?.map((DriverListTableField,index) => (
+                {VehicleInspectionListTableFields?.map((VehicleInspectionListTableField,index) => (
                   <th
                     key={index}
                     className=" px-2 py-3 text-left text-black dark:text-[#E8E8E8]"
                   >
-                    {DriverListTableField?.fields}
+                    {VehicleInspectionListTableField?.fields}
                   </th>
                 ))}
               </tr>
             </thead>
 
             <tbody className="dark:text-[#E8E8E8]">
-              {((driver as any)?.data ?? [])?.filter((V: any) => {
+              {((vehicleinspection as any)?.data ?? [])?.filter((V: any) => {
                 if (searchTerm == "") {
                   return V;
                 } else if (
-                  V?.name
+                  V?.vehicle
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                  V?.review_by
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase())
                 ) {
                   return V;
                 }
               })?.map(
-                (drivers: IProps, index: number) => (
+                (vehicleinspections: IProps, index: number) => (
                   <tr
-                    key={drivers?.id}
+                    key={vehicleinspections?.id}
                     className={`${
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
                   >
                     <td className="px-2 py-3 text-sm leading-5">
-                      <Image
-                        className="rounded-full"
-                        width={50}
-                        height={50}
-                        src={drivers?.avatar}
-                        alt="..."
-                      />
+                      {vehicleinspections?.vehicle}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      <p className="text-sm font-bold">{drivers?.name}</p>
-                      <p className="text-[8] text-textColor italic">
-                        {drivers?.email}
-                      </p>
-                    </td>
-
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.phone}
+                      {vehicleinspections?.review_by}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.license_no}
+                      {vehicleinspections?.reg_number}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.experience}
+                      {vehicleinspections?.failed_items}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.nid}
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      <StarRating score={drivers?.score}/>
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {drivers?.license_type}
+                      {vehicleinspections?.duration}
                     </td>
                     
                     <td className="px-2 py-3 text-sm leading-5">
                       <div className="flex gap-x-1">
-                        <ModalBox
-                          btnLabel={
-                            <span className="item justify-center items-center">
-                              <EyeOutlined />
-                            </span>
-                          }
-                        >
-                          <ViewItemDriver viewID={drivers?.id} />
-                        </ModalBox>
-
                         <ModalBox
                           btnLabel={
                             <span className="item justify-center items-center">
@@ -183,13 +143,13 @@ const DriverListTable = () => {
                             </span>
                           }
                         >
-                          <UpdateDriverForm driverData={drivers} />
+                          <UpdateVehicleInspectionForm vehicleInspectionData={vehicleinspections} />
                         </ModalBox>
 
                         <Popconfirm
                           title="Delete the task"
                           description="Are you sure to delete this task?"
-                          onConfirm={() => confirm(drivers?.id)}
+                          onConfirm={() => confirm(vehicleinspections?.id)}
                           onCancel={() => cancel}
                           
                           cancelText="No"
@@ -215,7 +175,7 @@ const DriverListTable = () => {
             <Pagination
               current={current}
               onChange={onChange}
-              total={driver?.data?.meta?.total | 30}
+              total={vehicleinspection?.data?.meta?.total | 30}
             />
           </div>
         </div>
@@ -225,4 +185,4 @@ const DriverListTable = () => {
   );
 };
 
-export default DriverListTable;
+export default VehicleInspectionTable;

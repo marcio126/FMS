@@ -4,19 +4,21 @@ import {
   useDeleteAccessoryMutation,
   useGetAccessoryAllQuery,
 } from "@/redux/api/accessoryApi";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined,DeleteOutlined,
+  EditOutlined,
+  EyeOutlined } from "@ant-design/icons";
 import {
   Button,
-  Dropdown,
   Image,
   Input,
-  Menu,
-  Modal,
   Pagination,
   PaginationProps,
+  Popconfirm,
+  message
 } from "antd";
 import { useState } from "react";
 import UpdateAccessory from "../Forms/UpdateAccessory";
+import ViewItemAccessory from "../ui/ViewItemAccessory";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
 
@@ -27,33 +29,57 @@ const accessoriesTableFields = [
   },
   {
     id: 1,
-    fields: "Product Name",
+    fields: "Name",
   },
   {
     id: 2,
-    fields: "Quantity",
-  },
-  {
-    id: 4,
-    fields: "Purchase Date",
+    fields: "Category",
   },
   {
     id: 3,
-    fields: "Expiration Date",
+    fields: "Model",
   },
-  {
-    id: 5,
-    fields: "Price",
-  },
+  // {
+  //   id: 4,
+  //   fields: "Purchase Date",
+  // },
+  // {
+  //   id: 5,
+  //   fields: "Expiration Date",
+  // },
   {
     id: 6,
+    fields: "Status",
+  },
+  {
+    id: 7,
+    fields: "Availability",
+  },
+  {
+    id: 8,
+    fields: "Unit Cost",
+  },
+  {
+    id: 9,
+    fields: "Qty on  hand",
+  },
+  {
+    id: 10,
+    fields: "Vendor",
+  },
+  {
+    id: 11,
+    fields: "Manufacturer",
+  },
+  {
+    id: 12,
     fields: "Action",
   },
 ];
 
 const AccessoriesTable = () => {
   const [current, setCurrent] = useState(1);
-  const [updateID, setUpdateID] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const {
     data: accessory,
     isLoading,
@@ -67,58 +93,17 @@ const AccessoriesTable = () => {
   const onChange: PaginationProps["onChange"] = (page) => {
     setCurrent(page);
   };
-  const handleDelete = (id: any) => {
-    // console.log(accessoryId)
-    Modal.confirm({
-      title: "Confirm Delete",
-      content: "Are you sure you want to delete this accessory?",
-      okText: "Delete",
-      okType: "danger",
-      cancelText: "Cancel",
-      onOk: async () => {
-        await deleteAccessory(id)
-          .then(() => {
-            Modal.success({
-              title: "Accessory Deleted",
-              content: "The accessory has been successfully deleted.",
-            });
-            // Refetch data
-            refetch();
-          })
-          .catch((error: any) => {
-            // Error message
-            Modal.error({
-              title: "Delete Failed",
-              okType: "danger",
-              cancelText: "Cancel",
-              content:
-                "An error occurred while deleting the accessory. Please try again later.",
-            });
-            console.error("Delete error:", error);
-          });
-      },
-    });
+
+  const confirm = async (e: any) => {
+    const res = await deleteAccessory(e);
+    console.log("🚀 ~ confirm ~ res:", res);
+    message.success(`Deleted Sucessfully`);
   };
 
-  const items = (accessoryId: any) => (
-    <Menu>
-      <Menu.Item key="1">
-        <ModalBox btnLabel="Update">
-          <UpdateAccessory updateID={accessoryId} />
-        </ModalBox>
-      </Menu.Item>
-      <Menu.Item key="2" onClick={() => handleDelete(accessoryId)}>
-        <Button danger type="text">
-          Delete
-        </Button>
-      </Menu.Item>
-    </Menu>
-  );
+  const cancel = (e: React.MouseEvent<HTMLElement>) => {
+    message.error("Click on No");
+  };
 
-  //searching code
-  const [searchTerm, setSearchTerm] = useState("");
-  const dummyImg =
-    "https://img.freepik.com/free-vector/car-wheel-realistic_1284-4977.jpg?w=740&t=st=1707802295~exp=1707802895~hmac=b5f07472817317de3b3460a5b32b3e681dd1d2b5f888354dc68ac47ab97ccf92";
   return (
     <>
       <Heading>
@@ -169,7 +154,19 @@ const AccessoriesTable = () => {
                   } else if (
                     V?.accessory_name
                       .toLowerCase()
-                      .includes(searchTerm.toLowerCase())
+                      .includes(searchTerm.toLowerCase()) ||
+                    V?.category
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    V?.model
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                    V?.vendor
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                    V?.manufacturer
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
                   ) {
                     return V;
                   }
@@ -178,7 +175,7 @@ const AccessoriesTable = () => {
                   const accessoryId = accessories?.id;
                   return (
                     <tr
-                      key={accessories?.ID}
+                      key={accessories?.id}
                       className={`${
                         index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                       }  `}
@@ -187,7 +184,7 @@ const AccessoriesTable = () => {
                         <Image
                           className="rounded-lg"
                           width={50}
-                          src={!accessories?.image ? dummyImg : ""}
+                          src={accessories?.avatar? accessories?.avatar : "https://i.ibb.co/SRF75vM/avatar.png"}
                           alt="..."
                         />
                       </td>
@@ -197,25 +194,72 @@ const AccessoriesTable = () => {
                       </td>
 
                       <td className=" px-2 py-3 text-sm leading-5">
-                        {accessories?.quantity}
+                        {accessories?.category}
                       </td>
                       <td className=" px-2 py-3 text-sm leading-5">
-                        {accessories?.purchase_date?.slice(0, 10)}
+                        {accessories?.model}
                       </td>
                       <td className=" px-2 py-3 text-sm leading-5">
-                        {accessories?.expire_date?.slice(0, 10)}
+                        {accessories?.status}
                       </td>
                       <td className=" px-2 py-3 text-sm leading-5">
-                        {accessories?.amount}
+                        {accessories?.availability}
+                      </td>
+                      <td className=" px-2 py-3 text-sm leading-5">
+                        {accessories?.unit_cost}
+                      </td>
+                      <td className=" px-2 py-3 text-sm leading-5">
+                        {accessories?.qty_hand}
+                      </td>
+                      <td className=" px-2 py-3 text-sm leading-5">
+                        {accessories?.vendor}
+                      </td>
+                      <td className=" px-2 py-3 text-sm leading-5">
+                        {accessories?.manufacturer}
                       </td>
                       <td className=" px-2 py-3 text-sm leading-5 ">
-                        <Dropdown
-                          overlay={() => items(accessoryId)}
-                          placement="bottomRight"
-                          arrow
+                        <td className="px-2 py-3 text-sm leading-5">
+                      <div className="flex gap-x-1">
+                        <ModalBox
+                          btnLabel={
+                            <span className="item justify-center items-center">
+                              <EyeOutlined />
+                            </span>
+                          }
                         >
-                          <Button>Action</Button>
-                        </Dropdown>
+                          <ViewItemAccessory viewID={accessories?.id} />
+                        </ModalBox>
+
+                        <ModalBox
+                          btnLabel={
+                            <span className="item justify-center items-center">
+                              {" "}
+                              <EditOutlined />
+                            </span>
+                          }
+                        >
+                          <UpdateAccessory accessoryData={accessories} />
+                        </ModalBox>
+
+                        <Popconfirm
+                          title="Delete the task"
+                          description="Are you sure to delete this task?"
+                          onConfirm={() => confirm(accessories?.id)}
+                          onCancel={() => cancel}
+                          
+                          cancelText="No"
+                          okText="Delete"
+                          okType="danger"
+                        >
+                          <Button danger>
+                            <span className="item justify-center items-center">
+                              {" "}
+                              <DeleteOutlined />{" "}
+                            </span>
+                          </Button>
+                        </Popconfirm>
+                      </div>
+                    </td>
                       </td>
                     </tr>
                   );

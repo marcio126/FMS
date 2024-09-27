@@ -21,7 +21,7 @@ const ViewFuelItem = ({ viewID }: any, ItemType: string) => {
               children: `Vendor Name: ${fuel?.data?.vendorName}`,
             }, 
             {
-              children: `Fuel Type: ${fuel?.data?.fuelTyoe}`,
+              children: `Fuel Type: ${fuel?.data?.fuelType}`,
             }, 
             {
               children: `Time: ${fuel?.data?.Time}`,
@@ -33,10 +33,13 @@ const ViewFuelItem = ({ viewID }: any, ItemType: string) => {
               children: `Price: ${fuel?.data?.price}`,
             },
             { 
-              children: `Invoice: ${fuel?.data?.invoice}`,
+              children: `Meter: ${fuel?.data?.meter}`,
             },
             {
-              children: `Comments: ${fuel?.data?.comments}`,
+              children: `Province: ${fuel?.data?.province}`,
+            },
+            {
+              children: `Consumption: ${fuel?.data?.consumption}`,
             }
           ]}
         /> 
