@@ -132,24 +132,14 @@ export const sidebarItems = (role: string) => {
       key: `/${role}/inventory`,
     },
     {
-      label: <Link href={`/${role}/vendor`}>Vendors</Link>,
+      label: <Link href={`/${role}/vendors`}>Vendors</Link>,
       icon: <ShopOutlined />,
-      key: `/${role}/vendor`,
+      key: `/${role}/vendors`,
     },
     {
-      label: <Link href={`/${role}/part`}>Parts</Link>,
+      label: <Link href={`/${role}/managePart`}>Manage Parts</Link>,
       icon: <SettingOutlined />,
-      key: `/${role}/part`,
-      children:[
-         {
-          label: <Link href={`/${role}/manage_part`}>Manage Parts</Link>,
-          key: `/${role}/manage_part`,
-        },
-         {
-          label: <Link href={`/${role}/part_category`}>Parts Category</Link>,
-          key: `/${role}/part_category`,
-        }
-      ]
+      key: `/${role}/managePart`,
     },
     {
       label: "Expenses",
@@ -175,9 +165,9 @@ export const sidebarItems = (role: string) => {
       ],
     },
     {
-      label: <Link href={`/${role}/work_order`}>Work Orders</Link>,
+      label: <Link href={`/${role}/order`}>Orders</Link>,
       icon: <ToolOutlined />,
-      key: `/${role}/work_order`,
+      key: `/${role}/order`,
     },
     {
       label: <Link href={`/${role}/manageRequest`}>Manage Request</Link>,
@@ -190,14 +180,9 @@ export const sidebarItems = (role: string) => {
       key: `/${role}/ReportAnalysis`,
     },
     {
-      label: <Link href={`/${role}/note`}>Notes</Link>,
+      label: <Link href={`/${role}/review`}>Review</Link>,
       icon: <SelectOutlined />,
-      key: `/${role}/note`,
-    },
-    {
-      label: <Link href={`/${role}/testimonials`}>Testimonials</Link>,
-      icon: <SelectOutlined />,
-      key: `/${role}/testimonials`,
+      key: `/${role}/review`,
     },
     {
       label: "Trip Schedule",

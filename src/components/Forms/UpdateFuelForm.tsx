@@ -8,7 +8,6 @@ import {
 } from "@/redux/api/manageFuelApi";
 import { SubmitHandler } from "react-hook-form";
 import FormSelectField from "../ReusableForms/FormSelectField";
-import FormTextArea from "../ReusableForms/FormTextArea";
 import { useDriverVehicleQuery } from "@/redux/api/driverApi";
 
 type AddFuelValues = {

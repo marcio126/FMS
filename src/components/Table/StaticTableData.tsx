@@ -409,6 +409,198 @@ export const CustomerListTableFields = [
     fields: "Operation",
   },
 ]
+export const VendorsTableFields = [
+  {
+    id: 0,
+    fields: "Avatar",
+  },
+  {
+    id: 1,
+    fields: "Name",
+  },
+  {
+    id: 2,
+    fields: "Email",
+  },
+  {
+    id: 3,
+    fields: "Phone",
+  },
+  {
+    id: 5,
+    fields: "Address",
+  },
+  {
+    id: 4,
+    fields: "Vendor Type",
+  },
+  // {
+  //   id: 6,
+  //   fields: "City",
+  // },
+  // {
+  //   id: 7,
+  //   fields: "Country",
+  // },
+  // {
+  //   id: 8,
+  //   fields: "Postal Code",
+  // },
+  // {
+  //   id: 9,
+  //   fields: "Website",
+  // },
+  // {
+  //   id: 10,
+  //   fields: "Province",
+  // },
+  // {
+  //   id: 11,
+  //   fields: "Note",
+  // },
+  {
+    id: 12,
+    fields: "Rating",
+  },
+  {
+    id: 13,
+    fields: "Operation",
+  },
+]
+export const PartsTableFields = [
+  {
+    id: 0,
+    fields: "Avatar",
+  },
+  {
+    id: 1,
+    fields: "Title",
+  },
+  {
+    id: 2,
+    fields: "Category",
+  },
+  {
+    id: 3,
+    fields: "Model",
+  },
+  {
+    id: 5,
+    fields: "Status",
+  },
+  {
+    id: 4,
+    fields: "Availability",
+  },
+  // {
+  //   id: 6,
+  //   fields: "City",
+  // },
+  // {
+  //   id: 7,
+  //   fields: "Country",
+  // },
+  // {
+  //   id: 8,
+  //   fields: "Postal Code",
+  // },
+  // {
+  //   id: 9,
+  //   fields: "Website",
+  // },
+  // {
+  //   id: 10,
+  //   fields: "Province",
+  // },
+  // {
+  //   id: 11,
+  //   fields: "Note",
+  // },
+  {
+    id: 12,
+    fields: "Unit Cost",
+  },
+  {
+    id: 13,
+    fields: "Qty on Hand",
+  },
+  {
+    id: 14,
+    fields: "Vendor",
+  },
+  {
+    id: 14,
+    fields: "Manufacturer",
+  },
+]
+export const OrderListTableFields = [
+  {
+    id: 0,
+    fields: "Vendor",
+  },
+  {
+    id: 1,
+    fields: "Vehicle",
+  },
+  {
+    id: 2,
+    fields: "Issuedby",
+  },
+  {
+    id: 3,
+    fields: "Requiredby",
+  },
+  {
+    id: 4,
+    fields: "Cost",
+  },
+  {
+    id: 5,
+    fields: "Status",
+  },
+  {
+    id: 6,
+    fields: "Issued_to",
+  },
+  {
+    id: 7,
+    fields: "Assigned_to",
+  },
+  {
+    id: 8,
+    fields: "Note",
+  },
+  {
+    id: 9,
+    fields: "Operation",
+  },
+]
+export const ReviewListTableFields = [
+  {
+    id: 0,
+    fields: "vehicle",
+  },
+  {
+    id: 1,
+    fields: "Person in Charge",
+  },
+  {
+    id: 2,
+    fields: "Status",
+  },
+  {
+    id: 3,
+    fields: "Score",
+  },
+  {
+    id: 4,
+    fields: "Note",
+  },
+  {
+    id: 4,
+    fields: "Operation",
+  },
+]
 export const DriverListTableFields = [
   {
     id: 0,
