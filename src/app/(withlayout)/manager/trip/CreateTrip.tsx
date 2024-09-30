@@ -21,7 +21,18 @@ type CreateTripValue = {
   description: string;
   tripId: string;
 };
+  const tripTypeOption = [
+    { label: "Single", value: "Single" },
+    { label: "Round", value: "Round" }
+  ];
+  const paymentOption = [
+    { label: "Paypal", value: "Paypal" },
+    { label: "Payoneer", value: "Payoneer" },
+    { label: "Crypto", value: "Crypto" },
+    { label: "Bank", value: "Bank" },
+    { label: "Real-Money", value: "Real-Money" }
 
+  ];
 type MyObjectType = {
     label: any;  // Replace 'any' with a more specific type if possible
     value: string;
@@ -35,18 +46,7 @@ const CreateTrip = () => {
 
   const [createTrip] = useCreateTripMutation()
   const {data:allCustomer} = useGetAllListCustomerQuery({})
-  const tripTypeOption = [
-    { label: "Single", value: "Single" },
-    { label: "Round", value: "Round" }
-  ];
-  const paymentOption = [
-    { label: "Paypal", value: "Paypal" },
-    { label: "Payoneer", value: "Payoneer" },
-    { label: "Crypto", value: "Crypto" },
-    { label: "Bank", value: "Bank" },
-    { label: "Real-Money", value: "Real-Money" }
 
-  ];
   useEffect(() => {
     if (allCustomer?.data) {
             const options = allCustomer.data.map((customer: { name: any  }) => ({
@@ -57,7 +57,7 @@ const CreateTrip = () => {
         }
   }, [allCustomer]);
   const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
-    data.status = "UPCOMMING";
+    data.status = "PENDING";
     data.passengerCount = parseInt(data?.passengerCount);
     data.tripRent = parseInt(data?.tripRent);
     data.startTime = new Date(data?.startTime);
