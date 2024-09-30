@@ -40,7 +40,10 @@ const ViewItem = ({ viewID }: any, ItemType: string) => {
             },
             {
               children: `Tax: ${vehicle?.data?.tax}`,
-            },             
+            }, 
+            {
+              children: `Available: ${vehicle?.data?.available}`,
+            },
             {
               children: `RegistrationDate: ${registrationDate}`,
             },

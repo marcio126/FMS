@@ -6,8 +6,8 @@ import { Button, message } from "antd";
 import Form from "@/components/ReusableForms/Form";
 import FormInput from "@/components/ReusableForms/FormInput";
 import FormSelectField from "@/components/ReusableForms/FormSelectField";
-import FormTextArea from "@/components/ReusableForms/FormTextArea";
 import { useDriverVehicleQuery } from "@/redux/api/driverApi";
+import { useGetAllListVendorsQuery } from "@/redux/api/vendorsApi";
 import { useCreateFuelMutation } from "@/redux/api/manageFuelApi";
 
 import { SubmitHandler } from "react-hook-form";
@@ -22,7 +22,7 @@ type AddFuelValues = {
   meter: Number;
   photo: string;
   province: string;
-  consumption: string;
+  consumption: number;
 };
 
 const AddManageFuel = () => {
@@ -31,7 +31,7 @@ const AddManageFuel = () => {
     { label: 'Shell #4291', value: 'Shell #4291' },
     { label: 'Shell #5820', value: 'Shell #5820' }
   ]
-  const tyoeArr = [
+  const typeArr = [
     { label: 'BioDiesel', value: 'BioDiesel' },
     { label: 'Compressed Natural Gas', value: 'Compressed Natural Gas' },
     { label: 'DEF', value: 'DEF' },
@@ -46,9 +46,11 @@ const AddManageFuel = () => {
 
   ]
   const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+  const [vendorOptions, setVendorOptions] = useState<{ label: string; value: string }[]>([]);
   const [createFuel] = useCreateFuelMutation();
   const { data: driverVehicle } = useDriverVehicleQuery({});
-useEffect(() => {
+  const { data: vendors } = useGetAllListVendorsQuery({});
+  useEffect(() => {
     if (driverVehicle?.data?.vehicleResult) {
             const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
                 label: vehicle.brand,
@@ -57,6 +59,15 @@ useEffect(() => {
             setVehicleOptions(options);
         }
   }, [driverVehicle]);
+  useEffect(() => {
+    if (vendors?.data) {
+            const options = vendors.data.map((vendor: { name: any }) => ({
+                label: vendor.name,
+                value: vendor.name
+            }));
+            setVendorOptions(options);
+        }
+  }, [vendors]);
   const [avater, setAvater] = useState("");
   const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
 
@@ -69,13 +80,15 @@ useEffect(() => {
     data.price = parseFloat(data?.price);
     data.meter = parseInt(data?.meter);
     data.province = data?.province;
-    data.consumption = data?.consumption;
+    data.consumption = parseInt(data?.consumption);
     
     data.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
 
     const [vehicle_id, vehicle_val] = data?.vehicle_id.split(',');
     data.vehicleVal = vehicle_val;
     data.vehicle_id = vehicle_id;
+    data.vendorName = data?.vendorName;
+    console.log(data);
     const res = await createFuel(data);
 
     if ((res as any)?.data?.statusCode === 200) {
@@ -129,15 +142,15 @@ useEffect(() => {
               name="vendorName"
               size="large"
               placeholder="Vendor Name"
-              options={vendorArr}
+              options={vendorOptions}
             />
           </div>
           <div className="mb-4">
             <FormSelectField
               name="fuelType"
               size="large"
-              placeholder="Fuel tyoe"
-              options={tyoeArr}
+              placeholder="Fuel type"
+              options={typeArr}
             />
           </div>
 
@@ -179,7 +192,7 @@ useEffect(() => {
           <div className="mb-4">
             <FormInput
               name="consumption"
-              type="text"
+              type="number"
               placeholder="Consumption"
             />
           </div>

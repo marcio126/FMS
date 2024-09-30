@@ -49,7 +49,7 @@ const tripApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.trip],
     }),
     upcomingTrip:build.query({
-      query:(page)=>({
+      query:()=>({
         url:`/trip/upcomingTrip`,
         method:"GET"
       }),

@@ -2,30 +2,75 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Input, message } from "antd";
 import { useEffect, useState } from "react";
+import { getTokenFromKey } from "@/services/auth.service";
+import { useGetProfileQuery } from "@/redux/api/authApi";
 
 import Heading from "../ui/Heading";
-import { trips } from "./StaticTableData";
-import { useTripAllQuery } from "@/redux/api/tripApi";
-
+import { useUpcomingTripQuery } from "@/redux/api/tripApi";
+const tripFields = [
+    {
+      id: 0,
+      fields: "Name",
+    },
+    {
+      id: 1,
+      fields: "Phone",
+    },
+    {
+      id: 2,
+      fields: "Start Date",
+    },
+    {
+      id: 3,
+      fields: "Trip Road(from - to)",
+    },
+    {
+      id: 4,
+      fields: "Trip Type",
+    },
+    {
+      id: 10,
+      fields: "Status",
+    },
+  ];
 const TripHistoryTable = () => {
   const [current, setCurrent] = useState(1);
+  const [userProfile, setUserProfile] = useState<any>({});
   const [allTrip, setAllTrip] = useState([{
     id:'',
     passengerName:'',
     passengerPhone:'',
     startLocation: "",
+    startTime:"",
     tripPeriod:"",
     endLocation:"",
     status:''
   }])
-  const { data:tripAll , isLoading } = useTripAllQuery(current);
-
+  const { data:tripAll , isLoading } = useUpcomingTripQuery({});
+  const userInfo = getTokenFromKey();
+  const { data: getProfile } = useGetProfileQuery(userInfo?.id);
+  useEffect(() => {
+    if (getProfile != undefined) {
+      setUserProfile(getProfile.data);
+      }
+  }, [getProfile]);
+  const userName = userProfile.name;
   useEffect(()=>{
-    if(tripAll != undefined){
-      setAllTrip(tripAll.data.data)
+    if(tripAll != undefined && userName){
+      const currentdate = new Date();
+      const formattedDate = currentdate.toISOString().split('T')[0];
+      const compareToday = new Date(formattedDate);
+      const tripItem = tripAll.data.map((item: any) => {
+        let comparehistory = new Date(item.startTime.substring(0,10));
+        if ((compareToday > comparehistory)&&(item.passengerName == userName)) {
+          return item;
+        }
+        return null
+      }).filter((item: any) => item !== null);
+      setAllTrip(tripItem);
     }
     
-  },[tripAll])
+  },[tripAll,userProfile])
 
   const confirm = (e: any) => {
     console.log(e);
@@ -39,39 +84,6 @@ const TripHistoryTable = () => {
 
   //searching code
   const [searchTerm, setSearchTerm] = useState("");
-
-  const tripFields = [
-    {
-      id: 0,
-      fields: "TripId",
-    },
-    {
-      id: 1,
-      fields: "Passenger Name",
-    },
-    {
-      id: 2,
-      fields: "Passenger Phone",
-    },
-    {
-      id: 3,
-      fields: "Trip Period",
-    },
-    {
-      id: 4,
-      fields: "Start-Location",
-    },
-    {
-      id: 8,
-      fields: "End-Location",
-    },
-    {
-      id: 10,
-      fields: "Status",
-    },
-  ];
-
-  console.log(allTrip)
   return (
     <>
       <Heading>
@@ -114,9 +126,6 @@ const TripHistoryTable = () => {
                   if (searchTerm == "") {
                     return value;
                   } else if (
-                    value?.id
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
                     value?.passengerName
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase())
@@ -132,10 +141,6 @@ const TripHistoryTable = () => {
                     }  `}
                   >
                     <td className="px-2 py-3 text-sm leading-5">
-                      {trips?.id}
-                    </td>
-
-                    <td className="px-2 py-3 text-sm leading-5">
                       {trips?.passengerName}
                     </td>
 
@@ -144,11 +149,11 @@ const TripHistoryTable = () => {
                     </td>
 
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {trips?.startLocation}
+                      {trips.startTime.substring(0,10)}
                     </td>
 
-                    <td className=" px-2 py-3 text-sm leading-5">
-                      {trips?.endLocation}
+                    <td className=" px-2 py-3 text-sm leading-5 w-96">
+                     {trips?.startLocation} --- {trips?.endLocation}
                     </td>
 
                     <td className=" px-2 py-3 text-sm leading-5">

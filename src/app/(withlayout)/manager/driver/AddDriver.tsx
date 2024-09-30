@@ -26,8 +26,8 @@ type AddVehicleValues = {
   profilePic: string;
   score: Number;
   trans_distance: Number;
+  available: string;
 };
-
 const AddDriver = () => {
   const [avater, setAvater] = useState("");
   const [currentImage, setCurrentImage] = useState(avater || "https://i.ibb.co/SRF75vM/avatar.png");
@@ -71,7 +71,7 @@ const AddDriver = () => {
     data.score = parseInt(data.score);
     data.trans_distance = parseFloat(data.trans_distance);
     data.license_expiry_date = new Date(data.license_expiry_date);
-
+    data.available = "true";
       const res = await addDriver(data);
     
       if((res as any)?.data?.statusCode === 200){

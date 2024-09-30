@@ -110,9 +110,9 @@ export const sidebarItems = (role: string) => {
           key: `/${role}/vehicleInspection`,
         },
         {
-          label: <Link href={`/${role}/vehicle_track`}>Vehicle Track</Link>,
+          label: <Link href={`/${role}/vehicleTrack`}>Vehicle Track</Link>,
           icon: <EnvironmentOutlined />,
-          key: `/${role}/vehicle_track`,
+          key: `/${role}/vehicleTrack`,
         },
       ]
     },
@@ -126,40 +126,30 @@ export const sidebarItems = (role: string) => {
       icon: <ExperimentOutlined />,
       key: `/${role}/manageFuel`,
     },
+    // {
+    //   label: <Link href={`/${role}/inventory`}>Inventory</Link>,
+    //   icon: <ShopOutlined />,
+    //   key: `/${role}/inventory`,
+    // },
     {
-      label: <Link href={`/${role}/inventory`}>Inventory</Link>,
+      label: <Link href={`/${role}/vendors`}>Vendors</Link>,
       icon: <ShopOutlined />,
-      key: `/${role}/inventory`,
+      key: `/${role}/vendors`,
     },
     {
-      label: <Link href={`/${role}/vendor`}>Vendors</Link>,
-      icon: <ShopOutlined />,
-      key: `/${role}/vendor`,
-    },
-    {
-      label: <Link href={`/${role}/part`}>Parts</Link>,
+      label: <Link href={`/${role}/managePart`}>Manage Parts</Link>,
       icon: <SettingOutlined />,
-      key: `/${role}/part`,
-      children:[
-         {
-          label: <Link href={`/${role}/manage_part`}>Manage Parts</Link>,
-          key: `/${role}/manage_part`,
-        },
-         {
-          label: <Link href={`/${role}/part_category`}>Parts Category</Link>,
-          key: `/${role}/part_category`,
-        }
-      ]
+      key: `/${role}/managePart`,
     },
     {
       label: "Expenses",
       key: "expenses",
       icon: <DollarOutlined />,
       children: [
-        {
-          label: <Link href={`/${role}/trip-cost`}>Trip-Cost</Link>,
-          key: "Trip Cost",
-        },
+        // {
+        //   label: <Link href={`/${role}/trip-cost`}>Trip-Cost</Link>,
+        //   key: "Trip Cost",
+        // },
         {
           label: <Link href={`/${role}/salary`}>Salary</Link>,
           key: "Salary",
@@ -175,35 +165,67 @@ export const sidebarItems = (role: string) => {
       ],
     },
     {
-      label: <Link href={`/${role}/work_order`}>Work Orders</Link>,
+      label: <Link href={`/${role}/order`}>Orders</Link>,
       icon: <ToolOutlined />,
-      key: `/${role}/work_order`,
+      key: `/${role}/order`,
     },
     {
-      label: <Link href={`/${role}/manageRequest`}>Manage Request</Link>,
-      icon: <SubnodeOutlined />,
-      key: `/${role}/manageRequest`,
+      label:"Drivers",
+      icon: <ToolOutlined />,
+      key: "Drivers",
+      children:[
+        {
+          label: <Link href={`/driver/driverVehicleInspection`}>Veicle Inspection</Link>,
+          key: "driverVehicleInspection",
+        },
+        {
+          label: <Link href={`/driver/driverManageFuel`}>Manage Fuel</Link>,
+          key: "driverManageFuel",
+        },
+        {
+          label: <Link href={`/driver/income`}>Manage Income</Link>,
+          key: "income",
+        },
+        {
+          label: <Link href={`/driver/expense`}>Manage Expense</Link>,
+          key: "expense",
+        },
+         {
+          label: <Link href={`/driver/mybook`}>My booking</Link>,
+          key: "mybook",
+        },
+      ]
     },
+    // {
+    //   label: <Link href={`/${role}/manageRequest`}>Manage Request</Link>,
+    //   icon: <SubnodeOutlined />,
+    //   key: `/${role}/manageRequest`,
+    // },
     {
       label: <Link href={`/${role}/report`}>Report and Analysis</Link>,
       icon: <FileZipOutlined />,
       key: `/${role}/ReportAnalysis`,
     },
     {
-      label: <Link href={`/${role}/note`}>Notes</Link>,
+      label: <Link href={`/${role}/review`}>Review</Link>,
       icon: <SelectOutlined />,
-      key: `/${role}/note`,
-    },
-    {
-      label: <Link href={`/${role}/testimonials`}>Testimonials</Link>,
-      icon: <SelectOutlined />,
-      key: `/${role}/testimonials`,
+      key: `/${role}/review`,
     },
     {
       label: "Trip Schedule",
       key: "tripSchedule",
       icon: <ScheduleOutlined />,
       children: [
+        {
+          label: <Link href={`/${role}/provider`}>Provider</Link>,
+          // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
+          key: "provider",
+        },
+       {
+          label: <Link href={`/${role}/addTrip`}>Add Trip</Link>,
+          // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
+          key: "addTrip",
+        },
         {
           // label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
           label: <Link href={`/driver/upComingTrip`}>Upcoming Trip</Link>,
@@ -216,12 +238,12 @@ export const sidebarItems = (role: string) => {
         },
       ],
     },
-    {
-      label: <Link href={`/driver/inventoryRequest`}>Inventory Request</Link>,
-      // label: <Link href={`/${role}/inventoryRequest`}>Inventory Request</Link>,
-      icon: <ShopOutlined />,
-      key: `/${role}/inventoryRequest`,
-    },
+    // {
+    //   label: <Link href={`/driver/inventoryRequest`}>Inventory Request</Link>,
+    //   // label: <Link href={`/${role}/inventoryRequest`}>Inventory Request</Link>,
+    //   icon: <ShopOutlined />,
+    //   key: `/${role}/inventoryRequest`,
+    // },
      {
       label: <Link href={`/super-admin/roleManage`}>Role Manage</Link>,
       // label: <Link href={`/${role}/roleManage`}>Role Manage</Link>,

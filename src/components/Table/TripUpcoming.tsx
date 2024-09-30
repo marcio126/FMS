@@ -5,38 +5,78 @@ import { useEffect, useState } from "react";
 
 import Heading from "../ui/Heading";
 import { trips } from "./StaticTableData";
-import { getUserInfo } from "@/services/auth.service";
+import { getTokenFromKey } from "@/services/auth.service";
+import { useGetProfileQuery } from "@/redux/api/authApi";
 import { useUpcomingTripQuery } from "@/redux/api/tripApi";
 
-
+const tripFields = [
+    {
+      id: 0,
+      fields: "Name",
+    },
+    {
+      id: 1,
+      fields: "Phone",
+    },
+    {
+      id: 2,
+      fields: "Start Date",
+    },
+    {
+      id: 3,
+      fields: "Trip Road(from - to)",
+    },
+    {
+      id: 4,
+      fields: "Trip Type",
+    },
+    {
+      id: 10,
+      fields: "Status",
+    },
+  ];
 const UpcomingTripTable = () => {
   const [current, setCurrent] = useState(1);
-  const [upcoming, setUpcoming] = useState([{
+  const [userProfile, setUserProfile] = useState<any>({});
+  const [allTrip, setAllTrip] = useState([{
     id:'',
     passengerName:'',
     passengerPhone:'',
     startLocation: "",
+    startTime:"",
     tripPeriod:"",
     endLocation:"",
     status:''
   }])
-  // const { role,id } = getUserInfo() as any;
-  // useEffect(()=>{
-    
-  // },[role,id])
 
-  const { data:upcomingTrip , isLoading } = useUpcomingTripQuery(current);
-
+  const { data:tripAll , isLoading } = useUpcomingTripQuery({});
+  const userInfo = getTokenFromKey();
+  const { data: getProfile } = useGetProfileQuery(userInfo?.id);
+  useEffect(() => {
+    if (getProfile != undefined) {
+      setUserProfile(getProfile.data);
+      }
+  }, [getProfile]);
+  const userName = userProfile.name;
+  
   useEffect(()=>{
-    if(upcomingTrip != undefined){
-      setUpcoming(upcomingTrip.data)
+    if(tripAll != undefined && userName){
+      const currentdate = new Date();
+      const formattedDate = currentdate.toISOString().split('T')[0];
+      const compareToday = new Date(formattedDate);
+      const tripItem = tripAll.data.map((item: any) => {
+        let comparehistory = new Date(item.startTime.substring(0,10));
+        if ((compareToday < comparehistory)&&(item.passengerName == userName)) {
+          return item;
+        }
+        return null
+      }).filter((item: any) => item !== null);
+      setAllTrip(tripItem);
     }
     
-  },[upcomingTrip])
+  },[tripAll,userProfile])
   
 
-  
-// const TripUpcoming = () => {
 
   const confirm = (e: any) => {
     console.log(e);
@@ -49,37 +89,6 @@ const UpcomingTripTable = () => {
   };
   //searching code
   const [searchTerm, setSearchTerm] = useState("");
-
-  const tripFields = [
-    {
-      id: 0,
-      fields: "TripId",
-    },
-    {
-      id: 1,
-      fields: "Passenger Name",
-    },
-    {
-      id: 2,
-      fields: "Passenger Phone",
-    },
-    {
-      id: 3,
-      fields: "Trip Period",
-    },
-    {
-      id: 4,
-      fields: "Start-Location",
-    },
-    {
-      id: 8,
-      fields: "End-Location",
-    },
-    {
-      id: 10,
-      fields: "Status",
-    },
-  ];
 
   return (
     <>
@@ -95,7 +104,7 @@ const UpcomingTripTable = () => {
           <div className="mx-auto max-w-[55%] md:max-w-[42%] my-2">
             <Input
               size="large"
-              placeholder={`Search by Trip Id / Passenger Name of total ${upcoming?.length} Trips`}
+              placeholder={`Search by Trip Id / Passenger Name of total ${allTrip?.length} Trips`}
               prefix={<SearchOutlined />}
               onChange={(event) => {
                 setSearchTerm(event?.target?.value);
@@ -118,14 +127,11 @@ const UpcomingTripTable = () => {
             </thead>
 
             <tbody className="dark:text-[#E8E8E8]">
-              {(upcoming ?? [])
+              {(allTrip ?? [])
                 ?.filter((value) => {
                   if (searchTerm == "") {
                     return value;
                   } else if (
-                    value?.id
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
                     value?.passengerName
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase())
@@ -141,23 +147,19 @@ const UpcomingTripTable = () => {
                     }  `}
                   >
                     <td className="px-2 py-3 text-sm leading-5">
-                      {trip?.id}
-                    </td>
-
-                    <td className="px-2 py-3 text-sm leading-5">
                       {trip?.passengerName}
                     </td>
 
                     <td className="px-2 py-3 text-sm leading-5">
                       {trip?.passengerPhone}
                     </td>
-
+                    
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {trip?.startLocation}
+                      {trip.startTime.substring(0,10)}
                     </td>
 
-                    <td className=" px-2 py-3 text-sm leading-5">
-                      {trip?.endLocation}
+                    <td className=" px-2 py-3 text-sm leading-5 w-96">
+                     {trip?.startLocation} --- {trip?.endLocation}
                     </td>
 
                     <td className=" px-2 py-3 text-sm leading-5">
