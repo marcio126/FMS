@@ -625,7 +625,7 @@ export const DriverListTableFields = [
   },
   {
     id: 4,
-    fields: "Experince",
+    fields: "Experience",
   },
   {
     id: 5,
@@ -689,7 +689,36 @@ export const ManageRequestTableFields = [
   }
 
 ];
-
+export const ExpenseListTableFields = [
+  {
+    id:0,
+    fields:"Vehicle"
+  },
+  {
+    id:1,
+    fields:"Expense Type"
+  },
+  {
+    id:2,
+    fields:"Vendor"
+  },
+  {
+    id:3,
+    fields:"Amount"
+  },
+  {
+    id:4,
+    fields:"Note"
+  },
+  {
+    id:5,
+    fields:"Date"
+  },
+  {
+    id:6,
+    fields:"Operation"
+  },
+]
 export const vehicleDriversList = [
   {
     name: "John Doe",

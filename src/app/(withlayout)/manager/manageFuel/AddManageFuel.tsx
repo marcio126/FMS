@@ -88,6 +88,7 @@ const AddManageFuel = () => {
     data.vehicleVal = vehicle_val;
     data.vehicle_id = vehicle_id;
     data.vendorName = data?.vendorName;
+    console.log(data);
     const res = await createFuel(data);
 
     if ((res as any)?.data?.statusCode === 200) {

@@ -10,17 +10,21 @@ import {
   useGetAllQuery,
   useUserDeleteMutation
 } from "@/redux/api/authApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const UserListTable = () => {
   const [current, setCurrent] = useState(1);
   const [deleteUser] = useUserDeleteMutation();
-
+  const [users, setUsers] = useState<any>({});
   const onChange: PaginationProps["onChange"] = (page) => {
       setCurrent(page);
     };
   const { data: allUser } = useGetAllQuery(current);
-  console.log(allUser);
+  useEffect(() => {
+    const filterManagers = allUser?.data?.data.filter((userItem: any) => userItem?.role?.toUpperCase() === "MANAGER");
+    setUsers(filterManagers);
+  },[allUser])
+  console.log(users);
   const confirm = async (e: any) => {
     const res = await deleteUser(e);
     console.log("🚀 ~ confirm ~ res:", res);

@@ -97,7 +97,7 @@ const year = [
 const IncomeReportTableFields = [
   {
     id: 0,
-    fields: "Vehicle Maker",
+    fields: "Vehicle Name",
   },
   {
     id: 1,
