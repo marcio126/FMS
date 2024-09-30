@@ -149,7 +149,7 @@ const ManageFuelTable = () => {
                       {fuel?.meter}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.consumption}
+                      {fuel?.consumption}{' '}KMPG
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
                       {fuel?.province}

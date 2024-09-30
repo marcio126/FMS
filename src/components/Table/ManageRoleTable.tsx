@@ -118,7 +118,6 @@ const ManageRoleTable = () => {
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                          { value: `${user?.id}/ADMIN`, label: "ADMIN" },
                           { value: `${user?.id}/USER`, label: "USER" },
                           { value: `${user?.id}/DRIVER`, label: "DRIVER" },
                           { value: `${user?.id}/MANAGER`, label: "MANAGER" },

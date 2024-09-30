@@ -64,7 +64,7 @@ const Sidebar = () => {
 
       <div className="demo-logo-vertical" />
       <Menu
-        className="customSidebar"
+        className="customSidebar py-20"
         theme="dark"
         defaultSelectedKeys={["1"]}
         mode="inline"

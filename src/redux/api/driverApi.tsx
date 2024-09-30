@@ -11,6 +11,13 @@ const driverApi = baseApi.injectEndpoints({
       }), 
       providesTags: [tagTypes.driver],
     }),
+    getDriverList: build.query({
+      query: () => ({
+        url: `/driver/list`,
+        method: "GET", 
+      }), 
+      providesTags: [tagTypes.driver],
+    }),
     getSingleDriver: build.query({
       query: (id) => ({
         url: `/driver/single/${id}`,
@@ -57,5 +64,6 @@ export const {
     useCreateDriverMutation,
     useUpdateDriverMutation,
     useDeleteDriverMutation,
-    useDriverVehicleQuery
+    useDriverVehicleQuery,
+    useGetDriverListQuery
 } = driverApi;

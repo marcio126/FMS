@@ -49,7 +49,10 @@ const ViewItemDriver = ({ viewID }: any, ItemType: string) => {
               children: `Score: ${driver?.data?.score}`, 
             },
             {
-              children: `trans distance: ${driver?.data?.trans_distance} Km`, 
+              children: `Trans distance: ${driver?.data?.trans_distance} Km`, 
+            },
+            {
+              children: `Available: ${driver?.data?.available}`, 
             }
           ]}
         /> 

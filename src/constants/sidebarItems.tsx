@@ -110,9 +110,9 @@ export const sidebarItems = (role: string) => {
           key: `/${role}/vehicleInspection`,
         },
         {
-          label: <Link href={`/${role}/vehicle_track`}>Vehicle Track</Link>,
+          label: <Link href={`/${role}/vehicleTrack`}>Vehicle Track</Link>,
           icon: <EnvironmentOutlined />,
-          key: `/${role}/vehicle_track`,
+          key: `/${role}/vehicleTrack`,
         },
       ]
     },
@@ -170,6 +170,33 @@ export const sidebarItems = (role: string) => {
       key: `/${role}/order`,
     },
     {
+      label:"Drivers",
+      icon: <ToolOutlined />,
+      key: "Drivers",
+      children:[
+        {
+          label: <Link href={`/${role}/driverVehicleInspection`}>Veicle Inspection</Link>,
+          key: "driverVehicleInspection",
+        },
+        {
+          label: <Link href={`/${role}/driverManageFuel`}>Manage Fuel</Link>,
+          key: "driverManageFuel",
+        },
+        {
+          label: <Link href={`/${role}/manageIncome`}>Manage Income</Link>,
+          key: "manageIncome",
+        },
+        {
+          label: <Link href={`/${role}/manageExpense`}>Manage Expense</Link>,
+          key: "manageExpense",
+        },
+         {
+          label: <Link href={`/${role}/mybooking`}>My booking</Link>,
+          key: "mybooking",
+        },
+      ]
+    },
+    {
       label: <Link href={`/${role}/manageRequest`}>Manage Request</Link>,
       icon: <SubnodeOutlined />,
       key: `/${role}/manageRequest`,
@@ -189,6 +216,16 @@ export const sidebarItems = (role: string) => {
       key: "tripSchedule",
       icon: <ScheduleOutlined />,
       children: [
+        {
+          label: <Link href={`/${role}/provider`}>Provider</Link>,
+          // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
+          key: "provider",
+        },
+       {
+          label: <Link href={`/${role}/addTrip`}>Add Trip</Link>,
+          // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
+          key: "addTrip",
+        },
         {
           // label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
           label: <Link href={`/driver/upComingTrip`}>Upcoming Trip</Link>,

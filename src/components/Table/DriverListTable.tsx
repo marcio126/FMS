@@ -40,6 +40,7 @@ interface IProps {
   license_type?: string;
   license_expiry_date?: Date;
   trans_distance?: number;
+  available?:string
 }
 
 const DriverListTable = () => {
@@ -161,6 +162,9 @@ const DriverListTable = () => {
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
                       {drivers?.license_type}
+                    </td>
+                    <td className="px-2 py-3 text-sm leading-5">
+                      {drivers?.available=="true"?"Available":"Not Available"}
                     </td>
                     
                     <td className="px-2 py-3 text-sm leading-5">

@@ -25,6 +25,10 @@ export const vehiclesFields = [
   },
   {
     id: 7,
+    fields: "Available",
+  },
+  {
+    id: 8,
     fields: "Actions",
   },
 ];
@@ -637,6 +641,10 @@ export const DriverListTableFields = [
   },
   {
     id: 8,
+    fields: "Available",
+  },
+  {
+    id: 9,
     fields: "Actions",
   },
 ];
@@ -748,6 +756,14 @@ export const vehicleDriversList = [
 
 export const tripFields = [
   {
+    id: 8,
+    fields: "Driver",
+  },
+  {
+    id: 9,
+    fields: "Vehicle",
+  },
+  {
     id: 0,
     fields: "Start Location",
   },
@@ -782,13 +798,7 @@ export const tripFields = [
   {
     id: 7,
     fields: "Trip Rent($)",
-  }, {
-    id: 8,
-    fields: "Driver",
-  }, {
-    id: 9,
-    fields: "Vehicle",
-  },
+  }, 
   {
     id: 10,
     fields: "Status",
@@ -833,11 +843,11 @@ export const manageFuelFields = [
   },
   {
     id: 8,
-    fields: "State/Province",
+    fields: "Consumption",
   },
   {
     id: 9,
-    fields: "Consumption",
+    fields: "State/Province",
   },
   {
     id: 10,

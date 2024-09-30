@@ -22,11 +22,15 @@ type AddVehicleValues = {
   profilePic: string;
   score: Number;
   trans_distance: Number;
+  available: string;
   avatar: string;
 };
-
+const availableOption = [
+  { label: "Available", value: "true" },
+  {label:"Not Available", value:"false"}
+]
 const UpdateDriverForm = ({ driverData }: any) => { 
-  const { name, phone, experience, email, nid, license_no, license_expiry_date, license_type, score, trans_distance,address,avatar, id } = driverData;
+  const { name, phone, experience, email, nid, license_no, license_expiry_date, license_type, score, trans_distance,address,avatar,available, id } = driverData;
   const defaultValues = {
     name: name,
     email:email,
@@ -40,6 +44,7 @@ const UpdateDriverForm = ({ driverData }: any) => {
     score: score,
     trans_distance: trans_distance,
     experience: experience,
+    available:available
 
   };
   const [avater, setAvater] = useState(avatar?avatar:"");
@@ -145,6 +150,15 @@ const handleImageUpload = (e : any) => {
               name="trans_distance"
               type="number"
               placeholder="Transported Distance (Km)"
+            />
+          </div>
+          <div className="mb-4 flex justify-between">
+            <span className="p-1">Available:</span>
+            <FormSelectField
+              name="available"
+              size="large"
+              placeholder="Select Vehicle Type"
+              options={availableOption}
             />
           </div>
           <div className="flex lg:flex-row flex-col gap-4 justify-center lg:items-center mt-2 py-2">

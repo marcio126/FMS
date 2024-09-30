@@ -10,6 +10,7 @@ import {
   PhoneOutlined,
   TwitterSquareFilled,
   UserAddOutlined,
+  KeyOutlined
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Divider, Menu, message } from "antd";
@@ -44,6 +45,7 @@ function getItem(
 const items: MenuProps["items"] = [
   getItem("Edit Profile", "edit-profile", <EditOutlined />),
   getItem("Social Profile", "social-profile", <UserAddOutlined />),
+  getItem("Password", "password", <KeyOutlined />),
 ];
 
 const UserProfile = ()  => {
@@ -53,13 +55,15 @@ const UserProfile = ()  => {
   const [profileUpdate] = useProfileUpdateMutation();
     const userInfo = getTokenFromKey();
     const { data: getProfile } = useGetProfileQuery(userInfo?.id);
-  const [userProfile, setUserProfile] = useState<any>({});
-  const [fullname, setFullName] = useState("");
+    const [userProfile, setUserProfile] = useState<any>({});
+    const [fullname, setFullName] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
-  const [location, setLocation] = useState("");
-  const [avatar, setAvater] = useState("");
+    const [location, setLocation] = useState("");
+    const [avatar, setAvater] = useState("");
   const [currentImage, setCurrentImage] = useState(avatar || "https://i.ibb.co/W5QpjZ7/avatar.png");
+  const [new_password, setNewPassword] = useState("");
+  const [new_repassword, setNewRePassword] = useState("");
     useEffect(() => {
     if (getProfile != undefined) {
       setUserProfile(getProfile.data);
@@ -98,8 +102,20 @@ const UserProfile = ()  => {
       data.phone = phone != "" ? phone : data.phone;
       data.address = address != "" ? address : data.address;
       data.location = location != "" ? location : data.location;
-      data.avatar = avatar !="" ? avatar :data.avatar;
+      data.avatar = avatar != "" ? avatar : data.avatar;
+      if(new_password!="" || new_repassword !=""){
+        if (new_password == new_repassword) {
+          data.newpassword = new_password;
+        }
+        else {
+          message.error("Didn't match password!");
+        }
+      }
+      else{
+        data.newpassword = "";
+      }
       let id = data.id;
+      
       const res = await profileUpdate({id, ...data});
         if ((res as any).data?.statusCode === 200) {
         message.success("User Profile Update successful");
@@ -110,6 +126,7 @@ const UserProfile = ()  => {
       message.error("Update profile unsuccessful");
     }
   };
+  
   return (
     <div>
       <h1 className="text-2xl font-bold text-textColor">My Profile</h1>
@@ -236,6 +253,38 @@ const UserProfile = ()  => {
                         }}
                       />
                     </div>
+                    <div>
+                      <FormInput
+                        name="new_password"
+                        type="password"
+                        label="Password"
+                        size="large"
+                        placeholder="Password"
+                        value={new_password}
+                        prefix={<KeyOutlined />}
+                        onChange={(e: {
+                          target: { value: SetStateAction<string> };
+                        }) => {
+                          return setNewPassword(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <FormInput
+                        name="new_password_reenter"
+                        type="password"
+                        label="Reender Password"
+                        size="large"
+                        placeholder="Reenter"
+                        value={new_repassword}
+                        prefix={<KeyOutlined />}
+                        onChange={(e: {
+                          target: { value: SetStateAction<string> };
+                        }) => {
+                          return setNewRePassword(e.target.value);
+                        }}
+                      />
+                    </div>
                   </div>
                   <button
                     type="submit"
@@ -294,6 +343,7 @@ const UserProfile = ()  => {
               </div>
             </div>
           )}
+          
       </div>
       </div>
       </Form>

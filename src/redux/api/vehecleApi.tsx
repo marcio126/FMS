@@ -11,6 +11,13 @@ const vehicleApi = baseApi.injectEndpoints({
       }), 
       providesTags: [tagTypes.vehicle],
     }),
+    vehicleAllList: build.query({
+      query: () => ({
+        url: "/vehicle/list",
+        method: "GET", 
+      }), 
+      providesTags: [tagTypes.vehicle],
+    }),
     getSingleVehicle: build.query({
       query: (id) => ({
         url: `/vehicle/single/${id}`,
@@ -46,6 +53,7 @@ const vehicleApi = baseApi.injectEndpoints({
 
 export const { 
   useVehicleAllQuery, 
+  useVehicleAllListQuery, 
   useGetSingleVehicleQuery,
   useCreateVehicleMutation, 
   useUpdateSingleVehicleMutation, 

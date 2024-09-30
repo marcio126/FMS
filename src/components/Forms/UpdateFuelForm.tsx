@@ -20,7 +20,7 @@ type AddFuelValues = {
   meter: Number;
   photo: string;
   province: string;
-  consumption: string;
+  consumption: number;
 };
 
 const UpdateFuelForm = ({ fuelData }: any) => {
@@ -74,7 +74,7 @@ const UpdateFuelForm = ({ fuelData }: any) => {
     updateData.province = updateData?.province;
     updateData.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
     updateData.meter = parseInt(updateData?.meter);
-    updateData.consumption = updateData?.consumption;
+    updateData.consumption = parseInt(updateData?.consumption);
     try {
       const res = await updateFuel({ id, ...updateData });
       if ((res as any)?.data?.statusCode === 200) {
@@ -188,7 +188,7 @@ const UpdateFuelForm = ({ fuelData }: any) => {
           <div className="mb-4">
             <FormInput
               name="consumption"
-              type="text"
+              type="number"
               placeholder="Consumption"
             />
           </div>

@@ -11,14 +11,13 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import type { PaginationProps } from "antd";
-import { Button, Input, Pagination, Popconfirm, message } from "antd";
+import { Image,Button, Input, Pagination, Popconfirm, message } from "antd";
 import React, { useState } from "react";
 import UpdateVehecleForm from "../Forms/UpdateVehicleForm";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
 import ViewItem from "../ui/ViewItem";
 import { vehiclesFields } from "./StaticTableData";
-
 interface IProps {
   id: string;
   vehicleName: string;
@@ -27,6 +26,8 @@ interface IProps {
   model: string;
   vehicleType: string;
   fuelType: string;
+  available:string;
+  avatar: string;
 }
 
 const VehicleListTable = (e: any) => {
@@ -48,8 +49,9 @@ const VehicleListTable = (e: any) => {
     setCurrent(page);
   };
 
-  const { data: vehicle } = useVehicleAllQuery(current);
+  const { data: vehicles } = useVehicleAllQuery(current);
   //searching code
+  console.log(vehicles);
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
@@ -95,7 +97,7 @@ const VehicleListTable = (e: any) => {
             </thead>
 
             <tbody className="dark:text-[#E8E8E8]">
-              {((vehicle as any)?.data?.data ?? [])
+              {((vehicles as any)?.data?.data ?? [])
                 ?.filter((V: any) => {
                   if (searchTerm == "") {
                     return V;
@@ -115,6 +117,16 @@ const VehicleListTable = (e: any) => {
                       index % 2 === 0 ? "" : "bg-gray-50 dark:bg-[#145374]"
                     }  `}
                   >
+                    <td className="px-2 py-3 text-sm leading-5">
+                      <Image
+                        className="rounded-full"
+                        width={50}
+                        height={50}
+                        src={vehicle?.avatar}
+                        alt="..."
+                      />
+                    </td>
+                    
                     <td className="px-2 py-3 text-sm leading-5">
                       {vehicle?.vehicleName}
                     </td>
@@ -139,6 +151,9 @@ const VehicleListTable = (e: any) => {
                       {vehicle?.fuelType}
                     </td>
 
+                    <td className=" px-2 py-3 text-sm leading-5">
+                      {vehicle?.available=="true"?"Available":"Not Available"}
+                    </td>
                     <td className="px- py-3 text-sm leading-5">
                       <div className="flex gap-x-1 ">
                         <ModalBox
@@ -190,7 +205,7 @@ const VehicleListTable = (e: any) => {
             <Pagination
               current={current}
               onChange={onChange}
-              total={vehicle?.data?.meta?.total | 30}
+              total={vehicles?.data?.meta?.total | 30}
             />
           </div>
         </div>

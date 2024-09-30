@@ -22,7 +22,7 @@ type AddFuelValues = {
   meter: Number;
   photo: string;
   province: string;
-  consumption: string;
+  consumption: number;
 };
 
 const AddManageFuel = () => {
@@ -80,7 +80,7 @@ const AddManageFuel = () => {
     data.price = parseFloat(data?.price);
     data.meter = parseInt(data?.meter);
     data.province = data?.province;
-    data.consumption = data?.consumption;
+    data.consumption = parseInt(data?.consumption);
     
     data.photo = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
 
@@ -191,7 +191,7 @@ const AddManageFuel = () => {
           <div className="mb-4">
             <FormInput
               name="consumption"
-              type="text"
+              type="number"
               placeholder="Consumption"
             />
           </div>
