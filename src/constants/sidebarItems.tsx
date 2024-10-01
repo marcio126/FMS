@@ -216,23 +216,23 @@ export const sidebarItems = (role: string) => {
   const driverSidebarItems: MenuProps["items"] = [
     ...overviewSidebarItems,
     
-    {
-      label: "Trip Schedule",
-      key: "tripSchedule",
-      icon: <ScheduleOutlined />,
-      children: [
-        {
-          label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
-          icon: <ScheduleOutlined />,
-          key: "upComingTrip",
-        },
-        {
-          label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
-          icon: <ScheduleOutlined />,
-          key: "tripHistory",
-        },
-      ],
-    },
+    // {
+    //   label: "Trip Schedule",
+    //   key: "tripSchedule",
+    //   icon: <ScheduleOutlined />,
+    //   children: [
+    //     {
+    //       label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
+    //       icon: <ScheduleOutlined />,
+    //       key: "upComingTrip",
+    //     },
+    //     {
+    //       label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
+    //       icon: <ScheduleOutlined />,
+    //       key: "tripHistory",
+    //     },
+    //   ],
+    // },
     {
       label: <Link href={`/${role}/driverVehicleInspection`}>Veicle Inspection</Link>,
       icon:<SyncOutlined />,
