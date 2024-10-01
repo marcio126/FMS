@@ -8,14 +8,12 @@ import { Image } from "antd";
 
 const ContactCard = ({ contacts }: any) => {
   const {
-    Avatar,
-    banner,
-    firstName,
-    lastName,
+    avatar,
+    name,
     email,
-    position,
     phone,
     address,
+    role
   } = contacts;
   return (
     <>
@@ -23,18 +21,18 @@ const ContactCard = ({ contacts }: any) => {
         <div className="rounded-t-lg h-32 overflow-hidden">
           <img
             className="object-cover object-top w-full"
-            src={banner}
+            src="https://i.ibb.co/GpQDgHj/banner4.png"
             alt="..."
           />
         </div>
         <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
-          <Image src={Avatar} alt="..." />
+          <Image src={avatar} alt="..." />
         </div>
         <div className="text-center mt-2 ">
           <h2 className="text-xl dark:text-gray-300 font-semibold">
-            {firstName} {lastName}
+            {name}
           </h2>
-          <p className="font-semibold dark:text-[#EFEFEF] ">{position}</p>
+          <p className="font-semibold dark:text-[#EFEFEF] ">{role}</p>
         </div>
 
         <div className="p-5 space-y-2">

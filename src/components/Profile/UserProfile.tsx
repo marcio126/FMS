@@ -45,7 +45,6 @@ function getItem(
 const items: MenuProps["items"] = [
   getItem("Edit Profile", "edit-profile", <EditOutlined />),
   getItem("Social Profile", "social-profile", <UserAddOutlined />),
-  getItem("Password", "password", <KeyOutlined />),
 ];
 
 const UserProfile = ()  => {

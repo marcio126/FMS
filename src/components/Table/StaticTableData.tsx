@@ -582,15 +582,15 @@ export const OrderListTableFields = [
 export const ReviewListTableFields = [
   {
     id: 0,
-    fields: "vehicle",
+    fields: "Giver",
   },
   {
     id: 1,
-    fields: "Driver",
+    fields: "Receiver",
   },
   {
     id: 2,
-    fields: "Status",
+    fields: "Badge",
   },
   {
     id: 3,

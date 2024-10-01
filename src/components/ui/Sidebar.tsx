@@ -9,8 +9,6 @@ import { useEffect, useState } from "react";
 import logo from "../../assets/logo.png";
 import { getTokenFromKey } from "@/services/auth.service";
 
-const role = USER_ROLE.ADMIN;
-
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [currentRole, setCurrentRole] = useState("");
@@ -24,8 +22,8 @@ const Sidebar = () => {
     // } else if(roleFromToekn.role === 'DRIVER'){
     //   roles = 'driver'
     // }
-    if (roleFromToekn.role == "ADMIN") {
-      setCurrentRole("super-admin");
+    if (roleFromToekn.role == "USER") {
+      setCurrentRole("user");
     } else if (roleFromToekn.role == "MANAGER") {
       setCurrentRole("manager");
     } else if (roleFromToekn.role == "DRIVER") {
