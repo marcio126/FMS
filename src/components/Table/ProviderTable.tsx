@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import type { PaginationProps } from "antd";
 import {Image, Button, Input, Pagination, Popconfirm, message } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalBox from "../ModalBox/ModalBox";
 import Heading from "../ui/Heading";
 import ViewItem from "../ui/ViewItem";
@@ -29,11 +29,15 @@ const ProviderTable = (e: any) => {
   const { data: vehicles } = useVehicleAllListQuery({});
   //searching code
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(vehicles);
+  const [allData, setAllData] = useState([]);
+  useEffect(() => {
+    const item = vehicles?.data?.data.filter((it: any) => it.available == "true");
+    setAllData(item);
+  },[vehicles])
   return (
     <>
       <Heading>
-        <p>Vehicle</p>
+        <p>Available Vehicle</p>
       </Heading>
       <div className="overflow-x-auto rounded-tl-xl rounded-tr-xl py-4">
         <div
@@ -56,7 +60,7 @@ const ProviderTable = (e: any) => {
           {/* table start */}
           <div className="min-w-full">
             <div className="grid grid-cols-4 dark:text-[#E8E8E8]">
-              {((vehicles as any)?.data?.data ?? [])
+              {((allData as any) ?? [])
                 ?.filter((V: any) => {
                   if (searchTerm == "") {
                     return V;

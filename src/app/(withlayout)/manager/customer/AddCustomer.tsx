@@ -16,7 +16,6 @@ type AddCustomerValues = {
   name: string;
   email: string;
   phone: string;
-  gender: string;
   address: string;
   score: Number;
 };
@@ -62,7 +61,7 @@ const AddCustomer = () => {
 
     const res = await addCustomer(data);
     if((res as any)?.data?.statusCode === 200){
-      message.success("Driver Created successful");
+      message.success("Customer Created successful");
     }else{
       message.error("Something went wrong");
     } 
@@ -72,17 +71,14 @@ const AddCustomer = () => {
   return (
     <>
       <p className="font-bold text-black text-[16px] mb-2">Add Customer</p>
-      <div className="mx-auto overflow-y-scroll ">
+      <div className="mx-auto">
         <Form submitHandler={onSubmit}>
           <div className="flex lg:flex-row flex-col gap-4 justify-center lg:items-center mt-2 py-2">
-            <div className="form-control w-full max-w-x flex items-center gap-2"
+            <div className="form-control w-full max-w-x flex items-center justify-center gap-2"
             >
             <div className="w-2/5">
-                <label className="label">
-                    <span className="label-text text-gray-600 font-semibold">Customer Image</span>
-                </label>
                 <div className="w-12 h-12 rounded-full">
-                <Image
+                    <Image
                         src={currentImage}
                         alt='avater'
                         className="w-full
@@ -110,14 +106,6 @@ const AddCustomer = () => {
         </div>
         <div className="mb-4">
           <FormInput name="phone" type="text" placeholder="Phone Number" />
-        </div>
-          <div className="mb-4">
-            <FormSelectField
-              name="gender"
-              size="large"
-              placeholder="Gender"
-              options={genderOption}
-            />
         </div>
         <div className="mb-4">
           <FormInput name="address" type="text" placeholder="Address" />

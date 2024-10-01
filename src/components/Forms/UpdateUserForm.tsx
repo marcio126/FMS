@@ -10,18 +10,22 @@ import FormSelectField from '../ReusableForms/FormSelectField';
 type AddCustomerValues = {
   avatar: string;
   name: string;
+  email: string;
   phone: string;
+  gender: string;
   address: string;
   score: Number;
 };
 
-const UpdateCustomerForm = ({ customerData }: any) => { 
-  const { name, phone, email, score, address, avatar, id } = customerData;
+const UpdateUserForm = ({ customerData }: any) => { 
+  const { name, phone, email, gender, score, address, avatar, id } = customerData;
   const defaultValues = {
     name: name,
+    email:email,
     phone: phone,
     address: address,
     avatar:avatar,
+    gender: gender,
     score: score,
   };
   const genderOption = [
@@ -64,7 +68,6 @@ const handleImageUpload = (e : any) => {
   const [updateCustomer] = useUpdateCustomerMutation();
   const onSubmit: SubmitHandler<AddCustomerValues> = async (data: any) => {
     data.id = id;
-    data.email = email;
     data.avatar = avater?avater : "https://i.ibb.co/SRF75vM/avatar.png";
     data.score = parseInt(data.score);
     try {
@@ -112,7 +115,18 @@ const handleImageUpload = (e : any) => {
           <FormInput name="name" type="text" placeholder="Customer Name" />
         </div>
         <div className="mb-4">
+          <FormInput name="email" type="email" placeholder="Customer Email" />
+        </div>
+        <div className="mb-4">
           <FormInput name="phone" type="text" placeholder="Phone Number" />
+        </div>
+          <div className="mb-4">
+            <FormSelectField
+              name="gender"
+              size="large"
+              placeholder="Gender"
+              options={genderOption}
+            />
         </div>
         <div className="mb-4">
           <FormInput name="address" type="text" placeholder="Address" />
@@ -138,4 +152,4 @@ const handleImageUpload = (e : any) => {
   );
 };
 
-export default UpdateCustomerForm;
+export default UpdateUserForm;

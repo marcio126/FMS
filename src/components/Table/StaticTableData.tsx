@@ -1,5 +1,9 @@
 export const vehiclesFields = [
   {
+    id: 0,
+    fields: "Photo",
+  },
+  {
     id: 1,
     fields: "Name",
   },
@@ -35,7 +39,7 @@ export const vehiclesFields = [
 export const VehicleInspectionListTableFields = [
   {
     id: 0,
-    fields: "Vehicle",
+    fields: "Vehicle Brand",
   },
   {
     id: 1,
@@ -395,10 +399,6 @@ export const CustomerListTableFields = [
   {
     id: 3,
     fields: "Phone",
-  },
-  {
-    id: 4,
-    fields: "Gender",
   },
   {
     id: 5,
