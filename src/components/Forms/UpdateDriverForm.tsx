@@ -33,7 +33,6 @@ const UpdateDriverForm = ({ driverData }: any) => {
   const { name, phone, experience, email, nid, license_no, license_expiry_date, license_type, score, trans_distance,address,avatar,available, id } = driverData;
   const defaultValues = {
     name: name,
-    email:email,
     phone: phone,
     address: address,
     avatar:avatar,
@@ -83,7 +82,8 @@ const handleImageUpload = (e : any) => {
   const [updateDriver] = useUpdateDriverMutation();
   const onSubmit: SubmitHandler<AddVehicleValues> = async (data: any) => {
     data.id = id;
-    data.avatar = avater?avater : "https://i.ibb.co/SRF75vM/avatar.png";
+    data.avatar = avater ? avater : "https://i.ibb.co/SRF75vM/avatar.png";
+    data.email = email;
     data.experience = parseInt(data.experience);
     data.score = parseInt(data.score);
     data.trans_distance = parseFloat(data.trans_distance);
@@ -99,13 +99,10 @@ const handleImageUpload = (e : any) => {
   };
   return (
     <>
-      <div className="mx-auto overflow-y-scroll p-5">
+      <div className="mx-auto p-5">
         <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
             <FormInput name="name" type="text" placeholder="Driver Name" />
-          </div>
-          <div className="mb-4">
-            <FormInput name="email" type="text" placeholder="Driver Email" />
           </div>
           <div className="mb-4">
             <FormInput name="phone" type="text" placeholder="Phone Number" />

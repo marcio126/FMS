@@ -19,7 +19,8 @@ type AddVehicleInspectionValues = {
 };
 const AddVehicleInspection = () => {
   const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
-    const { data: driverVehicle } = useDriverVehicleQuery({});
+  const { data: driverVehicle } = useDriverVehicleQuery({});
+  console.log(driverVehicle)
 useEffect(() => {
     if (driverVehicle?.data?.vehicleResult) {
             const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({

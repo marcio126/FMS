@@ -4,6 +4,7 @@ import {
   EditOutlined,
   EyeOutlined,
   SearchOutlined,
+  RedoOutlined
 } from "@ant-design/icons";
 import { Image, Input, PaginationProps } from "antd";
 import ModalBox from "../ModalBox/ModalBox";
@@ -15,6 +16,9 @@ import {
   useDeleteDriverMutation,
   useGetAllDriverQuery,
 } from "@/redux/api/driverApi";
+import {
+  useUserResetPasswordByEmailMutation
+} from "@/redux/api/authApi";
 import { Button, Pagination, Popconfirm, message } from "antd";
 import { useState } from "react";
 import Heading from "../ui/Heading";
@@ -45,13 +49,17 @@ interface IProps {
 
 const DriverListTable = () => {
   const [deleteDriver] = useDeleteDriverMutation();
-
+  const [resetPassword] = useUserResetPasswordByEmailMutation()
   const confirm = async (e: any) => {
     const res = await deleteDriver(e);
     console.log("🚀 ~ confirm ~ res:", res);
     message.success(`Deleted Sucessfully`);
   };
-
+  const confirmPassword = async (e: any) => {
+    const res = await resetPassword(e);
+    console.log("🚀 ~ confirm ~ res:", res);
+    message.success(`Reset Password Sucessfully`);
+  };
   const cancel = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e);
     message.error("Click on No");
@@ -189,7 +197,22 @@ const DriverListTable = () => {
                         >
                           <UpdateDriverForm driverData={drivers} />
                         </ModalBox>
-
+                        <Popconfirm
+                        title="Reset Password"
+                        description="Are you sure to reset password this account?"
+                        onConfirm={() => confirmPassword(drivers.email)}
+                        onCancel={() => cancel}
+                        okText="Yes"
+                        cancelText="No"
+                        okType="danger"
+                      >
+                        <Button>
+                          <span className="item justify-center items-center">
+                            {" "}
+                            <RedoOutlined />{" "}
+                          </span>
+                        </Button>
+                      </Popconfirm>
                         <Popconfirm
                           title="Delete the task"
                           description="Are you sure to delete this task?"

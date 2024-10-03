@@ -85,10 +85,12 @@ const AddParts = () => {
   const [vendorOptions, setVendorOptions] = useState<{ label: string; value: string }[]>([]);
 
   const { data: vendors } = useGetAllListVendorsQuery({});
-  
+  console.log(vendors);
   useEffect(() => {
   if (vendors?.data) {
-          const options = vendors.data.map((vendor: { name: any }) => ({
+    const options = vendors.data
+      .filter((vendor:{vendorType:string})=>vendor.vendorType === "Parts")
+      .map((vendor: { name: any }) => ({
               label: vendor.name,
               value: vendor.name
           }));

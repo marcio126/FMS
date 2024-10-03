@@ -36,8 +36,8 @@ export default function LoginPage() {
           router.push("/driver/overview");
           message.success("Driver log in successful");
         } else {
-          router.push("/super-admin/overview");
-          message.success("Admin log in successful");
+          router.push("/user/overview");
+          message.success("User log in successful");
         }
       } else {
         message.error("Login not successful");

@@ -18,7 +18,14 @@ import {
   UserOutlined,
   SettingOutlined,
   ToolOutlined,
-  SelectOutlined
+  SelectOutlined,
+  SyncOutlined,
+  FireOutlined,
+  DropboxOutlined,
+  FileDoneOutlined,
+  FileSearchOutlined,
+  FundViewOutlined,
+  GlobalOutlined
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import Link from "next/link";
@@ -152,14 +159,17 @@ export const sidebarItems = (role: string) => {
         // },
         {
           label: <Link href={`/${role}/salary`}>Salary</Link>,
+          icon: <DollarOutlined />,
           key: "Salary",
         },
         {
           label: <Link href={`/${role}/office-cost`}>Office-Cost</Link>,
+          icon: <DollarOutlined />,
           key: "Office Cost",
         },
         {
           label: <Link href={`/${role}/accessories`}>Accessories</Link>,
+          icon: <DollarOutlined />,
           key: "Accessories",
         },
       ],
@@ -168,33 +178,6 @@ export const sidebarItems = (role: string) => {
       label: <Link href={`/${role}/order`}>Orders</Link>,
       icon: <ToolOutlined />,
       key: `/${role}/order`,
-    },
-    {
-      label:"Drivers",
-      icon: <ToolOutlined />,
-      key: "Drivers",
-      children:[
-        {
-          label: <Link href={`/driver/driverVehicleInspection`}>Veicle Inspection</Link>,
-          key: "driverVehicleInspection",
-        },
-        {
-          label: <Link href={`/driver/driverManageFuel`}>Manage Fuel</Link>,
-          key: "driverManageFuel",
-        },
-        {
-          label: <Link href={`/driver/income`}>Manage Income</Link>,
-          key: "income",
-        },
-        {
-          label: <Link href={`/driver/expense`}>Manage Expense</Link>,
-          key: "expense",
-        },
-         {
-          label: <Link href={`/driver/mybook`}>My booking</Link>,
-          key: "mybook",
-        },
-      ]
     },
     // {
     //   label: <Link href={`/${role}/manageRequest`}>Manage Request</Link>,
@@ -209,34 +192,7 @@ export const sidebarItems = (role: string) => {
     {
       label: <Link href={`/${role}/review`}>Review</Link>,
       icon: <SelectOutlined />,
-      key: `/${role}/review`,
-    },
-    {
-      label: "Trip Schedule",
-      key: "tripSchedule",
-      icon: <ScheduleOutlined />,
-      children: [
-        {
-          label: <Link href={`/${role}/provider`}>Provider</Link>,
-          // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
-          key: "provider",
-        },
-       {
-          label: <Link href={`/${role}/addTrip`}>Add Trip</Link>,
-          // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
-          key: "addTrip",
-        },
-        {
-          // label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
-          label: <Link href={`/driver/upComingTrip`}>Upcoming Trip</Link>,
-          key: "upComingTrip",
-        },
-        {
-          // label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
-          label: <Link href={`/driver/tripHistory`}>Trip History</Link>,
-          key: "tripHistory",
-        },
-      ],
+      key: `/review`,
     },
     // {
     //   label: <Link href={`/driver/inventoryRequest`}>Inventory Request</Link>,
@@ -245,7 +201,7 @@ export const sidebarItems = (role: string) => {
     //   key: `/${role}/inventoryRequest`,
     // },
      {
-      label: <Link href={`/super-admin/roleManage`}>Role Manage</Link>,
+      label: <Link href={`/${role}/roleManage`}>Role Manage</Link>,
       // label: <Link href={`/${role}/roleManage`}>Role Manage</Link>,
       icon: <AppstoreAddOutlined />,
       key: `/${role}/roleManage`,
@@ -260,20 +216,52 @@ export const sidebarItems = (role: string) => {
   const driverSidebarItems: MenuProps["items"] = [
     ...overviewSidebarItems,
     
+    // {
+    //   label: "Trip Schedule",
+    //   key: "tripSchedule",
+    //   icon: <ScheduleOutlined />,
+    //   children: [
+    //     {
+    //       label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
+    //       icon: <ScheduleOutlined />,
+    //       key: "upComingTrip",
+    //     },
+    //     {
+    //       label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
+    //       icon: <ScheduleOutlined />,
+    //       key: "tripHistory",
+    //     },
+    //   ],
+    // },
     {
-      label: "Trip Schedule",
-      key: "tripSchedule",
-      icon: <ScheduleOutlined />,
-      children: [
-        {
-          label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
-          key: "upComingTrip",
-        },
-        {
-          label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
-          key: "tripHistory",
-        },
-      ],
+      label: <Link href={`/${role}/driverVehicleInspection`}>Veicle Inspection</Link>,
+      icon:<SyncOutlined />,
+      key: "driverVehicleInspection",
+    },
+    {
+      label: <Link href={`/${role}/driverManageFuel`}>Manage Fuel</Link>,
+      icon:<FireOutlined />,
+      key: "driverManageFuel",
+    },
+    {
+      label: <Link href={`/${role}/income`}>Manage Income</Link>,
+      icon:<DollarOutlined />,
+      key: "income",
+    },
+    {
+      label: <Link href={`/${role}/expense`}>Manage Expense</Link>,
+      icon:<DropboxOutlined />,
+      key: "expense",
+    },
+      {
+        label: <Link href={`/${role}/mybook`}>My booking</Link>,
+        icon:<FileDoneOutlined />,
+        key: "mybook",
+    },
+    {
+      label: <Link href={`/manager/review`}>Review</Link>,
+      icon: <FileSearchOutlined />,
+      key: `/review`,
     },
     {
       label: <Link href={`/${role}/inventoryRequest`}>Inventory Request</Link>,
@@ -283,24 +271,47 @@ export const sidebarItems = (role: string) => {
     ...contactSidebarItem,
     ...faqSidebarItem,
     ...privacyPolicySidebarItem,
+    ...profileSidebarItem,
+
   ];
 
-  //.............Super admin.......................
-  const superAdminSidebarItems: MenuProps["items"] = [
+  const userSidebarItems: MenuProps['items'] = [
     ...overviewSidebarItems,
     {
-      
-      label: <Link href={`/${role}/roleManage`}>Role Manage</Link>,
-      icon: <AppstoreAddOutlined />,
-      key: `/${role}/roleManage`,
+      label: <Link href={`/${role}/provider`}>Provider</Link>,
+      // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
+      icon:<FundViewOutlined />,
+      key: `/${role}/provider`,
+    },
+    {
+      label: <Link href={`/${role}/addTrip`}>Add Trip</Link>,
+      // label: <Link href={`/driver/addTrip`}>Add Trip</Link>,
+      icon:<GlobalOutlined />,
+      key: `/${role}/addTrip`,
+    },
+    {
+      // label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
+      label: <Link href={`/${role}/upComingTrip`}>Upcoming Trip</Link>,
+      icon: <ScheduleOutlined />,
+      key: `/${role}/upComingTrip`,
+    },
+    {
+      // label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
+      label: <Link href={`/${role}/tripHistory`}>Trip History</Link>,
+      icon: <ScheduleOutlined />,
+      key: `/${role}/tripHistory`,
+    },
+    {
+      label: <Link href={`/manager/review`}>Review</Link>,
+      icon: <FileSearchOutlined />,
+      key: `/review`,
     },
     ...contactSidebarItem,
     ...privacyPolicySidebarItem,
     ...faqSidebarItem,
     ...profileSidebarItem,
-  ];
-
-  if (role === USER_ROLE.SUPER_ADMIN) return superAdminSidebarItems;
+  ]
+  if (role === USER_ROLE.USER) return userSidebarItems;
   else if (role === USER_ROLE.MANAGER) return managerSidebarItems;
   else if (role === USER_ROLE.DRIVER) return driverSidebarItems;
   else {

@@ -7,6 +7,7 @@ const ViewFuelItem = ({ viewID }: any, ItemType: string) => {
   
   const purchaseDate = formatDateToRegularDate(fuel?.data?.purchaseDate)
     const registrationDate = formatDateToRegularDate(fuel?.data?.registrationDate)
+  const datetime = fuel?.data?.Time.substring(0,10);
   return (
     <>
       
@@ -15,7 +16,7 @@ const ViewFuelItem = ({ viewID }: any, ItemType: string) => {
         <Timeline
           items={[
             {
-              children: `Vehicle Reference: ${fuel?.data?.vehicle}`,
+              children: `Vehicle Reference: ${fuel?.data?.vehicleVal}`,
             },
             {
               children: `Vendor Name: ${fuel?.data?.vendorName}`,
@@ -24,7 +25,7 @@ const ViewFuelItem = ({ viewID }: any, ItemType: string) => {
               children: `Fuel Type: ${fuel?.data?.fuelType}`,
             }, 
             {
-              children: `Time: ${fuel?.data?.Time}`,
+              children: `Time: ${datetime}`,
             },
             {
               children: `Gallons: ${fuel?.data?.gallons}`,

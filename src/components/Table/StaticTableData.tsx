@@ -1,5 +1,9 @@
 export const vehiclesFields = [
   {
+    id: 0,
+    fields: "Photo",
+  },
+  {
     id: 1,
     fields: "Name",
   },
@@ -35,7 +39,7 @@ export const vehiclesFields = [
 export const VehicleInspectionListTableFields = [
   {
     id: 0,
-    fields: "Vehicle",
+    fields: "Vehicle Brand",
   },
   {
     id: 1,
@@ -397,10 +401,6 @@ export const CustomerListTableFields = [
     fields: "Phone",
   },
   {
-    id: 4,
-    fields: "Gender",
-  },
-  {
     id: 5,
     fields: "Address",
   },
@@ -582,15 +582,15 @@ export const OrderListTableFields = [
 export const ReviewListTableFields = [
   {
     id: 0,
-    fields: "vehicle",
+    fields: "Giver",
   },
   {
     id: 1,
-    fields: "Person in Charge",
+    fields: "Receiver",
   },
   {
     id: 2,
-    fields: "Status",
+    fields: "Badge",
   },
   {
     id: 3,
@@ -844,7 +844,7 @@ export const manageFuelFields = [
   },
   {
     id: 1,
-    fields: "Vehicle Reference",
+    fields: "Vehicle",
   },
   {
     id: 2,
@@ -856,15 +856,16 @@ export const manageFuelFields = [
   },
   {
     id: 4,
-    fields: "Time",
+    fields: "Date",
+  },
+  
+  {
+    id: 6,
+    fields: "Total Price",
   },
   {
     id: 5,
     fields: "QTY(Gallons)",
-  },
-  {
-    id: 6,
-    fields: "Price",
   },
   {
     id: 7,

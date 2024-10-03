@@ -3,6 +3,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
+  RedoOutlined
 } from "@ant-design/icons";
 import { Image, Input, PaginationProps } from "antd";
 import ModalBox from "../ModalBox/ModalBox";
@@ -19,13 +20,14 @@ import { useState } from "react";
 import Heading from "../ui/Heading";
 import UpdateCustomerForm from "../Forms/UpdateCustomerForm";
 import StarRating from "../ui/StarRating";
-
+import {
+  useUserResetPasswordByEmailMutation
+} from "@/redux/api/authApi";
 interface IProps {
   id?: string;
   name?:string;
   email?: string;
   phone?: string;
-  gender?:string;
   address?: string;
   avatar?: string;
   score?: number;
@@ -33,13 +35,18 @@ interface IProps {
 
 const CustomerListTable = () => {
   const [deleteCustomer] = useDeleteCustomerMutation();
+  const [resetPassword] = useUserResetPasswordByEmailMutation()
 
   const confirm = async (e: any) => {
     const res = await deleteCustomer(e);
     console.log("🚀 ~ confirm ~ res:", res);
     message.success(`Deleted Sucessfully`);
   };
-
+  const confirmPassword = async (e: any) => {
+    const res = await resetPassword(e);
+    console.log("🚀 ~ confirm ~ res:", res);
+    message.success(`Reset Password Sucessfully`);
+  };
   const cancel = (e: React.MouseEvent<HTMLElement>) => {
     console.log(e);
     message.error("Click on No");
@@ -78,7 +85,7 @@ const CustomerListTable = () => {
               />
             </div>
             <div className="flex justify-start">
-              <ModalBox btnLabel="Add Customer">
+              <ModalBox modalWidth={500} btnLabel="Add Customer">
                 <AddCustomer />
               </ModalBox>
             </div>
@@ -136,9 +143,6 @@ const CustomerListTable = () => {
                       {customers?.phone}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      {customers?.gender}
-                    </td>
-                    <td className="px-2 py-3 text-sm leading-5">
                       {customers?.address}
                     </td>
 
@@ -157,13 +161,27 @@ const CustomerListTable = () => {
                         >
                           <UpdateCustomerForm customerData={customers} />
                         </ModalBox>
-
+                        <Popconfirm
+                        title="Reset Password"
+                        description="Are you sure to reset password this account?"
+                        onConfirm={() => confirmPassword(customers.email)}
+                        onCancel={() => cancel}
+                        okText="Yes"
+                        cancelText="No"
+                        okType="danger"
+                      >
+                        <Button>
+                          <span className="item justify-center items-center">
+                            {" "}
+                            <RedoOutlined />{" "}
+                          </span>
+                        </Button>
+                      </Popconfirm>
                         <Popconfirm
                           title="Delete the task"
                           description="Are you sure to delete this task?"
                           onConfirm={() => confirm(customers?.id)}
                           onCancel={() => cancel}
-                          
                           cancelText="No"
                           okText="Delete"
                           okType="danger"

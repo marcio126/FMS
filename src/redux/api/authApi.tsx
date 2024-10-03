@@ -26,6 +26,20 @@ const authApi = baseApi.injectEndpoints({
       }), 
       providesTags: [tagTypes.user],
     }),
+    userResetPassword: build.mutation({
+      query: (id) => ({
+        url: `/auth/reset/${id}`,
+        method: "PATCH", 
+      }), 
+      invalidatesTags: [tagTypes.user],
+    }),
+    userResetPasswordByEmail: build.mutation({
+      query: (id) => ({
+        url: `/auth/resetbyemail/${id}`,
+        method: "PATCH", 
+      }), 
+      invalidatesTags: [tagTypes.user],
+    }),
     getAll: build.query({
       query: () => ({
         url: `/auth/allUser`,
@@ -57,5 +71,7 @@ export const {
   useProfileUpdateMutation,
   useGetProfileQuery,
   useGetAllQuery,
-  useUserDeleteMutation
+  useUserDeleteMutation,
+  useUserResetPasswordMutation,
+  useUserResetPasswordByEmailMutation
 } = authApi;

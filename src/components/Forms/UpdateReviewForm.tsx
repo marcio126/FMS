@@ -4,48 +4,36 @@ import { SubmitHandler } from "react-hook-form";
 import Form from "../ReusableForms/Form";
 import FormInput from "../ReusableForms/FormInput";
 import { useUpdateReviewMutation } from "@/redux/api/reviewApi";
-import { useDriverVehicleQuery } from '@/redux/api/driverApi';
 import FormSelectField from '../ReusableForms/FormSelectField';
 
 type AddReviewValues = {
-  vehicle: string;
-  personcharge: string;
+  giver: string;
+  receiver: string;
   score: number;
-  status: string;
+  badge: string;
   note: string;
 };
-const statusOptions = [
-  {label:"Pending",value:"Pending"},
-  {label:"Actived",value:"Actived"},
-  {label:"Declined",value:"Declined"},
+const badgeOptions = [
+  { label: "True", value: "true" },
+  { label: "False", value: "false"}
 ]
-
 const UpdateVehicleInspectionForm = ({ reviewData }: any) => { 
-  const { vehicle, personcharge, score, status, note, id } = reviewData;
+  const { giver, receiver, score, badge, note, id } = reviewData;
   const defaultValues = {
-    vehicle: vehicle,
-    personcharge:personcharge,
+    giver: giver,
+    receiver:receiver,
     score: score,
-    status: status,
+    badge: badge,
     note: note,
   };
-  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
-    const { data: driverVehicle } = useDriverVehicleQuery({});
-useEffect(() => {
-    if (driverVehicle?.data?.vehicleResult) {
-            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
-                label: vehicle.brand,
-                value: vehicle.id + "," + vehicle.brand
-            }));
-            setVehicleOptions(options);
-        }
-  }, [driverVehicle]);
+
   const [updateReview] = useUpdateReviewMutation();
   const onSubmit: SubmitHandler<AddReviewValues> = async (data: any) => {
     data.id = id;
+    data.receiver = data.receiver;
+    data.giver = data.giver;
     data.score = parseInt(data.score);
-    const [vehicle_id, vehicle_val] = data?.vehicle.split(',');
-    data.vehicle = vehicle_val;
+    data.badge = data.badge;
     try {
       const res = await updateReview({id, ...data });
       if ((res as any)?.data?.statusCode === 200) {
@@ -60,23 +48,18 @@ useEffect(() => {
       <div className="mx-auto overflow-y-scroll p-5">
         <Form submitHandler={onSubmit} defaultValues={defaultValues}>
           <div className="mb-4">
-            <FormSelectField
-              name="vehicle"
-              size="large"
-              placeholder="Select Vehicle"
-              options={vehicleOptions}
-            />
+            <FormInput name="giver" type="text" placeholder="Giver" />
           </div>
           <div className="mb-4">
-            <FormInput name="personcharge" type="text" placeholder="Person in charge" />
+            <FormInput name="receiver" type="text" placeholder="Receiver" />
           </div>
           <div className="mb-4">
             <FormSelectField
-              name="status"
-              size="large"
-              placeholder="Status"
-              options={statusOptions}
-            />
+                name="badge"
+                size="large"
+                placeholder="Choose Badge"
+                options={badgeOptions}
+              />
           </div>
           <div className="mb-4">
             <FormInput name="score" type="number" placeholder="Score" />

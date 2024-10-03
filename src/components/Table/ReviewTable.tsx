@@ -14,24 +14,35 @@ import {
   useDeleteReviewMutation,
   useGetAllReviewQuery,
 } from "@/redux/api/reviewApi";
+import { getTokenFromKey } from "@/services/auth.service";
+import { useGetProfileQuery } from "@/redux/api/authApi";
+
 import { Button, Pagination, Popconfirm, message } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Heading from "../ui/Heading";
 import UpdateReviewForm from "../Forms/UpdateReviewForm";
 import StarRating from './../ui/StarRating';
 
 interface IProps {
   id?: string;
-  vehicle?: string;
-  personcharge?: string;
-  status?: string;
+  giver?: string;
+  receiver?: string;
+  badge?: string;
   score?: number;
   note?: string;
 }
 
 const ReviewTable = () => {
   const [deleteReview] = useDeleteReviewMutation();
-
+ const [userProfile, setUserProfile] = useState<any>({});
+  const userInfo = getTokenFromKey();
+  const { data: getProfile } = useGetProfileQuery(userInfo?.id);
+  useEffect(() => {
+    if (getProfile != undefined) {
+      setUserProfile(getProfile.data);
+      }
+  }, [getProfile]);
+  const role = userProfile.role;
   const confirm = async (e: any) => {
     const res = await deleteReview(e);
     console.log("🚀 ~ confirm ~ res:", res);
@@ -119,13 +130,13 @@ const ReviewTable = () => {
                     }  `}
                   >
                     <td className="px-2 py-3 text-sm leading-5">
-                      {reviews?.vehicle}
+                      {reviews?.giver}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
-                      {reviews?.personcharge}
+                      {reviews?.receiver}
                     </td>
-                    <td className="px-2 py-3 text-sm leading-5">
-                      {reviews?.status}
+                    <td className="px-2 py-3 text-xl leading-5">
+                      {reviews?.badge=="true"?"👍":""}
                     </td>
                     <td className="px-2 py-3 text-sm leading-5">
                       <StarRating score={reviews?.score}/>
@@ -133,9 +144,9 @@ const ReviewTable = () => {
                     <td className="px-2 py-3 text-sm leading-5">
                       {reviews?.note}
                     </td>
-                    
-                    <td className="px-2 py-3 text-sm leading-5">
-                      <div className="flex gap-x-1">
+                      <td className="px-2 py-3 text-sm leading-5">
+                    <div className="flex gap-x-1">
+                    {(role == "MANAGER") ? (<>
                         <ModalBox
                           btnLabel={
                             <span className="item justify-center items-center">
@@ -163,9 +174,10 @@ const ReviewTable = () => {
                               <DeleteOutlined />{" "}
                             </span>
                           </Button>
-                        </Popconfirm>
+                        </Popconfirm></>
+                    ):"Not Available"}
                       </div>
-                    </td>
+                      </td>
                   </tr>
                 )
               )}

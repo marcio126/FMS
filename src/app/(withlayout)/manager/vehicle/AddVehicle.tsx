@@ -55,9 +55,12 @@ const handleImageUpload = (e : any) => {
 
 
   }
+  console.log(allVehicleType);
   useEffect(() => {
     if (allVehicleType?.data) {
-            const options = allVehicleType.data.map((vehicletype: { display_name: any  }) => ({
+      const options = allVehicleType.data
+              .filter((item:any)=>item.enable == true)
+            .map((vehicletype: { display_name: any  }) => ({
                 label: vehicletype.display_name,
                 value: vehicletype.display_name
             }));

@@ -1,14 +1,19 @@
 "use client";
 
 import { SearchOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import Heading from "../ui/Heading";
 import ContactCard from "./ContactCard";
 import { ContactData } from "./ContactData";
-
+import { useGetAllQuery } from "@/redux/api/authApi";
 const ContactPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
+  const { data: allUser } = useGetAllQuery({});
+  const [user, setUser] = useState([]);
+  useEffect(()=>{
+    setUser(allUser?.data?.data);
+  },[allUser])
+  console.log(user);
   return (
     <>
       <Heading>All Contacts</Heading>
@@ -28,22 +33,22 @@ const ContactPage = () => {
               }}
               type="text"
               className="flex-shrink flex-grow flex-auto leading-normal  w-px border border-none border-l-0 rounded rounded-l-none px-3 relative  text-gray-500 dark:text-gary-50 font-thin dark:bg-gray-400"
-              placeholder={`Search by Name of ${ContactData.length} Data`}
+              placeholder={`Search by Name of ${user?.length} Data`}
             />
           </div>
         </div>
       </div>
       {/* search end */}
       <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 ">
-        {ContactData?.filter((value) => {
+        {user?.filter((value:any) => {
           if (searchTerm == "") {
             return value;
           } else if (
-            value.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+            value.name.toLowerCase().includes(searchTerm.toLowerCase())
           ) {
             return value;
           }
-        })?.map((contacts) => (
+        })?.map((contacts:any) => (
           <ContactCard key={contacts?.id} contacts={contacts} />
         ))}
       </div>

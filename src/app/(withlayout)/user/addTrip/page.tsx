@@ -7,9 +7,9 @@ import { Button, message } from "antd";
 import { useState,useEffect } from "react";
 import { SubmitHandler } from "react-hook-form"; 
 import { useCreateTripMutation } from "@/redux/api/tripApi";
-import { useGetAllListCustomerQuery } from "@/redux/api/customerApi";
+import { getTokenFromKey } from "@/services/auth.service";
 import FormSelectField from "@/components/ReusableForms/FormSelectField";
-
+import { useGetProfileQuery } from "@/redux/api/authApi";
 
 type CreateTripValue = {
   passengerName: string;
@@ -21,10 +21,30 @@ type CreateTripValue = {
   description: string;
   tripId: string;
 };
-  const tripTypeOption = [
-    { label: "Single", value: "Single" },
-    { label: "Round", value: "Round" }
-  ];
+
+type MyObjectType = {
+    label: any;  // Replace 'any' with a more specific type if possible
+    value: string;
+};
+const tripTypeOption = [
+  { label: "Single", value: "Single" },
+  { label: "Round", value: "Round" }
+];
+const page = () => {
+  const [driverOptions, setDriverOptions] = useState<{ label: string; value: string }[]>([]);
+  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
+  const [userProfile, setUserProfile] = useState<any>({});
+  
+  const userInfo = getTokenFromKey();
+  const { data: getProfile } = useGetProfileQuery(userInfo?.id);
+  const [createTrip] = useCreateTripMutation();
+  const { data: driverVehicle } = useDriverVehicleQuery({});
+
+  useEffect(() => {
+    if (getProfile != undefined) {
+      setUserProfile(getProfile.data);
+      }
+  }, [getProfile]);
   const paymentOption = [
     { label: "Paypal", value: "Paypal" },
     { label: "Payoneer", value: "Payoneer" },
@@ -33,30 +53,6 @@ type CreateTripValue = {
     { label: "Real-Money", value: "Real-Money" }
 
   ];
-type MyObjectType = {
-    label: any;  // Replace 'any' with a more specific type if possible
-    value: string;
-};
-const CreateTrip = () => {  
-  const [driverOptions, setDriverOptions] = useState<{ label: string; value: string }[]>([]);
-  const [vehicleOptions, setVehicleOptions] = useState<{ label: string; value: string }[]>([]);
-  const [vehicleValue, setVehicleValue] = useState<MyObjectType | undefined>(undefined);
-  const [driverValue, setDriverValue] = useState<MyObjectType | undefined>(undefined);
-  const [ customerOptions, setCustomerOptions] = useState<{ label: string; value: string }[]>([]);
-
-  const [createTrip] = useCreateTripMutation()
-  const {data:allCustomer} = useGetAllListCustomerQuery({})
-
-  useEffect(() => {
-    if (allCustomer?.data) {
-            const options = allCustomer.data.map((customer: { name: any  }) => ({
-                label: customer.name,
-                value: customer.name
-            }));
-            setCustomerOptions(options);
-        }
-  }, [allCustomer]);
-  const { data: driverVehicle } = useDriverVehicleQuery({});
   useEffect(() => {
     if (driverVehicle?.data?.driverResult) {
             const options = driverVehicle.data.driverResult.map((driver: { name: any; id:any }) => ({
@@ -66,24 +62,25 @@ const CreateTrip = () => {
             setDriverOptions(options);
     }
     if (driverVehicle?.data?.vehicleResult) {
-            const options = driverVehicle.data.vehicleResult.map((vehicle: { vehicleName: any;id:any  }) => ({
-                label: vehicle.vehicleName,
-                value: vehicle.id + "," + vehicle.vehicleName
+            const options = driverVehicle.data.vehicleResult.map((vehicle: { brand: any;id:any  }) => ({
+                label: vehicle.brand,
+                value: vehicle.id + "," + vehicle.brand
             }));
             setVehicleOptions(options);
         }
   }, [driverVehicle]);
-
   const onSubmit: SubmitHandler<CreateTripValue> = async (data: any) => {
-    data.status = "PENDING";
+    data.status = "UPCOMMING";
+    data.passengerName = userProfile.name;
+    data.passengerPhone = userProfile.phone;
     data.passengerCount = parseInt(data?.passengerCount);
     data.tripRent = parseInt(data?.tripRent);
     data.startTime = new Date(data?.startTime);
     const [vehicle_id, vehicle_val] = data?.vehicle_id.split(',');
     const [driver_id, driver_val] = data?.driver_id.split(',');
     data.vehicleVal = vehicle_val;
-    data.driverVal = driver_val;
     data.vehicle_id = vehicle_id;
+    data.driverVal = driver_val;
     data.driver_id = driver_id;
     const res = await createTrip(data) 
 
@@ -92,15 +89,14 @@ const CreateTrip = () => {
     }
  
   };
-  
-
   return (
     <>
       <p className="font-bold text-black text-[16px] mb-2">Create A New Trip</p>
       <div className="mx-auto ">
         <Form submitHandler={onSubmit}>
          
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Start Location:</label>
             <FormInput
               name="startLocation"
               type="text"
@@ -108,7 +104,8 @@ const CreateTrip = () => {
             />
           </div>
           
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">End Location:</label>
             <FormInput
               name="endLocation"
               type="text"
@@ -117,39 +114,24 @@ const CreateTrip = () => {
           </div>
 
           <div className="mb-4 flex gap-2 items-center">
-          <label className="mr-2">Date:</label>
+          <label className="mr-2 w-36">Date:</label>
             <FormInput
               name="startTime"
               type="date"
               placeholder="Trip Date"
             />
           </div>
-
-          <div className="mb-4">
-            <FormSelectField
-              name="passengerName"
-              size="large"
-              placeholder="Passenger Name"
-              options={customerOptions}
-            />
-          </div>
           
-          <div className="mb-4">
-            <FormInput
-              name="passengerPhone"
-              type="text"
-              placeholder="Passenger Phone"
-            />
-          </div>
-          
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Select Payment</label>
             <FormSelectField
               options={paymentOption}
               name="payment"
               placeholder="Payment"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Passenger Count:</label>
             <FormInput
               name="passengerCount"
               type="number"
@@ -157,7 +139,8 @@ const CreateTrip = () => {
             />
           </div> 
           
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Trip Type Period:</label>
             <FormSelectField
               options={tripTypeOption}
               name="tripPeriod"
@@ -165,14 +148,16 @@ const CreateTrip = () => {
             />
           </div>
             
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Price:</label>
             <FormInput
               name="tripRent"
               type="number"
-              placeholder="$tripRent"
+              placeholder="Trip Price"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Select Driver:</label>
             <FormSelectField
               name="driver_id"
               size="large"
@@ -180,7 +165,8 @@ const CreateTrip = () => {
               options={driverOptions}
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 flex gap-2 items-center">
+          <label className="mr-2 w-36">Select Vehicle:</label>
             <FormSelectField
               name="vehicle_id"
               size="large"
@@ -196,7 +182,7 @@ const CreateTrip = () => {
               color: "#eee",
             }}
           >
-            New Driver Add
+            Add Trip Booking
           </Button>
         </Form>
       </div>
@@ -204,4 +190,4 @@ const CreateTrip = () => {
   );
 };
 
-export default CreateTrip;
+export default page;

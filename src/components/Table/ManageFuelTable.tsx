@@ -140,7 +140,7 @@ const ManageFuelTable = () => {
                       {fuel?.Time.substring(0,10)}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
-                      {fuel?.price}
+                      {parseInt(fuel?.price) * parseInt(fuel?.gallons)}
                     </td>
                     <td className=" px-2 py-3 text-sm leading-5">
                       {fuel?.gallons}

@@ -63,6 +63,8 @@ const BookingTable = () => {
       }
   }, [getProfile]);
   const userName = userProfile.name;
+  console.log("userName========>",userName);
+
   useEffect(()=>{
     if(tripAll != undefined && userName){
       const currentdate = new Date();
@@ -70,7 +72,7 @@ const BookingTable = () => {
       const compareToday = new Date(formattedDate);
       const tripItem = tripAll.data.map((item: any) => {
         let comparehistory = new Date(item.startTime.substring(0,10));
-        if ((compareToday > comparehistory)&&(item.passengerName == userName)) {
+        if ((compareToday > comparehistory)&&(item.driverVal == userName)) {
           return item;
         }
         return null

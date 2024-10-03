@@ -1,21 +1,23 @@
 "use client";
 import {
   DeleteOutlined,
-  SearchOutlined
+  SearchOutlined,
+  RedoOutlined
 } from "@ant-design/icons";
 import { Button,Image,PaginationProps,Pagination,Input,message,Popconfirm } from "antd";
-import ModalBox from "../ModalBox/ModalBox";
 import { UserListTableFields } from "./StaticTableData";
 import {
   useGetAllQuery,
-  useUserDeleteMutation
+  useUserDeleteMutation,
+  useUserResetPasswordMutation
 } from "@/redux/api/authApi";
 import { useEffect, useState } from "react";
 
 const UserListTable = () => {
   const [current, setCurrent] = useState(1);
   const [deleteUser] = useUserDeleteMutation();
-  const [users, setUsers] = useState<any>({});
+  const [resetPassword] = useUserResetPasswordMutation()
+  const [users, setUsers] = useState<any>([]);
   const onChange: PaginationProps["onChange"] = (page) => {
       setCurrent(page);
     };
@@ -24,11 +26,16 @@ const UserListTable = () => {
     const filterManagers = allUser?.data?.data.filter((userItem: any) => userItem?.role?.toUpperCase() === "MANAGER");
     setUsers(filterManagers);
   },[allUser])
-  console.log(users);
+  
   const confirm = async (e: any) => {
     const res = await deleteUser(e);
     console.log("🚀 ~ confirm ~ res:", res);
     message.success(`Deleted Sucessfully`);
+  };
+  const confirmPassword = async (e: any) => {
+    const res = await resetPassword(e);
+    console.log("🚀 ~ confirm ~ res:", res);
+    message.success(`Reset Password Sucessfully`);
   };
 
   const cancel = (e: React.MouseEvent<HTMLElement>) => {
@@ -41,7 +48,7 @@ const UserListTable = () => {
     <>
       {/* table start */}
       <div className="overflow-x-auto rounded-lg">
-        <div className="align-middle inline-block min-w-full shadow overflow-hidden bg-white   px-8 pt-3 rounded-bl-lg rounded-br-lg py-10">
+        <div className="align-middle inline-block min-w-full shadow overflow-hidden bg-white pt-3 rounded-bl-lg rounded-br-lg">
           <div className="pb-3 flex justify-between">
             <div className=" max-w-[80%]">
                 <Input
@@ -59,19 +66,19 @@ const UserListTable = () => {
           <table className="min-w-full">
             <thead className="bg-gray-50 rounded-2xl">
               <tr className="">
-                {UserListTableFields?.map((DriverListTableField) => (
+                {UserListTableFields?.map((UserListTableField) => (
                   <th
-                    key={DriverListTableField?.id}
+                    key={UserListTableField?.id}
                     className=" px-2 py-3 text-left text-black"
                   >
-                    {DriverListTableField?.fields}
+                    {UserListTableField?.fields}
                   </th>
                 ))}
               </tr>
             </thead>
 
             <tbody className="">
-              {((allUser as any)?.data.data ?? [])?.filter((V: any) => {
+              {(users as any)?.filter((V: any) => {
                 if (searchTerm == "") {
                   return V;
                 } else if (
@@ -110,7 +117,23 @@ const UserListTable = () => {
                   <td className="px-2 py-3 text-sm leading-5">
                     {user?.location}
                   </td>
-                  <td className="px-2 py-3 text-sm leading-5">
+                    <td className="px-2 py-3 flex gap-x-1 text-sm leading-5">
+                      <Popconfirm
+                        title="Reset Password"
+                        description="Are you sure to reset password this account?"
+                        onConfirm={() => confirmPassword(user?.id)}
+                        onCancel={() => cancel}
+                        okText="Yes"
+                        cancelText="No"
+                        okType="danger"
+                      >
+                        <Button>
+                          <span className="item justify-center items-center">
+                            {" "}
+                            <RedoOutlined />{" "}
+                          </span>
+                        </Button>
+                      </Popconfirm>
                       <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
